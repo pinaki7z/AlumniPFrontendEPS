@@ -205,6 +205,9 @@ const Chat = ({userId}) => {
     }).then(res => {
       const offlinePeopleArray = res.data
         .filter(p => p._id !== profile._id)
+        .filter(p => p.profileLevel !== 2)
+        .filter(p => p.profileLevel !== 3)
+        .filter(p => p.profileLevel !== null)
         .filter(p => !Object.keys(onlinePeople).includes(p._id));
       const offlinePeople = {};
       offlinePeopleArray.forEach(p => {
@@ -217,7 +220,6 @@ const Chat = ({userId}) => {
 
   useEffect(() => {
     const div = divUnderMessages.current;
-    console.log('selected user id in useEffect',selectedUserId)
     if (selectedUserId) {
 
       axios.get(`${baseUrl}/messages/${selectedUserId}`, {

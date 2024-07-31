@@ -139,17 +139,17 @@ const SideWidgets = () => {
                             <Popover.Body>
                                 <div className='img-job-vide' style={{ flexDirection: 'column', gap: '10px' }}>
                                     <label style={{ backgroundColor: '#f3f3f3', textAlign: 'center', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em' }}>
-                                        <a href="/groups/create" style={{ textDecoration: 'none', color: 'black' }}><HiUserGroup style={{ color: 'ffcf63' }} /> Create Group</a>
+                                        <a href="/groups/create" style={{ textDecoration: 'none', color: 'black' }}><HiUserGroup style={{ color: 'ffcf63' }} /> Group</a>
                                     </label>
                                     <button style={{ backgroundColor: '#f3f3f3', color: 'black', padding: '5px 10px' }} onClick={() => {
                                         setShowModal(true);
-                                    }}><BiSolidBriefcase style={{ color: 'black' }} />Create Job</button>
+                                    }}><BiSolidBriefcase style={{ color: 'black' }} />Internships</button>
                                     {showModal && <JobsInt modalShow={showModal} onHideModal={onHideModal} popover={popover} />}
-                                    <label style={{ backgroundColor: '#f3f3f3', textAlign: 'center', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em' }}>
+                                    {/* <label style={{ backgroundColor: '#f3f3f3', textAlign: 'center', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em' }}>
                                         <a href="/donations/create" style={{ textDecoration: 'none', color: 'black' }}><BsCurrencyRupee style={{ color: 'c8d1da' }} /> Create Donations</a>
-                                    </label>
+                                    </label> */}
                                     <label style={{ backgroundColor: '#f3f3f3', textAlign: 'center', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em' }}>
-                                        <a href="/sponsorships/create" style={{ textDecoration: 'none', color: 'black' }}><GoSponsorTiers style={{ color: '#d8887d' }} /> Create Sponsorships</a>
+                                        <a href="/sponsorships/create" style={{ textDecoration: 'none', color: 'black' }}><GoSponsorTiers style={{ color: '#d8887d' }} /> Sponsorships</a>
                                     </label>
                                 </div>
                             </Popover.Body>

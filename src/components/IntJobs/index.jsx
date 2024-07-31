@@ -607,7 +607,7 @@ const IntJobs = (props) => {
                                             <Dropdown.Item eventKey="Transportation">Transportation</Dropdown.Item>
                                         </div>
                                     </DropdownButton>
-                                    {profile.profileLevel === 2 && (
+                                    {(profile.profileLevel === 0 || profile.profileLevel === 1) && (
                                         <Button variant="danger" onClick={() => setModalShow(true)}>
                                             Create a job/internship
                                         </Button>

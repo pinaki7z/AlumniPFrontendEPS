@@ -31,7 +31,8 @@ const Sponsorships = () => {
   let [page, setPage] = useState(1);
   let [previousPage, setPreviousPage] = useState(0);
   let admin;
-  if (profile.profileLevel === 3) {
+  if (profile.profileLevel === 0 || profile.profileLevel === 1 ) {
+    console.log('PROFILE LEVEL is 3')
     admin = true;
   }
 

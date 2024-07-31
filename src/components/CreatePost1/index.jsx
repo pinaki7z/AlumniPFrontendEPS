@@ -271,7 +271,7 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
             </div>
           </div>
         </div>
-        <div className={`img-job-vide ${isExpanded ? 'expanded' : ''}`}>
+        <div className={`img-job-vide ${isExpanded ? 'expanded' : ''}`} style={{paddingLeft: '90px'}}>
           <label style={{ border: '1px solid #6FBC94' ,color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em', display: 'flex', alignItems: 'center', justifyContent: 'center',fontSize: '15px', gap: '5px',width: '18%' }}>
           <img src={gallery} alt="" srcset="" />Image
             <input

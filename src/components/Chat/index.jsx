@@ -272,8 +272,12 @@ const Chat = () => {
         Authorization: `Bearer ${cookie.token}`,
       },
     }).then(res => {
+      console.log('res data',res.data)
       const offlinePeopleArray = res.data
         .filter(p => p._id !== profile._id)
+        .filter(p => p.profileLevel !== 2)
+        .filter(p => p.profileLevel !== 3)
+        .filter(p => p.profileLevel !== null)
         .filter(p => !Object.keys(onlinePeople).includes(p._id));
       const offlinePeople = {};
       offlinePeopleArray.forEach(p => {

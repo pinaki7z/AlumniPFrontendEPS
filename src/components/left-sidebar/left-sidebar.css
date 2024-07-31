@@ -27,6 +27,7 @@
 .sideBar ul li a p{
     margin-bottom: 0px;
     color: #F8F8FF;
+    font-size: smaller;
 }
 .sideBar li:hover {
     background-color: #6FBC94; 
