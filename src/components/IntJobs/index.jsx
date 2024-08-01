@@ -46,7 +46,7 @@ const IntJobs = (props) => {
     const [showSalaryFields, setShowSalaryFields] = useState(false);
     const [isPaid, setIsPaid] = useState(false);
     const [isUnpaid, setIsUnpaid] = useState(false);
-    console.log('isUnpaid', isUnpaid)
+    console.log('isUnpaid', profile.profileLevel)
 
 
     let admin;
@@ -273,7 +273,7 @@ const IntJobs = (props) => {
         >
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Create a Job/Internship post
+                    Create an Internship post
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -609,7 +609,7 @@ const IntJobs = (props) => {
                                     </DropdownButton>
                                     {(profile.profileLevel === 0 || profile.profileLevel === 1) && (
                                         <Button variant="danger" onClick={() => setModalShow(true)}>
-                                            Create a job/internship
+                                            Create an internship post
                                         </Button>
                                     )}
 

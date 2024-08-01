@@ -171,10 +171,17 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
 
   return (
     <div className='feed'>
-      {showCreatePost && <CreatePost1 photoUrl={photoUrl} username={username} onNewPost={handleNewPost} entityType={entityType} />}
+      {(showCreatePost && (profile.profileLevel === 0 || profile.profileLevel === 1)) && (
+        <CreatePost1
+          photoUrl={photoUrl}
+          username={username}
+          onNewPost={handleNewPost}
+          entityType={entityType}
+        />
+      )}
       {showCreateButton &&
-        <div style={{width: '100%'}}>
-          <button style={{fontFamily: 'Inter', fontWeight: '500', fontSize: '20px',padding: '30px',borderRadius: '8px', border: 'none',height: '0vh', width: '20%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '20px'}}>
+        <div style={{ width: '100%' }}>
+          <button style={{ fontFamily: 'Inter', fontWeight: '500', fontSize: '20px', padding: '30px', borderRadius: '8px', border: 'none', height: '0vh', width: '20%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '20px' }}>
             Create
           </button>
         </div>}

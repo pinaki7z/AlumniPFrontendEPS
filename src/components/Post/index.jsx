@@ -20,7 +20,7 @@ import postDelete from "../../images/post-delete.svg";
 import baseUrl from "../../config";
 
 function Post({ userId, postId, profilePicture, username, text, timestamp, image, video, likes, handleLikes, handleComments, className, onDeletePost, entityType, showDeleteButton, groupID }) {
-  console.log('video pathh',video)
+  console.log('video pathh', video)
 
 
   const PrevButton = ({ onClick }) => {
@@ -207,25 +207,29 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
         {console.log('entity type1', entityType)}
         {entityType === 'posts' && (
           <div className='bottomAction'>
-            <div className='action'>
-              <img src={commentIcon} alt='comment-icon' className={`postAction grey`} />
-              <h4>Comment</h4>
-            </div>
-            <div className='action' onClick={handleLike}>{
-              isliked ? (
-                <img src={liked} alt="" srcset="" />
+            {(profile.profileLevel === 0 || profile.profileLevel === 1) && (
+              <>
+                <div className='action'>
+                  <img src={commentIcon} alt='comment-icon' className={`postAction grey`} />
+                  <h4>Comment</h4>
+                </div>
+                <div className='action'>
+                  <img src={share} alt='share-icon' className={`postAction grey`} />
+                  <h4>Share</h4>
+                </div>
+              </>
+            )}
+            <div className='action' onClick={handleLike}>
+              {isliked ? (
+                <img src={liked} alt="" />
               ) : (
-                <img src={unliked} alt="" srcset="" />
-              )
-            } <h4>{isliked ? 'Liked' : 'Like'}</h4>
-            </div>
-
-            <div className='action'>
-              <img src={share} alt='share-icon' className={`postAction grey`} />
-              <h4>Share</h4>
+                <img src={unliked} alt="" />
+              )}
+              <h4>{isliked ? 'Liked' : 'Like'}</h4>
             </div>
           </div>
         )}
+
       </>)}
     </div>
   );
