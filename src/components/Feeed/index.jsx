@@ -208,7 +208,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
                   groupID={post.groupID}
                 />
                 {console.log("entityType", entityType)}
-                {(entityType === 'posts' || entityType === 'forums') && (<CommentSection entityId={post._id} entityType="posts" onCommentSubmit={refreshComments}
+                {(entityType === 'posts' || entityType === 'forums') && (profile.profileLevel === 0 || profile.profileLevel === 1) &&(<CommentSection entityId={post._id} entityType="posts" onCommentSubmit={refreshComments}
                   onDeleteComment={refreshComments} comments={post ? post.comments : null} />)}
               </div>
             );
