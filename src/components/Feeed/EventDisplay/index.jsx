@@ -1,5 +1,6 @@
 import pic from "../../../images/profilepic.jpg";
-import { Avatar, IconButton, Modal, Box } from '@mui/material';
+import { Avatar, IconButton, Modal, Box, Menu, MenuItem } from '@mui/material';
+import { MoreVert } from '@mui/icons-material';
 import postDelete from "../../../images/post-delete.svg";
 import { useSelector } from 'react-redux';
 import React, { useState, useEffect } from 'react';
@@ -11,7 +12,7 @@ import getDay from "date-fns/getDay";
 import parse from "date-fns/parse";
 import startOfWeek from "date-fns/startOfWeek";
 import { EventBusy } from "@mui/icons-material";
-import baseUrl from "../../../config"
+import baseUrl from "../../../config";
 
 lineSpinner.register();
 
@@ -22,6 +23,7 @@ const EventDisplay = ({ event }) => {
     const [attendees, setAttendees] = useState();
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
+    const [menuAnchor, setMenuAnchor] = useState(null);
 
     useEffect(() => {
         checkAttendanceStatus();
@@ -57,9 +59,9 @@ const EventDisplay = ({ event }) => {
     };
 
     const handleAttendance = async (attendance, eventId) => {
-        console.log('handling attendance')
+        console.log('handling attendance');
         setLoading(true);
-        console.log('event titlee',event.title,attendance)
+        console.log('event title', event.title, attendance);
         try {
             let body = {
                 userId: profile._id,
@@ -105,37 +107,41 @@ const EventDisplay = ({ event }) => {
 
     const handleOpen = () => {
         checkAttendanceStatus();
-        setOpen(true)
+        setOpen(true);
     };
     const handleClose = () => setOpen(false);
 
     const handleDeleteEvent = async () => {
-        console.log('deleting event')
+        console.log('deleting event');
         try {
-         
-          const url = `${baseUrl}/events/${event._id}`;
-          
-         
-          const requestBody = {
-            groupName: event.title
-          };
-      
-        
-          const response = await axios.delete(url, { data: requestBody });
-      
-          if (response.status === 200) {
-            console.log("Event deleted successfully");
-            toast.success("Event deleted successfully");
-            window.location.reload();
-          } else {
-            console.error("Failed to delete event");
-            toast.error("Failed to delete event");
-         
-          }
+            const url = `${baseUrl}/events/${event._id}`;
+            const requestBody = {
+                groupName: event.title
+            };
+            const response = await axios.delete(url, { data: requestBody });
+
+            if (response.status === 200) {
+                console.log("Event deleted successfully");
+                toast.success("Event deleted successfully");
+                window.location.reload();
+            } else {
+                console.error("Failed to delete event");
+                toast.error("Failed to delete event");
+            }
         } catch (error) {
-          console.error("Error occurred while deleting event:", error);
+            console.error("Error occurred while deleting event:", error);
         }
-      };
+    };
+
+    const handleEditEvent = () => {
+        console.log("Edit event");
+        setMenuAnchor(null);
+    };
+
+    const handleArchiveEvent = () => {
+        console.log("Archive event");
+        setMenuAnchor(null);
+    };
 
     return (
         <>
@@ -147,11 +153,24 @@ const EventDisplay = ({ event }) => {
                 )}
                 <div className='info'>
                     <h4>{event.userName ? event.userName : null}</h4>
-                    <span style={{ fontSize: '14px', fontWeight: '500', color: '#136175' }}>{formatCreatedAt(event.createdAt)}</span>
+                    <span style={{ fontSize: '14px', fontWeight: '500', color: '#004C8A' }}>{formatCreatedAt(event.createdAt)}</span>
                 </div>
-                {event.userId === profile._id && <IconButton className='delete-button' style={{ marginRight: '10px', marginLeft: 'auto' }}>
-                    <img src={postDelete} onClick={handleDeleteEvent}/>
-                </IconButton>}
+                {(event.userId === profile._id) && (
+                    <>
+                        <IconButton onClick={(e) => setMenuAnchor(e.currentTarget)} className='more-button' style={{marginLeft: 'auto',color: 'black'}}>
+                            <MoreVert />
+                        </IconButton>
+                        <Menu
+                            anchorEl={menuAnchor}
+                            open={Boolean(menuAnchor)}
+                            onClose={() => setMenuAnchor(null)}
+                        >
+                            <MenuItem onClick={handleEditEvent}>Edit</MenuItem>
+                            <MenuItem onClick={handleArchiveEvent}>Archive</MenuItem>
+                            <MenuItem onClick={handleDeleteEvent}>Delete</MenuItem>
+                        </Menu>
+                    </>
+                )}
             </div>
             <div style={{ paddingTop: '20px'}}>
                 <p><span style={{ fontWeight: '500' }}>Title:</span> {event.title}</p>

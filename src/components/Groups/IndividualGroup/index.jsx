@@ -266,7 +266,7 @@ const IndividualGroup = () => {
                                         </div>
                                     </div>
                                     <div className="lower-div" style={{
-                                        backgroundColor: '#E9F5EF',
+                                        backgroundColor: '#FEF7E7',
                                         width: '100%',
                                         minHeight: '15vh',
                                         backgroundSize: 'cover',
@@ -335,10 +335,10 @@ const IndividualGroup = () => {
                                                             <p style={{ marginBottom: '0rem', fontWeight: '500' }}>{member.userName}</p>
                                                             <button
                                                                 style={{
-                                                                    backgroundColor: isFollowing(member.userId) ? '#6FBC94' : '#FFFFFF',
-                                                                    color: isFollowing(member.userId) ? '#FFFFFF' : '#6FBC94',
+                                                                    backgroundColor: isFollowing(member.userId) ? '#F8A700' : '#FFFFFF',
+                                                                    color: isFollowing(member.userId) ? '#FFFFFF' : '#F8A700',
                                                                     borderRadius: '32px',
-                                                                    border: isFollowing(member.userId) ? 'none' : '2px solid #6FBC94',
+                                                                    border: isFollowing(member.userId) ? 'none' : '2px solid #F8A700',
                                                                     marginLeft: 'auto',
                                                                     padding: '8px 32px',
                                                                     cursor: 'pointer'
@@ -372,7 +372,7 @@ const IndividualGroup = () => {
                                                     <p>Add/Remove Members</p>
                                                 </div>
                                                 <button className="close-button"
-                                                    style={{ fontSize: 'larger', fontFamily: 'Inter', color: '#136175' }}
+                                                    style={{ fontSize: 'larger', fontFamily: 'Inter', color: '#004C8A' }}
                                                     onClick={() => {
                                                         setShowModal(false);
                                                     }
@@ -385,7 +385,7 @@ const IndividualGroup = () => {
                                                     value={searchTerm}
                                                     onChange={(e) => setSearchTerm(e.target.value)}
                                                     className="search-input"
-                                                    style={{ backgroundColor: '#E9F5EF' }}
+                                                    style={{ backgroundColor: '#FEF7E7' }}
                                                 />
                                                 <img src={searchIcon} alt="" srcset="" style={{position: 'absolute',top: '10px', right: '10px'}}/>
                                             </div>

@@ -212,7 +212,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
                   onDeleteComment={refreshComments} comments={post ? post.comments : null} />)}
               </div>
             );
-          } else if (post.type === 'Job' && (post.groupID === _id)) {
+          } else if (post.type === 'Internship' && (post.groupID === _id)) {
             return (
               <div key={post._id} className="job-box" style={{ width: '100%' }}>
                 <JobIntDisplay

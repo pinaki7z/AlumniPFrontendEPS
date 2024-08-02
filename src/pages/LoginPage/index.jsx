@@ -211,7 +211,7 @@ const LoginPage = ({ handleLogin }) => {
             <div className="action-buttons">
               <button className="button" type='submit' style={{
                 color: '#F8F8FF',
-                background: '#6FBC94' 
+                background: '#F8A700' 
               }}>
                 <div className="button1" style={{ color: '#F8F8FF' }}>{loading? 'Logging in...' : 'Login'}</div>
               </button>

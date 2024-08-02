@@ -23,6 +23,14 @@ import { updateProfile } from '../../store/profileSlice';
 import { toast } from "react-toastify";
 import { lineSpinner } from 'ldrs';
 import baseUrl from '../../config';
+import poll from '../../images/poll.svg';
+import PollModal from '../CreatePost1/PollModal';
+import { MdOutlineEvent } from 'react-icons/md';
+import format from "date-fns/format";
+import Modal from 'react-bootstrap/Modal';
+import { Col, Row } from 'react-bootstrap';
+import DatePicker from "react-datepicker";
+import Button from 'react-bootstrap/Button';
 
 lineSpinner.register()
 
@@ -40,8 +48,10 @@ const SideWidgets = () => {
     const [loading, setLoading] = useState(true);
     const [isloading, setIsLoading] = useState({});
     const [load, setLoad] = useState(false);
+    const [showPollModal, setShowPollModal] = useState(false);
     const [isFollowing, setIsFollowing] = useState(false);
     const itemsPerPage = 3;
+    const [modalShow, setModalShow] = React.useState(false);
     const dispatch = useDispatch();
     console.log('notifications1', notifications, profile);
 
@@ -126,6 +136,328 @@ const SideWidgets = () => {
         return 'just now';
     };
 
+    const handleCreatePoll = async (question, options) => {
+        console.log('question1', question, options);
+        const pollData = {
+            userId: profile._id,
+            userName: `${profile.firstName} ${profile.lastName}`,
+            profilePicture: profile.profilePicture,
+            question: question,
+            options: options,
+        };
+        //if (_id) pollData.groupID = _id;
+
+        try {
+            const response = await axios.post(
+                `${baseUrl}/poll/createPoll`,
+                pollData,
+            );
+            const newPoll = await response.data;
+            //onNewPost(newPoll);
+            //setInput("");
+            setShowPollModal(false);
+            window.location.reload();
+        } catch (error) {
+            console.error("Error creating poll:", error);
+        }
+    };
+
+    function MyVerticallyCenteredModal(props) {
+        const [isEditing, setIsEditing] = useState(false);
+        const profile = useSelector((state) => state.profile);
+        const [createGroup, setCreateGroup] = useState(false);
+        const [loading, setLoading] = useState(false);
+
+        const [newEvent, setNewEvent] = useState({
+            title: "", start: "", end: "", startTime: "00:00",
+            endTime: "00:00", picture: "", cName: "",
+            cNumber: "", cEmail: "", location: ""
+        });
+        const [allEvents, setAllEvents] = useState([]);
+        const [selectedEvent, setSelectedEvent] = useState([props.selectedEvent])
+
+
+        const handleImageChange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    setNewEvent({ ...newEvent, picture: reader.result });
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+
+
+
+        const handleAddEvent = () => {
+            const { title, start, end, startTime, endTime, picture, cName, cNumber, cEmail, location } = newEvent;
+
+            if (!title || !start || !end || !picture) {
+                alert("Please provide title, start date, end date and image");
+                return;
+            }
+
+            const formattedStart = format(new Date(start), "yyyy-MM-dd");
+            const formattedEnd = format(new Date(end), "yyyy-MM-dd");
+            setLoading(true);
+
+            const eventData = {
+                userId: profile._id,
+                title,
+                start: formattedStart,
+                end: formattedEnd,
+                startTime,
+                userName: `${profile.firstName} ${profile.lastName}`,
+                profilePicture: profile.profilePicture,
+                endTime,
+                picture,
+                cName,
+                cNumber,
+                cEmail,
+                location,
+                department: profile.department,
+                createGroup
+            };
+            console.log('eventData', eventData)
+
+            fetch(`${baseUrl}/events/createEvent`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(eventData),
+            })
+                .then((response) => response.json())
+                .then((createdEvent) => {
+                    setAllEvents([...allEvents, createdEvent]);
+                    setLoading(false);
+                    window.location.reload();
+
+                    setNewEvent({ title: "", start: "", end: "", startTime: "", endTime: "", picture: null, cEmail: "", cName: "", cNumber: "", location: "" });
+                })
+                .catch((error) => console.error("Error creating event:", error));
+        };
+
+
+        const handleEditEvent = () => {
+            const { title, start, end, startTime, endTime, picture, cName, cNumber, cEmail, location } = newEvent;
+            const eventId = props.selectedEvent._id;
+
+            if (!title || !start || !end) {
+                alert("Please provide title, start date, and end date.");
+                return;
+            }
+
+            try {
+                const formattedStart = format(new Date(start), "yyyy-MM-dd");
+                const formattedEnd = format(new Date(end), "yyyy-MM-dd");
+
+
+                const updatedEvent = {
+                    title: title,
+                    start: formattedStart,
+                    end: formattedEnd,
+                    startTime,
+                    endTime,
+                    picture,
+                    cName,
+                    cNumber,
+                    cEmail,
+                    location
+                };
+
+                const jsonEventData = JSON.stringify(updatedEvent);
+
+                fetch(`${baseUrl}/events/${eventId}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: jsonEventData,
+                })
+                    .then(() => {
+                        const updatedEvents = allEvents.map((event) =>
+                            event._id === eventId ? updatedEvent : event
+                        );
+
+                        setAllEvents(updatedEvents);
+                        setSelectedEvent(null);
+                        props.onHide();
+                        toast.success("Event updated successfully.");
+                        window.location.reload();
+                    })
+                    .catch((error) => console.error("Error updating event:", error));
+            } catch (jsonError) {
+                console.error("JSON serialization error:", jsonError);
+                alert("Error updating event: JSON serialization error");
+            }
+        };
+
+        const handleDateChange = (date, field) => {
+            if (props.isEditing) {
+                const updatedEvent = { ...newEvent };
+                updatedEvent[field] = date;
+                setNewEvent(updatedEvent);
+                setIsEditing(true)
+            } else {
+                setNewEvent({ ...newEvent, [field]: date });
+            }
+        };
+
+        const handleTimeChange = (time, field) => {
+            const updatedEvent = { ...newEvent };
+            updatedEvent[field] = time;
+            setNewEvent(updatedEvent);
+        };
+
+
+
+        return (
+            <Modal
+                {...props}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header style={{ backgroundColor: '#f5dad2' }} closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter">
+                        {props.isEditing ? "Edit Event" : "Add Event"}
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body style={{ display: 'flex', gap: '2em', backgroundColor: '#eaf6ff' }}>
+                    <Col>
+                        <Row style={{ padding: '0px 5px' }}>
+                            <input
+                                type="text"
+                                placeholder="Add/Edit Title"
+                                style={{ width: "100%", padding: "0.5em", borderRadius: "10px" }}
+                                value={newEvent.title}
+                                onChange={(e) =>
+                                    setNewEvent({ ...newEvent, title: e.target.value })
+                                }
+                            />
+                            <br />
+                            <br />
+                            <label htmlFor={newEvent.picture}>Insert a Picture:-</label>
+                            <br />
+                            <input type="file" name={newEvent.picture}
+                                style={{ width: '60%' }}
+                                onChange={handleImageChange} />
+
+
+                            <input
+                                type="text"
+                                placeholder="Enter Coordinator Name"
+                                style={{ width: "100%", padding: "0.5em", borderRadius: "10px" }}
+                                value={newEvent.cName}
+                                onChange={(e) =>
+                                    setNewEvent({ ...newEvent, cName: e.target.value })
+                                }
+                            />
+
+
+
+                        </Row>
+
+
+
+                    </Col>
+
+
+
+
+                    <Col>
+                        <DatePicker
+                            placeholderText="Start Date"
+                            style={{ marginRight: "10px", padding: "0.5em" }}
+                            selected={newEvent.start}
+                            onChange={(date) => handleDateChange(date, "start")}
+                        />
+                        <br /><br />
+                        <input type="time" id="appt" name="startTime" value={newEvent.startTime} onChange={(e) =>
+                            setNewEvent({ ...newEvent, startTime: e.target.value })
+                        } />
+                        <br /><br />
+                        <input
+                            type="number"
+                            placeholder="Enter Coordinator Contact Number"
+                            style={{ width: "100%", padding: "0.5em", borderRadius: "10px" }}
+                            value={newEvent.cNumber}
+                            onChange={(e) =>
+                                setNewEvent({ ...newEvent, cNumber: e.target.value })
+                            }
+                        />
+
+                        <input
+                            type="text"
+                            placeholder="Enter event location"
+                            style={{ width: "100%", padding: "0.5em", borderRadius: "10px" }}
+                            value={newEvent.location}
+                            onChange={(e) =>
+                                setNewEvent({ ...newEvent, location: e.target.value })
+                            }
+                        />
+
+                    </Col>
+
+
+                    <Col>
+                        <Col>
+                            <DatePicker
+                                placeholderText="End Date"
+                                style={{ padding: "0.5em" }}
+                                selected={newEvent.end}
+                                onChange={(date) => handleDateChange(date, "end")}
+                            />
+                            <br /><br />
+                            <input type="time" id="appt" name="endTime" value={newEvent.endTime} onChange={(e) =>
+                                setNewEvent({ ...newEvent, endTime: e.target.value })
+                            } />
+                            <input
+                                type="email"
+                                placeholder="Enter Coordinator Email"
+                                style={{ width: "100%", padding: "0.5em", borderRadius: "10px" }}
+                                value={newEvent.cEmail}
+                                onChange={(e) =>
+                                    setNewEvent({ ...newEvent, cEmail: e.target.value })
+                                }
+                            />
+                        </Col>
+
+                    </Col>
+
+                </Modal.Body>
+
+                <Modal.Footer style={{ backgroundColor: '#f5dad2' }}>
+                    <div style={{ marginRight: 'auto', display: 'flex', alignItems: 'center' }}>
+                        <input
+                            type="checkbox"
+                            id="create-group"
+                            checked={createGroup}
+                            onChange={(e) => setCreateGroup(e.target.checked)}
+                        />
+                        <label htmlFor="create-group" style={{ marginLeft: '0.5em' }}>Create a group with the same event title name</label>
+                    </div>
+                    <Button
+                        onClick={props.isEditing ? handleEditEvent : handleAddEvent}
+                    >
+                        {loading
+                            ? 'Adding Event...'
+                            : props.isEditing
+                                ? 'Edit Event'
+                                : 'Add Event'}
+
+                    </Button>
+                    <Button onClick={props.onHide}>Close</Button>
+                </Modal.Footer>
+
+            </Modal>
+        );
+    }
+
+
     return (
         <div className="sideWidget-feed">
             <div style={{ float: 'right' }}>
@@ -146,50 +478,67 @@ const SideWidgets = () => {
                                     }}><BiSolidBriefcase style={{ color: 'black' }} />Internships</button>
                                     {showModal && <JobsInt modalShow={showModal} onHideModal={onHideModal} popover={popover} />}
                                     {/* <label style={{ backgroundColor: '#f3f3f3', textAlign: 'center', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em' }}>
-                                        <a href="/donations/create" style={{ textDecoration: 'none', color: 'black' }}><BsCurrencyRupee style={{ color: 'c8d1da' }} /> Create Donations</a>
+                                        <a href="/sponsorships/create" style={{ textDecoration: 'none', color: 'black' }}><GoSponsorTiers style={{ color: '#d8887d' }} /> Sponsorships</a>
                                     </label> */}
                                     <label style={{ backgroundColor: '#f3f3f3', textAlign: 'center', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em' }}>
-                                        <a href="/sponsorships/create" style={{ textDecoration: 'none', color: 'black' }}><GoSponsorTiers style={{ color: '#d8887d' }} /> Sponsorships</a>
+                                        <button style={{ color: 'black', marginLeft: '0px', fontSize: '15px', width: '100%' }} onClick={() => setShowPollModal(true)}><img src={poll} alt="" width='12px' srcset="" />Poll</button>
+                                    </label>
+                                    <label style={{ backgroundColor: '#f3f3f3', textAlign: 'center', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em' }} onClick={() => setModalShow(true)}>
+                                        <MdOutlineEvent style={{ color: '#d8887d' }} /> Event
                                     </label>
                                 </div>
+
                             </Popover.Body>
                         </Popover>
                     }
                 >
                     {(profile.profileLevel === 0 || profile.profileLevel === 1) ? (
-            <button
-                onClick={() => setShowPopover(!showPopover)}
-                style={{
-                    backgroundColor: '#136175',
-                    color: '#FFFFF0',
-                    width: '125px',
-                    height: '45px',
-                    borderRadius: '8px',
-                    border: 'none',
-                    fontSize: '20px'
-                }}
-            >
-                Create
-            </button>
-        ) : (
-            <></>
-        )}
+                        <button
+                            onClick={() => setShowPopover(!showPopover)}
+                            style={{
+                                backgroundColor: '#004C8A',
+                                color: '#FFFFF0',
+                                width: '125px',
+                                height: '45px',
+                                borderRadius: '8px',
+                                border: 'none',
+                                fontSize: '20px'
+                            }}
+                        >
+                            Create
+                        </button>
+                    ) : (
+                        <></>
+                    )}
                 </OverlayTrigger>
             </div>
-
+            <PollModal
+                show={showPollModal}
+                onHide={() => setShowPollModal(false)}
+                onCreatePoll={handleCreatePoll}
+            />
+            <MyVerticallyCenteredModal
+          show={modalShow}
+          //isEditing={isEditing}
+          //selectedEvent={selectedEvent}
+          onHide={() => {
+            setModalShow(false);
+            //setSelectedEventDetails(null);
+          }}
+        />
             <div className="sideWidget-post-card">
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <img src={profile.profilePicture} alt="Profile" width="60px" height="60px" style={{ borderRadius: '50%' }} />
                     <Link to='/profile' style={{ textDecoration: 'none', color: 'black' }}>
                         <p style={{ marginBottom: '0rem', fontWeight: '500', fontSize: '20px' }}>{profile.firstName}</p>
                     </Link>
-                    <p style={{ marginBottom: '0rem', fontSize: '14px', backgroundColor: '#6FBC94', paddingLeft: '5px', paddingRight: '5px' }}>@{profile.firstName}</p>
+                    <p style={{ marginBottom: '0rem', fontSize: '14px', backgroundColor: '#F8A700', paddingLeft: '5px', paddingRight: '5px' }}>@{profile.firstName}</p>
                 </div>
                 <div style={{ height: '20%' }}>
                     <ul style={{ paddingLeft: '0px', marginBottom: '0px', display: 'flex', gap: '10px' }}>
-                        <li style={{ display: 'inline-block', borderRight: '1px solid #e9e9e9', textAlign: 'center', paddingRight: '7px' }}><a href="" style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', color: 'black' }}><span>Posts</span><span style={{ fontWeight: '500', color: '#136175' }}>5</span></a></li>
-                        <li style={{ display: 'inline-block', borderRight: '1px solid #e9e9e9', textAlign: 'center', paddingRight: '7px' }}><a href="" style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', color: 'black' }}><span>Following</span><span style={{ fontWeight: '500', color: '#136175' }}>1</span></a></li>
-                        <li style={{ display: 'inline-block', textAlign: 'center' }}><a href="" style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', color: 'black' }}><span>Followers</span><span style={{ fontWeight: '500', color: '#136175' }}>1</span></a></li>
+                        <li style={{ display: 'inline-block', borderRight: '1px solid #e9e9e9', textAlign: 'center', paddingRight: '7px' }}><a href="" style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', color: 'black' }}><span>Posts</span><span style={{ fontWeight: '500', color: '#004C8A' }}>5</span></a></li>
+                        <li style={{ display: 'inline-block', borderRight: '1px solid #e9e9e9', textAlign: 'center', paddingRight: '7px' }}><a href="" style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', color: 'black' }}><span>Following</span><span style={{ fontWeight: '500', color: '#004C8A' }}>1</span></a></li>
+                        <li style={{ display: 'inline-block', textAlign: 'center' }}><a href="" style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', color: 'black' }}><span>Followers</span><span style={{ fontWeight: '500', color: '#004C8A' }}>1</span></a></li>
                     </ul>
                 </div>
             </div>
@@ -197,14 +546,14 @@ const SideWidgets = () => {
             <div className='sideWidget2-post-card'>
                 <div className="sideWidget2-post-header">
                     <p style={{ marginBottom: '0rem', fontWeight: '500', fontSize: '20px' }}>People You May Know</p>
-                    <button style={{ border: 'none', backgroundColor: '#136175' }}><TbReload style={{ color: '#F8F8FF' }} /></button>
+                    <button style={{ border: 'none', backgroundColor: '#004C8A' }}><TbReload style={{ color: '#F8F8FF' }} /></button>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                     {displayedMembers.map((member, index) => (
                         <div key={member._id} style={{ display: 'flex', gap: '10px', alignItems: 'center', padding: '10px', border: '1px solid #e9e9e9', borderRadius: '10px', width: '100%' }}>
                             {member.profilePicture ? <img src={member.profilePicture} alt="Profile" width="60px" height="60px" style={{ borderRadius: '50%' }} /> : <img src={profilepic} alt="Profile" width="60px" height="60px" style={{ borderRadius: '50%' }} />}
                             <p style={{ marginBottom: '0rem', fontWeight: '500' }}>{member.firstName}</p>
-                            <button onClick={() => handleFollowToggle(member._id, member.firstName, member.lastName)} style={{ backgroundColor: '#6FBC94', color: 'white', borderRadius: '32px', border: 'none', marginLeft: 'auto', color: '#F8F8FF', padding: '8px 32px', pointer: 'cursor' }}>{isloading[member._id] ? <l-line-spinner
+                            <button onClick={() => handleFollowToggle(member._id, member.firstName, member.lastName)} style={{ backgroundColor: '#F8A700', color: 'white', borderRadius: '32px', border: 'none', marginLeft: 'auto', color: '#F8F8FF', padding: '8px 32px', pointer: 'cursor' }}>{isloading[member._id] ? <l-line-spinner
                                 size="20"
                                 stroke="3"
                                 speed="1"
@@ -213,7 +562,7 @@ const SideWidgets = () => {
                         </div>
                     ))}
                     {peopleYouMayKnow.length > displayedMembers.length && (
-                        <p onClick={() => setCurrentPage(currentPage + 1)} style={{ color: '#136175', borderRadius: '10px', borderColor: 'white', padding: '10px', marginTop: '10px', cursor: 'pointer', fontWeight: '500' }}>See More</p>
+                        <p onClick={() => setCurrentPage(currentPage + 1)} style={{ color: '#004C8A', borderRadius: '10px', borderColor: 'white', padding: '10px', marginTop: '10px', cursor: 'pointer', fontWeight: '500' }}>See More</p>
                     )}
                 </div>
 
@@ -228,7 +577,7 @@ const SideWidgets = () => {
             <div className="sideWidget2-post-card">
                 <div className="sideWidget2-post-header">
                     <p style={{ marginBottom: '0rem', fontWeight: '500', fontSize: '20px' }}>Latest Activities</p>
-                    <button style={{ border: 'none', backgroundColor: '#136175' }}><TbReload onClick={fetchNotifications} style={{
+                    <button style={{ border: 'none', backgroundColor: '#004C8A' }}><TbReload onClick={fetchNotifications} style={{
                         color: '#F8F8FF'
                     }} /></button>
                 </div>

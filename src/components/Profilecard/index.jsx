@@ -216,7 +216,7 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
                 fontSize: '20px',
                 fontWeight: '500',
                 fontFamily: 'Inter',
-                backgroundColor: '#136175',
+                backgroundColor: '#004C8A',
               }}
             >
               {isFollowing ? "Following" : <><BiUserPlus style={{ fontSize: "17px" }} /> Follow</>}

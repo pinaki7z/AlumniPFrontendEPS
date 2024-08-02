@@ -1,7 +1,7 @@
 import React from 'react';
-import { ThumbUpRounded, ChatBubbleOutlineRounded, NearMeRounded, DeleteRounded } from '@mui/icons-material';
+import { ThumbUpRounded, ChatBubbleOutlineRounded, NearMeRounded, DeleteRounded, MoreVert } from '@mui/icons-material';
 import PlayCircleOutlineRoundedIcon from '@mui/icons-material/PlayCircleOutlineRounded';
-import { Avatar, TextField, IconButton, Typography } from '@mui/material';
+import { Avatar, TextField, IconButton, Typography, Menu, MenuItem } from '@mui/material';
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
@@ -21,7 +21,6 @@ import baseUrl from "../../config";
 
 function Post({ userId, postId, profilePicture, username, text, timestamp, image, video, likes, handleLikes, handleComments, className, onDeletePost, entityType, showDeleteButton, groupID }) {
   console.log('video pathh', video)
-
 
   const PrevButton = ({ onClick }) => {
     return <button className="slick-arrow slick-prev" style={{ background: 'black' }} onClick={onClick}>Previous</button>;
@@ -47,8 +46,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]);
   const [cookie, setCookie] = useCookies(['access_token']);
-
-
+  const [menuAnchor, setMenuAnchor] = useState(null);
 
   const [loading, setLoading] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false);
@@ -79,15 +77,12 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
 
   };
 
-
   useEffect(() => {
     if (loggedInUserId && postId) {
       const postLiked = likes.some((like) => like.userId === loggedInUserId);
       setLiked(postLiked);
     }
   }, [likes, loggedInUserId, postId]);
-
-
 
   const fetchComments = async () => {
     try {
@@ -98,7 +93,6 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
       console.error("Error fetching comments:", error);
     }
   };
-
 
   const handleLike = async (e) => {
     setLiked(!isliked);
@@ -124,7 +118,6 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
     }
   };
 
-
   const handleDeletePost = async (userId) => {
     if (userId === profile._id) {
       try {
@@ -133,11 +126,21 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
       } catch (error) {
         console.error('Error deleting post:', error);
       }
-    }
-    else {
+    } else {
       console.log("Cannot Delete")
     }
   };
+
+  const handleEditPost = () => {
+    console.log("Edit post");
+    setMenuAnchor(null);
+  };
+
+  const handleArchivePost = () => {
+    console.log("Archive post");
+    setMenuAnchor(null);
+  };
+
   const formatCreatedAt = (timestamp) => {
     const options = { hour: 'numeric', minute: 'numeric', hour12: true };
     const timeString = new Date(timestamp).toLocaleTimeString(undefined, options);
@@ -145,11 +148,6 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
 
     return `${dateString} ${timeString}`;
   };
-
-  // if (!groupID && groupID !== _id) {
-  //   console.log("SKIPPPP")
-  //   return null; 
-  // }
 
   return (
     <div className={`post ${className}`}>
@@ -159,12 +157,23 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
             (<Avatar src={comment} style={{ width: '50px', height: '50px' }} />)}
           <div className='info'>
             <h4>{username}</h4>
-            <span style={{ fontSize: '14px', fontWeight: '500', color: '#136175' }}>{formatCreatedAt(timestamp)}</span>
+            <span style={{ fontSize: '14px', fontWeight: '500', color: '#004C8A' }}>{formatCreatedAt(timestamp)}</span>
           </div>
           {(admin || userId === profile._id) && (
-            <IconButton onClick={() => handleDeletePost(userId)} className='delete-button'>
-              <img src={postDelete} />
-            </IconButton>
+            <>
+              <IconButton onClick={(e) => setMenuAnchor(e.currentTarget)} className='more-button' style={{marginLeft: 'auto',color: 'black'}}> 
+                <MoreVert />
+              </IconButton>
+              <Menu
+                anchorEl={menuAnchor}
+                open={Boolean(menuAnchor)}
+                onClose={() => setMenuAnchor(null)}
+              >
+                <MenuItem onClick={handleEditPost}>Edit</MenuItem>
+                <MenuItem onClick={handleArchivePost}>Archive</MenuItem>
+                <MenuItem onClick={() => handleDeletePost(userId)}>Delete</MenuItem>
+              </Menu>
+            </>
           )}
         </div>
         {text && (
@@ -234,6 +243,5 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
     </div>
   );
 }
-
 
 export default Post;

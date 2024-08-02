@@ -25,23 +25,23 @@
   
   .manage-members-btn {
     background-color: transparent;
-    border: 1px solid #136175;
+    border: 1px solid #004C8A;
     border-radius: 8px;
     padding: 10px 20px;
-    color: #136175;
+    color: #004C8A;
     cursor: pointer;
     font-family: 'Arial', sans-serif;
     font-weight: 500;
   }
   
   .manage-members-btn:hover {
-    background-color: #136175;
+    background-color: #004C8A;
     color: #ffffff;
   }
   
   .forum-post {
     display: flex;
-    background-color: #E9F5EF;
+    background-color: #FEF7E7;
     border-radius: 12px;
     padding: 20px;
     position: relative;
@@ -116,7 +116,7 @@
     display: flex;
     align-items: end;
     cursor: pointer;
-    color: #136175;
+    color: #004C8A;
     font-weight: 500;
     gap: 10px;
   }
@@ -140,7 +140,7 @@
   }
   
   .modal-forum {
-    background: #E9F5EF;
+    background: #FEF7E7;
     padding: 20px;
     border-radius: 10px;
     width: 30%;

@@ -39,7 +39,7 @@ const LeftSidebar = () => {
     }, []);
 
     return (
-        <div style={{ width: '20%',backgroundColor: '#136175',height: '100vh',position: 'fixed' }}>
+        <div style={{ width: '20%',backgroundColor: '#004C8A',height: '100vh',position: 'fixed' }}>
             <div style={{ textAlign: 'center', marginTop: '3em'}}>
                         <img src={io} alt="" width="150px" height="75px"/>
                     </div>
@@ -53,7 +53,7 @@ const LeftSidebar = () => {
                         {/* <li><Link to="/forums" style={{ textDecoration: 'none' }}><MdForum className="dashboard-icon" /><p>Forums</p></Link></li>
                         <li><Link to="/news" style={{ textDecoration: 'none' }}><BiNews className="dashboard-icon" /><p>News</p></Link></li>
                         <li><Link to="/donations" style={{ textDecoration: 'none' }}><BsCurrencyRupee className="dashboard-icon" /><p>Business Connect</p></Link></li> */}
-                        <li><Link to="/sponsorships" style={{ textDecoration: 'none' }}><GoSponsorTiers className="dashboard-icon" /><p>Sponsorships</p></Link></li>
+                        {/* <li><Link to="/sponsorships" style={{ textDecoration: 'none' }}><GoSponsorTiers className="dashboard-icon" /><p>Sponsorships</p></Link></li> */}
                         <li><Link to="/events" style={{ textDecoration: 'none' }}><MdOutlineEvent className="dashboard-icon" /><p>Events</p></Link></li>
                         <li><Link to="/jobs" style={{ textDecoration: 'none' }}><FaBriefcase className="dashboard-icon" /><p>Internships</p></Link></li>
                         {/* <li><Link to="/internships" style={{ textDecoration: 'none' }}><HiOutlineBriefcase style={{ color: '#407093' }} /><p>Internships</p></Link></li> */}

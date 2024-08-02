@@ -183,7 +183,7 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
           (group.groupType === 'Public' && group.members.some(member => member.userId === profile._id)) ||
           (group.groupType === 'Private' && group.members.some(member => member.userId === profile._id)) ||
           group.businessConnect === true ? (
-          <div style={{ width: '100%', height: '80%', border: '1px solid black',background: '#E9F5EF'
+          <div style={{ width: '100%', height: '80%', border: '1px solid black',background: '#FEF7E7'
           }}>
             <Link to={`/groups/${group._id}`} style={{ textDecoration: 'none', color: 'black' }}>
               <div className='display-post-image' style={{ position: 'relative' }}>
@@ -200,7 +200,7 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
               <div className='display-post-title'>
                 <p style={{ marginBottom: '0rem', fontWeight: '600', fontSize: '20px', fontWeight: '600', fontFamily: 'Inter' }}>{group.groupName}</p>
                 <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                  <img src={groupMembers} alt="" srcSet="" style={{color: '#136175'}}/>
+                  <img src={groupMembers} alt="" srcSet="" style={{color: '#004C8A'}}/>
                   <p style={{ marginBottom: '0rem', color: '#7b7b7b', fontWeight: '500', fontSize: '16px', fontWeight: 'Inter' }}>{group.members.length} </p>
                 </div>
               </div>
@@ -210,7 +210,7 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
             </Link>
           </div>
         ) : (
-          <div style={{ width: '100%', height: '80%', border: '1px solid black',background: '#E9F5EF'
+          <div style={{ width: '100%', height: '80%', border: '1px solid black',background: '#FEF7E7'
           }}>
             <div className='display-post-image' style={{ position: 'relative' }}>
               {/* <img src={picture} alt="" width="100px" height="100px" style={{ position: 'absolute' }} /> */}
@@ -239,9 +239,9 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
           !group.members.some(member => member.userId === profile._id) && (
             <div className='display-post-edit'>
               {group.groupType === 'Public' ? (
-                <button onClick={() => handleAddMember(group._id)} style={{ padding: '8px 32px', fontWeight: '500', fontSize: '20px',backgroundColor: '#136175',color: '#F8F8FF' }}>Join</button>
+                <button onClick={() => handleAddMember(group._id)} style={{ padding: '8px 32px', fontWeight: '500', fontSize: '20px',backgroundColor: '#004C8A',color: '#F8F8FF' }}>Join</button>
               ) : (profile.department === group.department || group.category === "Business Connect" || group.department === 'All') && (
-                <button style={{ padding: '8px 32px', fontWeight: '500', fontSize: '20px',backgroundColor: '#136175',color: '#F8F8FF' }} onClick={() => {
+                <button style={{ padding: '8px 32px', fontWeight: '500', fontSize: '20px',backgroundColor: '#004C8A',color: '#F8F8FF' }} onClick={() => {
                   if (group.category === "Business Connect") {
                     if (requestStatus === 'Requested') {
                       handleRequest(group.userId, group._id, profile._id, group.groupName, profile.firstName, profile.lastName);

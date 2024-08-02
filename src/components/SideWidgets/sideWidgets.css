@@ -7,7 +7,7 @@
   .sideWidget-post-card {
     width: 100%;
     /* max-width: 25vw;  */
-    background-color: #E9F5EF;
+    background-color: #FEF7E7;
     border: 1px solid #e0e0e0;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
@@ -48,7 +48,7 @@
   .sideWidget2-post-card {
     width: 100%;
     max-width: 25vw;
-    background-color: #E9F5EF;
+    background-color: #FEF7E7;
     border: 1px solid #e0e0e0;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 12px;
@@ -63,7 +63,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #136175;
+    background-color: #004C8A;
     color: #F8F8FF;
     border-radius: 12px 12px 0px 0px;
   }
@@ -85,7 +85,7 @@
     align-items: center;
     width: 100%;
     max-width: 25vw;
-    background-color: #136175;
+    background-color: #004C8A;
     border: 1px solid #e0e0e0;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
@@ -173,5 +173,5 @@
   }
 
   .sideWidget-email input::placeholder{
-    color: #6FBC94;
+    color: #F8A700;
   }

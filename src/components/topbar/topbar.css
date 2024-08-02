@@ -3,7 +3,7 @@
   height: 100%;
   display: flex;
   align-items: center;
-  background-color: #E9F5EF; 
+  background-color: #FEF7E7; 
   color: white;
   width: 94%;
   justify-content: space-between;
@@ -11,7 +11,7 @@
   /* margin-right: 130px; */
 }
 .top-bar {
-  background-color: #E9F5EF;
+  background-color: #FEF7E7;
   display: flex;
   justify-content: center;
   position: sticky;
@@ -30,12 +30,12 @@
   width: 80%;
   border-radius: 10px;
   color: green !important;
-  background: #E9F5EF;
+  background: #FEF7E7;
   padding-left: 15px;
 }
 
 .search input::placeholder {
-  color: #6FBC94;
+  color: #F8A700;
 }
 
 .top {
@@ -45,7 +45,7 @@
 
 }
 .top button {
-  background-color: #E9F5EF;
+  background-color: #FEF7E7;
   color: white;
   display: flex;
   align-items: center;

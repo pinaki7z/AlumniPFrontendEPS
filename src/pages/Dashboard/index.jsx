@@ -91,7 +91,7 @@ const Dashboard = ({ handleLogout }) => {
               />
             )}
             <Route path="/donations/*" element={<Donations />} />
-            <Route path="/sponsorships/*" element={<Sponsorships />} />
+            {/* <Route path="/sponsorships/*" element={<Sponsorships />} /> */}
             <Route path="/members/*" element={<div style={{ width: '100%',padding: '0% 5%'}}><Members showHeading={true} /></div>} />
             <Route path="/members/create" element={
               <div style={{ width: '100%',padding: '5%' }}>

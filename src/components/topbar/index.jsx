@@ -184,7 +184,7 @@ const TopBar = ({ handleLogout }) => {
                                     placeholder="Search for people, forums and groups"
                                     value={searchText}
                                     onChange={handleChange}
-                                    style={{ width: '100%', padding: '10px 40px 10px 10px', border: '1px solid #136175' }}
+                                    style={{ width: '100%', padding: '10px 40px 10px 10px', border: '1px solid #004C8A' }}
                                 />
                                 <button
                                     type="submit"
@@ -193,7 +193,7 @@ const TopBar = ({ handleLogout }) => {
                                         right: '10px',
                                         top: '50%',
                                         transform: 'translateY(-50%)',
-                                        backgroundColor: '#E9F5EF',
+                                        backgroundColor: '#FEF7E7',
                                         border: 'none',
                                         padding: '5px',
                                         color: 'white',
@@ -208,7 +208,7 @@ const TopBar = ({ handleLogout }) => {
                                             color="white"
                                         ></l-line-spinner>
                                     ) : (
-                                        <IoSearchSharp style={{ color: '#136175', width: '25px', height: '25px' }} />
+                                        <IoSearchSharp style={{ color: '#004C8A', width: '25px', height: '25px' }} />
                                     )}
                                 </button>
                             </div>
@@ -226,7 +226,7 @@ const TopBar = ({ handleLogout }) => {
                                 No New Messages
                             </div>
                         )} <div ref={notificationsOptionsRef}>
-                            <FaBell style={{ cursor: 'pointer', color: '#136175' }} onClick={() => {
+                            <FaBell style={{ cursor: 'pointer', color: '#004C8A' }} onClick={() => {
                                 setShowProfileOptions(false);
                                 setShowMessages(false);
                                 setShowNotifications(true);

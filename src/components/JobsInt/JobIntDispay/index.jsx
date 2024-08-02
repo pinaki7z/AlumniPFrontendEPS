@@ -44,22 +44,13 @@ const JobIntDisplay = ({ picture, jobId, jobTitle, location, salaryMin, salaryMa
                     <div className="ijp-card-container">
                         <div className="ijp-card">
                             <div className="ijp-image" style={{ backgroundImage: picture ? `url(${picture})` : `url(${coverImage})`, backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }}>
-                                {/* Content goes here */}
+                               
                             </div>
-                            {/* <img src={profilePic} alt="Profile Image" style={{
-                                width: '70px',
-                                height: '70px',
-                                borderRadius: '50%',
-                                marginRight: '10px'
-                            }} /> */}
+                        
                             <div className="ijp-title">
                                 <p>{title === 'Jobs' ? jobTitle : title === 'Internships' ? jobs.internshipTitle : ''}</p>
                             </div>
-                            {/* <div className="ijp-user-details">
-
-                                <p>admin </p>
-
-                            </div> */}
+                           
                             <div className="ijp-location-bar">
                                 <div className="ijp-location">
                                     <FaLocationDot />
