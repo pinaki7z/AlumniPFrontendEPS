@@ -122,7 +122,7 @@ const LoginPage = ({ handleLogin }) => {
     <div className="landing-page-1">
       <div className="main-container" style={{marginBottom: '20px'}}>
         <div className="content-area">
-          <img src={eps} alt="" width='150px' height='125px' />
+          <img src={eps} alt="" width='90px' height='120px' />
         </div>
       </div>
       <main className="login-panel">
