@@ -236,7 +236,7 @@
     z-index: 1;
   }
   .university-affiliation {
-    width: 264px;
+    width: 100%;
     display: flex;
     flex-direction: row;
     align-items: flex-start;

@@ -340,7 +340,7 @@ const SideWidgets = () => {
                             />
                             <br />
                             <br />
-                            <label htmlFor={newEvent.picture}>Insert a Picture:-</label>
+                            <label htmlFor={newEvent.picture} style={{ marginTop: '20px' }}>Insert a Picture:-</label>
                             <br />
                             <input type="file" name={newEvent.picture}
                                 style={{ width: '60%' }}
@@ -350,13 +350,21 @@ const SideWidgets = () => {
                             <input
                                 type="text"
                                 placeholder="Enter Coordinator Name"
-                                style={{ width: "100%", padding: "0.5em", borderRadius: "10px" }}
+                                style={{ width: "100%", padding: "0.5em", borderRadius: "10px", marginTop: '20px' }}
                                 value={newEvent.cName}
                                 onChange={(e) =>
                                     setNewEvent({ ...newEvent, cName: e.target.value })
                                 }
                             />
-
+                            <input
+                                type="text"
+                                placeholder="Enter event location"
+                                style={{ width: "100%", padding: "0.5em", borderRadius: "10px", marginTop: '10px' }}
+                                value={newEvent.location}
+                                onChange={(e) =>
+                                    setNewEvent({ ...newEvent, location: e.target.value })
+                                }
+                            />
 
 
                         </Row>
@@ -376,21 +384,21 @@ const SideWidgets = () => {
                             onChange={(date) => handleDateChange(date, "start")}
                         />
                         <br /><br />
-                        <input type="time" id="appt" name="startTime" value={newEvent.startTime} onChange={(e) =>
+                        <input type="time" id="appt" name="startTime" style={{marginTop: '20px'}} value={newEvent.startTime} onChange={(e) =>
                             setNewEvent({ ...newEvent, startTime: e.target.value })
                         } />
                         <br /><br />
                         <input
                             type="number"
                             placeholder="Enter Coordinator Contact Number"
-                            style={{ width: "100%", padding: "0.5em", borderRadius: "10px" }}
+                            style={{ width: "100%", padding: "0.5em", borderRadius: "10px",marginTop: '26px' }}
                             value={newEvent.cNumber}
                             onChange={(e) =>
                                 setNewEvent({ ...newEvent, cNumber: e.target.value })
                             }
                         />
 
-                        <input
+                        {/* <input
                             type="text"
                             placeholder="Enter event location"
                             style={{ width: "100%", padding: "0.5em", borderRadius: "10px" }}
@@ -398,7 +406,7 @@ const SideWidgets = () => {
                             onChange={(e) =>
                                 setNewEvent({ ...newEvent, location: e.target.value })
                             }
-                        />
+                        /> */}
 
                     </Col>
 
@@ -412,13 +420,13 @@ const SideWidgets = () => {
                                 onChange={(date) => handleDateChange(date, "end")}
                             />
                             <br /><br />
-                            <input type="time" id="appt" name="endTime" value={newEvent.endTime} onChange={(e) =>
+                            <input type="time" id="appt" name="endTime" value={newEvent.endTime} style={{marginTop: '20px'}} onChange={(e) =>
                                 setNewEvent({ ...newEvent, endTime: e.target.value })
                             } />
                             <input
                                 type="email"
                                 placeholder="Enter Coordinator Email"
-                                style={{ width: "100%", padding: "0.5em", borderRadius: "10px" }}
+                                style={{ width: "100%", padding: "0.5em", borderRadius: "10px",marginTop: '46px' }}
                                 value={newEvent.cEmail}
                                 onChange={(e) =>
                                     setNewEvent({ ...newEvent, cEmail: e.target.value })
@@ -518,14 +526,14 @@ const SideWidgets = () => {
                 onCreatePoll={handleCreatePoll}
             />
             <MyVerticallyCenteredModal
-          show={modalShow}
-          //isEditing={isEditing}
-          //selectedEvent={selectedEvent}
-          onHide={() => {
-            setModalShow(false);
-            //setSelectedEventDetails(null);
-          }}
-        />
+                show={modalShow}
+                //isEditing={isEditing}
+                //selectedEvent={selectedEvent}
+                onHide={() => {
+                    setModalShow(false);
+                    //setSelectedEventDetails(null);
+                }}
+            />
             <div className="sideWidget-post-card">
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <img src={profile.profilePicture} alt="Profile" width="60px" height="60px" style={{ borderRadius: '50%' }} />

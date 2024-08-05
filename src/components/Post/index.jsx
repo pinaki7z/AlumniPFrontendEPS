@@ -18,6 +18,7 @@ import liked from "../../images/liked.svg";
 import unliked from "../../images/unliked.svg";
 import postDelete from "../../images/post-delete.svg";
 import baseUrl from "../../config";
+import CreatePost1 from '../CreatePost1';
 
 function Post({ userId, postId, profilePicture, username, text, timestamp, image, video, likes, handleLikes, handleComments, className, onDeletePost, entityType, showDeleteButton, groupID }) {
   console.log('video pathh', video)
@@ -29,6 +30,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
   const NextButton = ({ onClick }) => {
     return <button className="slick-arrow slick-next" style={{ background: 'black' }} onClick={onClick}>Next</button>;
   };
+
   const settings = {
     dots: true,
     infinite: true,
@@ -42,13 +44,13 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
   };
 
   const { _id } = useParams();
-  const [isliked, setLiked] = useState(false);
+  const [isLiked, setLiked] = useState(false);
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]);
   const [cookie, setCookie] = useCookies(['access_token']);
   const [menuAnchor, setMenuAnchor] = useState(null);
-
-  const [loading, setLoading] = useState(false)
+  const [showCreatePost, setShowCreatePost] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef(null);
   const profile = useSelector((state) => state.profile);
@@ -58,7 +60,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
     admin = true;
   }
 
-  console.log('groupIds in feed', _id, groupID)
+  console.log('groupIds in feed', _id, groupID);
 
   const handlePlay = async () => {
     if (videoRef.current) {
@@ -74,7 +76,6 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
         setIsPlaying(true);
       }
     }
-
   };
 
   useEffect(() => {
@@ -95,9 +96,8 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
   };
 
   const handleLike = async (e) => {
-    setLiked(!isliked);
+    setLiked(!isLiked);
     try {
-
       const response = await axios.patch(
         `${baseUrl}/posts/${postId}/likes`,
         {
@@ -127,13 +127,14 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
         console.error('Error deleting post:', error);
       }
     } else {
-      console.log("Cannot Delete")
+      console.log("Cannot Delete");
     }
   };
 
   const handleEditPost = () => {
     console.log("Edit post");
     setMenuAnchor(null);
+    setShowCreatePost(true);
   };
 
   const handleArchivePost = () => {
@@ -151,95 +152,112 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
 
   return (
     <div className={`post ${className}`}>
-      {loading ? (<div> Loading...</div>) : (<>
-        <div className='top'>
-          {profilePicture ? (<img src={profilePicture} style={{ width: '50px', height: '50px', borderRadius: '50%' }} />) :
-            (<Avatar src={comment} style={{ width: '50px', height: '50px' }} />)}
-          <div className='info'>
-            <h4>{username}</h4>
-            <span style={{ fontSize: '14px', fontWeight: '500', color: '#004C8A' }}>{formatCreatedAt(timestamp)}</span>
-          </div>
-          {(admin || userId === profile._id) && (
-            <>
-              <IconButton onClick={(e) => setMenuAnchor(e.currentTarget)} className='more-button' style={{marginLeft: 'auto',color: 'black'}}> 
-                <MoreVert />
-              </IconButton>
-              <Menu
-                anchorEl={menuAnchor}
-                open={Boolean(menuAnchor)}
-                onClose={() => setMenuAnchor(null)}
-              >
-                <MenuItem onClick={handleEditPost}>Edit</MenuItem>
-                <MenuItem onClick={handleArchivePost}>Archive</MenuItem>
-                <MenuItem onClick={() => handleDeletePost(userId)}>Delete</MenuItem>
-              </Menu>
-            </>
-          )}
-        </div>
-        {text && (
-          <div className='texxt'>
-            <p>{text}</p>
-          </div>
-        )}
-        {image.length > 1 ? (
-          <Slider {...settings}>
-            {image.map((img, index) => (
-              <div key={index} className='image'>
-                <img src={img} alt={`Post Image ${index + 1}`} />
-              </div>
-            ))}
-          </Slider>
-        ) : image.length === 1 ? (
-          <div>
-            <img src={image} alt={`image`} style={{ width: '-webkit-fill-available' }} />
-          </div>
-        ) : null
-        }
-
-        {video && (
-          <div className='video'>
-            <video
-              ref={videoRef}
-              autoPlay={isPlaying}
-              preload="auto"
-              controls={false}
-              onClick={handlePlay}
-            >
-              <source src={video.videoPath} type='video/mp4' />
-              Your browser does not support the video tag.
-            </video>
-            <div className={`play-button ${isPlaying ? '' : ''}`} onClick={handlePlay}>
-              <PlayCircleOutlineRoundedIcon fontSize='large' />
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <>
+          <div className='top'>
+            {profilePicture ? (
+              <img src={profilePicture} style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
+            ) : (
+              <Avatar src={comment} style={{ width: '50px', height: '50px' }} />
+            )}
+            <div className='info'>
+              <h4>{username}</h4>
+              <span style={{ fontSize: '14px', fontWeight: '500', color: '#004C8A' }}>{formatCreatedAt(timestamp)}</span>
             </div>
-          </div>
-        )}
-        {console.log('entity type1', entityType)}
-        {entityType === 'posts' && (
-          <div className='bottomAction'>
-            {(profile.profileLevel === 0 || profile.profileLevel === 1) && (
+            {(admin || userId === profile._id) && (
               <>
-                <div className='action'>
-                  <img src={commentIcon} alt='comment-icon' className={`postAction grey`} />
-                  <h4>Comment</h4>
-                </div>
-                <div className='action'>
-                  <img src={share} alt='share-icon' className={`postAction grey`} />
-                  <h4>Share</h4>
-                </div>
+                <IconButton onClick={(e) => setMenuAnchor(e.currentTarget)} className='more-button' style={{ marginLeft: 'auto', color: 'black' }}>
+                  <MoreVert />
+                </IconButton>
+                <Menu
+                  anchorEl={menuAnchor}
+                  open={Boolean(menuAnchor)}
+                  onClose={() => setMenuAnchor(null)}
+                >
+                  <MenuItem onClick={handleEditPost}>Edit</MenuItem>
+                  <MenuItem onClick={handleArchivePost}>Archive</MenuItem>
+                  <MenuItem onClick={() => handleDeletePost(userId)}>Delete</MenuItem>
+                </Menu>
               </>
             )}
-            <div className='action' onClick={handleLike}>
-              {isliked ? (
-                <img src={liked} alt="" />
-              ) : (
-                <img src={unliked} alt="" />
-              )}
-              <h4>{isliked ? 'Liked' : 'Like'}</h4>
-            </div>
           </div>
-        )}
+          {text && (
+            <div className='texxt'>
+              <p>{text}</p>
+            </div>
+          )}
+          {image.length > 1 ? (
+            <Slider {...settings}>
+              {image.map((img, index) => (
+                <div key={index} className='image'>
+                  <img src={img} alt={`Post Image ${index + 1}`} />
+                </div>
+              ))}
+            </Slider>
+          ) : image.length === 1 ? (
+            <div>
+              <img src={image} alt={`image`} style={{ width: '-webkit-fill-available' }} />
+            </div>
+          ) : null}
 
-      </>)}
+          {video && (
+            <div className='video'>
+              <video
+                ref={videoRef}
+                autoPlay={isPlaying}
+                preload="auto"
+                controls={false}
+                onClick={handlePlay}
+              >
+                <source src={video.videoPath} type='video/mp4' />
+                Your browser does not support the video tag.
+              </video>
+              <div className={`play-button ${isPlaying ? '' : ''}`} onClick={handlePlay}>
+                <PlayCircleOutlineRoundedIcon fontSize='large' />
+              </div>
+            </div>
+          )}
+          {console.log('entity type1', entityType)}
+          {entityType === 'posts' && (
+            <div className='bottomAction'>
+              {(profile.profileLevel === 0 || profile.profileLevel === 1) && (
+                <>
+                  <div className='action'>
+                    <img src={commentIcon} alt='comment-icon' className={`postAction grey`} />
+                    <h4>Comment</h4>
+                  </div>
+                  <div className='action'>
+                    <img src={share} alt='share-icon' className={`postAction grey`} />
+                    <h4>Share</h4>
+                  </div>
+                </>
+              )}
+              <div className='action' onClick={handleLike}>
+                {isLiked ? (
+                  <img src={liked} alt="" />
+                ) : (
+                  <img src={unliked} alt="" />
+                )}
+                <h4>{isLiked ? 'Liked' : 'Like'}</h4>
+              </div>
+            </div>
+          )}
+        </>
+      )}
+      {showCreatePost && (
+        <div className="post-overlay">
+          <div className="post-overlay-content">
+            <CreatePost1 
+            closeButton={() => setShowCreatePost(false)}
+            close={true}
+            entityType='posts'
+            postId = {postId}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

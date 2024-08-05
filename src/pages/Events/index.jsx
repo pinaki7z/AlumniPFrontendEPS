@@ -208,24 +208,32 @@ function MyVerticallyCenteredModal(props) {
             />
             <br />
             <br />
-            <label htmlFor={newEvent.picture}>Insert a Picture:-</label>
+            <label htmlFor={newEvent.picture} style={{ marginTop: '20px' }}>Insert a Picture:-</label>
             <br />
             <input type="file" name={newEvent.picture}
-              style={{ width: '60%' }}
+              style={{ width: '60%', marginTop: '10px' }}
               onChange={handleImageChange} />
 
 
             <input
               type="text"
               placeholder="Enter Coordinator Name"
-              style={{ width: "100%", padding: "0.5em", borderRadius: "10px" }}
+              style={{ width: "100%", padding: "0.5em", borderRadius: "10px", marginTop: '20px' }}
               value={newEvent.cName}
               onChange={(e) =>
                 setNewEvent({ ...newEvent, cName: e.target.value })
               }
             />
 
-
+            <input
+              type="text"
+              placeholder="Enter event location"
+              style={{ width: "100%", padding: "0.5em", borderRadius: "10px", marginTop: '10px'  }}
+              value={newEvent.location}
+              onChange={(e) =>
+                setNewEvent({ ...newEvent, location: e.target.value })
+              }
+            />
 
           </Row>
 
@@ -244,21 +252,21 @@ function MyVerticallyCenteredModal(props) {
             onChange={(date) => handleDateChange(date, "start")}
           />
           <br /><br />
-          <input type="time" id="appt" name="startTime" value={newEvent.startTime} onChange={(e) =>
+          <input type="time" id="appt" name="startTime" value={newEvent.startTime} style={{marginTop: '20px'}} onChange={(e) =>
             setNewEvent({ ...newEvent, startTime: e.target.value })
           } />
           <br /><br />
           <input
             type="number"
             placeholder="Enter Coordinator Contact Number"
-            style={{ width: "100%", padding: "0.5em", borderRadius: "10px" }}
+            style={{ width: "100%", padding: "0.5em", borderRadius: "10px",marginTop: '35px' }}
             value={newEvent.cNumber}
             onChange={(e) =>
               setNewEvent({ ...newEvent, cNumber: e.target.value })
             }
           />
 
-          <input
+          {/* <input
             type="text"
             placeholder="Enter event location"
             style={{ width: "100%", padding: "0.5em", borderRadius: "10px" }}
@@ -266,7 +274,7 @@ function MyVerticallyCenteredModal(props) {
             onChange={(e) =>
               setNewEvent({ ...newEvent, location: e.target.value })
             }
-          />
+          /> */}
 
         </Col>
 
@@ -280,13 +288,13 @@ function MyVerticallyCenteredModal(props) {
               onChange={(date) => handleDateChange(date, "end")}
             />
             <br /><br />
-            <input type="time" id="appt" name="endTime" value={newEvent.endTime} onChange={(e) =>
+            <input type="time" id="appt" name="endTime" value={newEvent.endTime} style={{marginTop: '20px'}} onChange={(e) =>
               setNewEvent({ ...newEvent, endTime: e.target.value })
             } />
             <input
               type="email"
               placeholder="Enter Coordinator Email"
-              style={{ width: "100%", padding: "0.5em", borderRadius: "10px" }}
+              style={{ width: "100%", padding: "0.5em", borderRadius: "10px",marginTop: '55px' }}
               value={newEvent.cEmail}
               onChange={(e) =>
                 setNewEvent({ ...newEvent, cEmail: e.target.value })
@@ -467,7 +475,7 @@ function Events() {
   };
 
   const checkAttendanceStatus = async (eventId) => {
-    console.log('eventid check',eventId)
+    console.log('eventid check', eventId)
     try {
       const response = await axios.get(
         `${baseUrl}/events/attendees/${eventId}`,
@@ -595,7 +603,7 @@ function Events() {
 
   const [open, setOpen] = useState(false);
   const handleOpenModal = (eventId) => {
-    console.log('eventid openmodal',eventId)
+    console.log('eventid openmodal', eventId)
     checkAttendanceStatus(eventId);
     setOpen(true)
   };
@@ -688,7 +696,7 @@ function Events() {
                     Delete Event
                   </Button>
                 </div>}
-                {selectedEventDetails.userId === profile._id && <div className='see-event-results' style={{ textAlign: 'right', cursor: 'pointer' }} onClick={()=>handleOpenModal(selectedEventDetails._id)}>See event attendees</div>}
+                {selectedEventDetails.userId === profile._id && <div className='see-event-results' style={{ textAlign: 'right', cursor: 'pointer' }} onClick={() => handleOpenModal(selectedEventDetails._id)}>See event attendees</div>}
               </div>
               <MModal
                 open={open}

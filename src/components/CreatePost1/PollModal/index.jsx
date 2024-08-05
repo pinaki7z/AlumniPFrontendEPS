@@ -1,11 +1,11 @@
 // PollModal.js
 import React, { useState } from 'react';
-import './pollModal.css'; 
+import './pollModal.css';
 
-const PollModal = ({ show, onHide, onCreatePoll }) => {
+const PollModal = ({ show, onHide, onCreatePoll,edit }) => {
   const [pollQuestion, setPollQuestion] = useState('');
   const [pollOptions, setPollOptions] = useState(['', '', '', '', '']);
-  const [optionCount, setOptionCount] = useState(2); 
+  const [optionCount, setOptionCount] = useState(2);
 
   const handleOptionChange = (index, value) => {
     const newOptions = [...pollOptions];
@@ -25,7 +25,7 @@ const PollModal = ({ show, onHide, onCreatePoll }) => {
       .map(option => ({ option, votes: [] }));
 
     if (pollQuestion.trim() && validOptions.length >= 2) {
-      console.log('question',pollQuestion, validOptions);
+      console.log('question', pollQuestion, validOptions);
       onCreatePoll(pollQuestion, validOptions);
       setPollQuestion('');
       setPollOptions(['', '', '', '', '']);
@@ -65,8 +65,11 @@ const PollModal = ({ show, onHide, onCreatePoll }) => {
         {optionCount < 5 && (
           <button onClick={handleAddOption}>Add Option</button>
         )}
-        <button onClick={handleCreatePoll}>Create Poll</button>
-        <button onClick={onHide}>Cancel</button>
+        <div style={{display: 'flex', gap: '10px'}}>
+          <button onClick={handleCreatePoll}>{edit? 'Edit Poll' : 'Create Poll'}</button>
+          <button onClick={onHide}>Cancel</button>
+        </div>
+
       </div>
     </div>
   );

@@ -7,13 +7,17 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { toast } from "react-toastify";
 import baseUrl from '../../../config';
+import PollModal from '../../CreatePost1/PollModal';
+import { useParams } from "react-router-dom";
 
 const PollDisplay = ({ poll }) => {
+    const { _id } = useParams();
     const [hasVoted, setHasVoted] = useState(false);
     const [updatedPoll, setUpdatedPoll] = useState(null);
     const [modalOpen, setModalOpen] = useState(false);
     const [menuAnchor, setMenuAnchor] = useState(null);
     const profile = useSelector((state) => state.profile);
+    const [showPollModal, setShowPollModal] = useState(false); 
 
     useEffect(() => {
         const userVoted = poll.options.some(option =>
@@ -87,9 +91,33 @@ const PollDisplay = ({ poll }) => {
         setModalOpen(false);
     };
 
-    const handleEditPoll = () => {
+    const handleEditPoll = async (question, options)=> {
         console.log("Edit poll");
+        setShowPollModal(true)
         setMenuAnchor(null);
+        console.log('question1',question, options);
+        const pollData = {
+          userId: profile._id,
+          userName: `${profile.firstName} ${profile.lastName}`,
+          profilePicture: profile.profilePicture,
+          question: question,
+          options: options,
+        };
+        if (_id) pollData.groupID = _id;
+    
+        try {
+          const response = await axios.put(
+            `${baseUrl}/poll/${poll._id}/editPoll`,
+            pollData,
+          );
+          const newPoll = await response.data;
+          //onNewPost(newPoll);
+          //setInput("");
+          setShowPollModal(false);
+          window.location.reload();
+        } catch (error) {
+          console.error("Error creating poll:", error);
+        }
     };
 
     const handleArchivePoll = () => {
@@ -114,6 +142,32 @@ const PollDisplay = ({ poll }) => {
             console.error("Error occurred while deleting poll:", error);
         }
     };
+
+    const handleCreatePoll = async (question, options) => {
+        console.log('question1',question, options);
+        const pollData = {
+          userId: profile._id,
+          userName: `${profile.firstName} ${profile.lastName}`,
+          profilePicture: profile.profilePicture,
+          question: question,
+          options: options,
+        };
+        if (_id) pollData.groupID = _id;
+    
+        try {
+          const response = await axios.post(
+            `${baseUrl}/poll/createPoll`,
+            pollData,
+          );
+          const newPoll = await response.data;
+          //onNewPost(newPoll);
+          //setInput("");
+          setShowPollModal(false);
+          window.location.reload();
+        } catch (error) {
+          console.error("Error creating poll:", error);
+        }
+      };
 
     const pollData = hasVoted ? updatedPoll : poll;
     const optionsWithPercentages = calculatePercentages(pollData.options);
@@ -193,6 +247,12 @@ const PollDisplay = ({ poll }) => {
                     </div>
                 </Box>
             </Modal>
+            <PollModal
+        show={showPollModal}
+        onHide={() => setShowPollModal(false)}
+        onCreatePoll={handleEditPoll}
+        edit={true}
+      />
         </>
     );
 };

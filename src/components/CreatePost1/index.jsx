@@ -14,7 +14,7 @@ import baseUrl from '../../config';
 
 
 
-const CreatePost1 = ({ name, onNewPost, entityType }) => {
+const CreatePost1 = ({ name, onNewPost, entityType,closeButton,close,postId }) => {
   const { _id } = useParams();
   const [isExpanded, setExpanded] = useState(false);
   const [input, setInput] = useState('');
@@ -166,16 +166,32 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
 
 
       try {
-        const response = await axios.post(
-          `${baseUrl}/${entityType}/create`,
-          formDataObject,
-
-        );
-        const newPost = await response.data;
-        onNewPost(newPost);
-        setInput("");
-        setImgUrl("");
-        window.location.reload();
+        if(close){
+          console.log("EDITING POST");
+          const response = await axios.put(
+            `${baseUrl}/${entityType}/${postId}`,
+            formDataObject,
+  
+          );
+          const newPost = await response.data;
+          //onNewPost(newPost);
+          setInput("");
+          setImgUrl("");
+          window.location.reload();
+        }
+        else{
+          const response = await axios.post(
+            `${baseUrl}/${entityType}/create`,
+            formDataObject,
+  
+          );
+          const newPost = await response.data;
+          onNewPost(newPost);
+          setInput("");
+          setImgUrl("");
+          window.location.reload();
+        }
+        
       } catch (error) {
         console.error("Error posting:", error);
       }
@@ -185,22 +201,44 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
   const uploadData = async (formDataObject, folderName) => {
     try {
       console.log("request body", formDataObject);
-      const response = await axios.post(
-        `${baseUrl}/${entityType}/create?folder=${folderName}`,
-        formDataObject,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      const newPost = await response.data;
-      console.log(newPost);
-      onNewPost(newPost);
-      setInput("");
-      setImgUrl("");
-      setSelectedFile(null);
-      window.location.reload();
+      if(close){
+        console.log("EDITING POST");
+        const response = await axios.put(
+          `${baseUrl}/${entityType}/${postId}?folder=${folderName}`,
+          formDataObject,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        const newPost = await response.data;
+        console.log(newPost);
+        //onNewPost(newPost);
+        setInput("");
+        setImgUrl("");
+        setSelectedFile(null);
+        window.location.reload();
+      }
+      else{
+        const response = await axios.post(
+          `${baseUrl}/${entityType}/create?folder=${folderName}`,
+          formDataObject,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        const newPost = await response.data;
+        console.log(newPost);
+        onNewPost(newPost);
+        setInput("");
+        setImgUrl("");
+        setSelectedFile(null);
+        window.location.reload();
+      }
+      
     } catch (error) {
       console.error("Error posting:", error);
     }
@@ -209,17 +247,33 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
   const uploadImage = async (formDataObject) => {
     try {
       console.log("request body", formDataObject);
-      const response = await axios.post(
-        `${baseUrl}/${entityType}/create`,
-        formDataObject,
-
-      );
-      const newPost = await response.data;
-      onNewPost(newPost);
-      setInput("");
-      setImgUrl("");
-      setSelectedFile(null);
-      window.location.reload();
+      if(close){
+        const response = await axios.put(
+          `${baseUrl}/${entityType}/${postId}`,
+          formDataObject,
+  
+        );
+        const newPost = await response.data;
+        //onNewPost(newPost);
+        setInput("");
+        setImgUrl("");
+        setSelectedFile(null);
+        window.location.reload();
+      }
+      else{
+        const response = await axios.post(
+          `${baseUrl}/${entityType}/create`,
+          formDataObject,
+  
+        );
+        const newPost = await response.data;
+        onNewPost(newPost);
+        setInput("");
+        setImgUrl("");
+        setSelectedFile(null);
+        window.location.reload();
+      }
+      
     } catch (error) {
       console.error("Error posting:", error);
     }
@@ -268,6 +322,7 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
                 placeholder="Whats Going on??"                
               />
             </div>
+            {close && <button onClick={closeButton}>Close</button>}
           </div>
         </div>
         <div className={`img-job-vide ${isExpanded ? 'expanded' : ''}`} style={{paddingLeft: '90px'}}>

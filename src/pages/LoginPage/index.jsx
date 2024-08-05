@@ -1,6 +1,6 @@
 import "./loginPage.css";
 import "../../components/FrameComponent/FrameComponent.css";
-import io from "../../images/io.png";
+import eps from "../../images/excelPublicSchool.png";
 import { useState,useEffect } from 'react';
 import './loginPage.css';
 import { useCookies } from "react-cookie";
@@ -120,9 +120,9 @@ const LoginPage = ({ handleLogin }) => {
 
   return (
     <div className="landing-page-1">
-      <div className="main-container">
+      <div className="main-container" style={{marginBottom: '20px'}}>
         <div className="content-area">
-          <img src={io} alt="" width='200px' height='100px' />
+          <img src={eps} alt="" width='150px' height='125px' />
         </div>
       </div>
       <main className="login-panel">
@@ -142,8 +142,9 @@ const LoginPage = ({ handleLogin }) => {
             <div className="university-affiliation">
               <div className="bhu-alumni-association-container">
                 <b className="bhu">
-                  <span className="bhu1" style={{color: '#36454F'}}>InsideOut</span>
+                  <span className="bhu1" style={{color: '#36454F',fontSize: '60px'}}>Excel Public School</span>
                 </b>
+                <br />
                 <span className="alumni-association">
                   <b className="b">{` `}</b>
                   <span className="alumni-association1" style={{color: '#36454F'}}>Alumni Association</span>
