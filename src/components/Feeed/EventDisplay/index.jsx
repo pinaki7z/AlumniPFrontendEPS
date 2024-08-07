@@ -1,5 +1,5 @@
 import pic from "../../../images/profilepic.jpg";
-import { Avatar, IconButton, Modal as MModal, Box, Menu, MenuItem } from '@mui/material';
+import { Avatar, IconButton, Modal as MModal,Modal as MMModal, Box, Menu, MenuItem,Typography } from '@mui/material';
 import { MoreVert } from '@mui/icons-material';
 import postDelete from "../../../images/post-delete.svg";
 import { useSelector } from 'react-redux';
@@ -17,10 +17,11 @@ import { Col, Row } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import DatePicker from "react-datepicker";
 import Modal from 'react-bootstrap/Modal';
+import BootstrapModal from 'react-bootstrap/Modal'; 
 
 lineSpinner.register();
 
-const EventDisplay = ({ event }) => {
+const EventDisplay = ({ event,archived }) => {
   const profile = useSelector((state) => state.profile);
   const [newEvent, setNewEvent] = useState(event);
   const [isEditing, setIsEditing] = useState(false);
@@ -30,6 +31,8 @@ const EventDisplay = ({ event }) => {
   const [modalShow, setModalShow] = React.useState(false);
   const [open, setOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState(null);
+  const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
+
 
   useEffect(() => {
     checkAttendanceStatus();
@@ -148,8 +151,33 @@ const EventDisplay = ({ event }) => {
 
   const handleArchiveEvent = () => {
     console.log("Archive event");
+    setIsArchiveModalOpen(true);
     setMenuAnchor(null);
   };
+  console.log('isarchiveopen',isArchiveModalOpen)
+
+  const confirmArchiveEvent = async () => {
+    setIsArchiveModalOpen(false); // Close the confirmation modal
+
+    try {
+        const url = `${baseUrl}/events/${event._id}/archive`;
+        const response = await axios.put(url);
+
+        if (response.status === 200) {
+            console.log("Event archived successfully");
+            toast.success("Event archived successfully");
+            // Optionally, update UI state or reload the page
+            window.location.reload(); // Refresh the page to reflect changes
+        } else {
+            console.error("Failed to archive event");
+            toast.error("Failed to archive event");
+        }
+    } catch (error) {
+        console.error("Error occurred while archiving event:", error);
+        toast.error("Error occurred while archiving event");
+    }
+};
+
 
   function MyVerticallyCenteredModal(props) {
     const [isEditing, setIsEditing] = useState(false);
@@ -490,7 +518,7 @@ const EventDisplay = ({ event }) => {
               onClose={() => setMenuAnchor(null)}
             >
               <MenuItem onClick={handleEditEvent}>Edit</MenuItem>
-              <MenuItem onClick={handleArchiveEvent}>Archive</MenuItem>
+              <MenuItem onClick={handleArchiveEvent}>{archived? 'Unarchive' : 'Archive'}</MenuItem>
               <MenuItem onClick={handleDeleteEvent}>Delete</MenuItem>
             </Menu>
           </>
@@ -573,9 +601,39 @@ const EventDisplay = ({ event }) => {
           </div>
         </Box>
       </MModal>
-
+      <MMModal
+       open={isArchiveModalOpen}
+       onClose={() => setIsArchiveModalOpen(false)}
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+      >
+        <Box sx={{ ...modalStyle, width: 400 }}>
+          <Typography id="archive-modal-title" variant="h6" component="h2">
+            Are you sure you want to {archived? 'unarchive' : 'archive'} this event?
+          </Typography>
+          <Box mt={2}>
+            <Button variant="contained" color="primary" onClick={confirmArchiveEvent}>
+              Yes
+            </Button>
+            <Button variant="outlined" color="secondary" onClick={() => setIsArchiveModalOpen(false)} sx={{ ml: 2 }}>
+              No
+            </Button>
+          </Box>
+        </Box>
+      </MMModal>
     </>
   );
 }
+
+const modalStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
 export default EventDisplay;

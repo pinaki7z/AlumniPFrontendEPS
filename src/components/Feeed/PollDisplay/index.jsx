@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './pollDisplay.css';
-import { Avatar, IconButton, Modal, Box, Menu, MenuItem } from '@mui/material';
+import { Avatar, IconButton, Modal as MModal, Box, Menu, MenuItem } from '@mui/material';
 import { MoreVert } from '@mui/icons-material';
 import pic from "../../../images/profilepic.jpg";
 import { useSelector } from 'react-redux';
@@ -9,15 +9,18 @@ import { toast } from "react-toastify";
 import baseUrl from '../../../config';
 import PollModal from '../../CreatePost1/PollModal';
 import { useParams } from "react-router-dom";
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 
-const PollDisplay = ({ poll }) => {
+const PollDisplay = ({ poll, archived }) => {
     const { _id } = useParams();
     const [hasVoted, setHasVoted] = useState(false);
     const [updatedPoll, setUpdatedPoll] = useState(null);
     const [modalOpen, setModalOpen] = useState(false);
     const [menuAnchor, setMenuAnchor] = useState(null);
+    const [archiveModalOpen, setArchiveModalOpen] = useState(false);
     const profile = useSelector((state) => state.profile);
-    const [showPollModal, setShowPollModal] = useState(false); 
+    const [showPollModal, setShowPollModal] = useState(false);
 
     useEffect(() => {
         const userVoted = poll.options.some(option =>
@@ -91,39 +94,60 @@ const PollDisplay = ({ poll }) => {
         setModalOpen(false);
     };
 
-    const handleEditPoll = async (question, options)=> {
+    const handleEditPoll = async (question, options) => {
         console.log("Edit poll");
         setShowPollModal(true)
         setMenuAnchor(null);
-        console.log('question1',question, options);
+        console.log('question1', question, options);
         const pollData = {
-          userId: profile._id,
-          userName: `${profile.firstName} ${profile.lastName}`,
-          profilePicture: profile.profilePicture,
-          question: question,
-          options: options,
+            userId: profile._id,
+            userName: `${profile.firstName} ${profile.lastName}`,
+            profilePicture: profile.profilePicture,
+            question: question,
+            options: options,
         };
         if (_id) pollData.groupID = _id;
-    
+
         try {
-          const response = await axios.put(
-            `${baseUrl}/poll/${poll._id}/editPoll`,
-            pollData,
-          );
-          const newPoll = await response.data;
-          //onNewPost(newPoll);
-          //setInput("");
-          setShowPollModal(false);
-          window.location.reload();
+            const response = await axios.put(
+                `${baseUrl}/poll/${poll._id}/editPoll`,
+                pollData,
+            );
+            const newPoll = await response.data;
+            setShowPollModal(false);
+            window.location.reload();
         } catch (error) {
-          console.error("Error creating poll:", error);
+            console.error("Error creating poll:", error);
         }
     };
 
     const handleArchivePoll = () => {
-        console.log("Archive poll");
+        setArchiveModalOpen(true);
         setMenuAnchor(null);
     };
+
+    const confirmArchivePoll = async () => {
+        setArchiveModalOpen(false); // Close the confirmation modal
+    
+        try {
+            const url = `${baseUrl}/poll/${poll._id}/archive`;
+            const response = await axios.put(url);
+    
+            if (response.status === 200) {
+                console.log("Poll archived successfully");
+                toast.success("Poll archived successfully");
+                // Optionally, update UI state or reload the page
+                window.location.reload(); // Refresh the page to reflect changes
+            } else {
+                console.error("Failed to archive poll");
+                toast.error("Failed to archive poll");
+            }
+        } catch (error) {
+            console.error("Error occurred while archiving poll:", error);
+            toast.error("Error occurred while archiving poll");
+        }
+    };
+    
 
     const handleDeletePoll = async () => {
         try {
@@ -144,30 +168,28 @@ const PollDisplay = ({ poll }) => {
     };
 
     const handleCreatePoll = async (question, options) => {
-        console.log('question1',question, options);
+        console.log('question1', question, options);
         const pollData = {
-          userId: profile._id,
-          userName: `${profile.firstName} ${profile.lastName}`,
-          profilePicture: profile.profilePicture,
-          question: question,
-          options: options,
+            userId: profile._id,
+            userName: `${profile.firstName} ${profile.lastName}`,
+            profilePicture: profile.profilePicture,
+            question: question,
+            options: options,
         };
         if (_id) pollData.groupID = _id;
-    
+
         try {
-          const response = await axios.post(
-            `${baseUrl}/poll/createPoll`,
-            pollData,
-          );
-          const newPoll = await response.data;
-          //onNewPost(newPoll);
-          //setInput("");
-          setShowPollModal(false);
-          window.location.reload();
+            const response = await axios.post(
+                `${baseUrl}/poll/createPoll`,
+                pollData,
+            );
+            const newPoll = await response.data;
+            setShowPollModal(false);
+            window.location.reload();
         } catch (error) {
-          console.error("Error creating poll:", error);
+            console.error("Error creating poll:", error);
         }
-      };
+    };
 
     const pollData = hasVoted ? updatedPoll : poll;
     const optionsWithPercentages = calculatePercentages(pollData.options);
@@ -186,7 +208,7 @@ const PollDisplay = ({ poll }) => {
                 </div>
                 {(poll.userId === profile._id) && (
                     <>
-                        <IconButton onClick={(e) => setMenuAnchor(e.currentTarget)} className='more-button' style={{marginLeft: 'auto',color: 'black'}}>
+                        <IconButton onClick={(e) => setMenuAnchor(e.currentTarget)} className='more-button' style={{ marginLeft: 'auto', color: 'black' }}>
                             <MoreVert />
                         </IconButton>
                         <Menu
@@ -195,7 +217,7 @@ const PollDisplay = ({ poll }) => {
                             onClose={() => setMenuAnchor(null)}
                         >
                             <MenuItem onClick={handleEditPoll}>Edit</MenuItem>
-                            <MenuItem onClick={handleArchivePoll}>Archive</MenuItem>
+                            <MenuItem onClick={handleArchivePoll}>{archived? 'Unarchive' : 'Archive'}</MenuItem>
                             <MenuItem onClick={handleDeletePoll}>Delete</MenuItem>
                         </Menu>
                     </>
@@ -223,7 +245,7 @@ const PollDisplay = ({ poll }) => {
                 ))}
             </div>
 
-            <Modal open={modalOpen} onClose={handleCloseModal}>
+            <MModal open={modalOpen} onClose={handleCloseModal}>
                 <Box className='poll-modal-box'>
                     <div className='voters-container'>
                         {pollData.options.map(option => (
@@ -246,13 +268,29 @@ const PollDisplay = ({ poll }) => {
                         ))}
                     </div>
                 </Box>
+            </MModal>
+
+            <Modal show={archiveModalOpen} onHide={() => setArchiveModalOpen(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Confirm {archived? 'Unarchive' : 'Archive'}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Are you sure you want to {archived? 'unarchive' : 'archive'} this poll?</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setArchiveModalOpen(false)}>
+                        No
+                    </Button>
+                    <Button variant="primary" onClick={confirmArchivePoll}>
+                        Yes
+                    </Button>
+                </Modal.Footer>
             </Modal>
+
             <PollModal
-        show={showPollModal}
-        onHide={() => setShowPollModal(false)}
-        onCreatePoll={handleEditPoll}
-        edit={true}
-      />
+                show={showPollModal}
+                onHide={() => setShowPollModal(false)}
+                onCreatePoll={handleEditPoll}
+                edit={true}
+            />
         </>
     );
 };

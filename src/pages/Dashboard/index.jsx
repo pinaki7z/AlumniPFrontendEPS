@@ -31,6 +31,7 @@ import DonSponRequest from "../../components/DonSponRequest/index.jsx";
 import { SearchedResults } from "../../components/SearchedResults";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
+import ArchivePage from "../Archive";
 const Dashboard = ({ handleLogout }) => {
 
   const location = useLocation();
@@ -115,6 +116,7 @@ const Dashboard = ({ handleLogout }) => {
             <Route path="/profile/:id/followers" element={<Followers />} />
             <Route path="/profile/workExperience" element={<WorkExperience />} />
             <Route path="/profile/profile-settings" element={<ProfileSettings />} />
+            <Route path="/archive/*" element={<ArchivePage />} />
             {/* <Route path="/socialWall/*" element={
               <div
                 style={{

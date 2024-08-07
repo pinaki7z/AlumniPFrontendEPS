@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
-import CreatePost1 from '../CreatePost1';
-import Post from '../Post';
+import CreatePost1 from '../../components/CreatePost1';
+import Post from '../../components/Post';
 import axios from 'axios';
-import './feed.scss';
+import '../../components/Feeed/feed.scss';
 import { toast } from "react-toastify";
-import CommentSection from '../CommentSection';
-import JobIntDisplay from '../JobsInt/JobIntDispay';
+import CommentSection from '../../components/CommentSection';
+import JobIntDisplay from '../../components/JobsInt/JobIntDispay';
 import { useSelector } from 'react-redux';
-import { DisplayNews } from '../DisplayNews';
+import { DisplayNews } from '../../components/DisplayNews';
 import { dotPulse } from 'ldrs';
-import EventDisplay from './EventDisplay';
+import EventDisplay from '../../components/Feeed/EventDisplay';
 import { useParams } from 'react-router-dom';
-import PollDisplay from './PollDisplay';
+import PollDisplay from '../../components/Feeed/PollDisplay';
 import baseUrl from '../../config';
 dotPulse.register();
 
@@ -19,7 +19,7 @@ dotPulse.register();
 
 
 
-function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDeleteButton, admin, userId, groupID, showCreateButton }) {
+function Archive({ photoUrl, username, showCreatePost, entityId, entityType, showDeleteButton, admin, userId, groupID, showCreateButton }) {
   const [posts, setPosts] = useState([]);
   const profile = useSelector((state) => state.profile);
   const [loading, setLoading] = useState(false);
@@ -29,6 +29,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
   const isFetchingRef = useRef(false);
   let lastFetchedPageRef = useRef(0);
   console.log("Entity type1", entityType)
+  console.log("ARCHIVED POSTS")
   const [jobs, setJobs] = useState([]);
   const { _id } = useParams();
 
@@ -136,7 +137,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
     try {
       if (userId) {
         const response = await axios.get(
-          `${baseUrl}/${entityType}/userPosts/${userId}?page=${page}&size=${LIMIT}`
+          `${baseUrl}/posts/userPosts/${userId}?page=${page}&size=${LIMIT}`
         );
         const postsData = response.data.records;
         setPosts((prevItems) => [...prevItems, ...postsData]);
@@ -153,7 +154,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
       }
       else {
         const response = await axios.get(
-          `${baseUrl}/${entityType}?page=${page}&size=${LIMIT}`
+          `${baseUrl}/posts?page=${page}&size=${LIMIT}`
         );
         const postsData = response.data.records;
         setPosts((prevItems) => [...prevItems, ...postsData]);
@@ -170,7 +171,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
 
 
   return (
-    <div className='feed'>
+    <div className='feed' style={{width: '65%', paddingLeft: '5%'}}>
       {(showCreatePost && (profile.profileLevel === 0 || profile.profileLevel === 1)) && (
         <CreatePost1
           photoUrl={photoUrl}
@@ -187,7 +188,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
         </div>}
       <div className='infiniteScroll' ref={scrollContainerRef} style={{ height: "120vh", marginTop: '10px', overflowY: "auto", width: "100%", display: "flex", flexDirection: "column", alignItems: "center", paddingTop: '27px' }}>
         {posts.map((post, index) => {
-          if (post.type === 'Post' && post.groupID === _id && (post.archive === false || post.archive === undefined)) {
+          if (post.type === 'Post' && post.groupID === _id && (post.archive === true)) {
             return (
               <div key={post._id} className="post-box">
                 <Post
@@ -206,6 +207,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
                   handleLikes={handleLikes}
                   onDeletePost={() => handleDeletePost(post._id)}
                   groupID={post.groupID}
+                  archived={true}
                 />
                 {console.log("entityType", entityType)}
                 {(entityType === 'posts' || entityType === 'forums') && (profile.profileLevel === 0 || profile.profileLevel === 1) &&(<CommentSection entityId={post._id} entityType="posts" onCommentSubmit={refreshComments}
@@ -229,16 +231,16 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
                 />
               </div>
             );
-          } else if ((post.type === 'poll') && (post.archive === false || post.archive === undefined)) {
+          } else if ((post.type === 'poll') && (post.archive === true)) {
             return (
               <div key={post._id} className="post-box">
-                <PollDisplay poll={post} />
+                <PollDisplay poll={post} archived={true}/>
               </div>
             );
-          } else if ((post.type === 'event') && (post.archive === false || post.archive === undefined)) {
+          } else if ((post.type === 'event') && (post.archive === true)) {
             return (
               <div key={post._id} className="post-box">
-                <EventDisplay event={post} />
+                <EventDisplay event={post} archived={true}/>
               </div>
             );
           }
@@ -270,6 +272,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
         {totalPosts != 0 && activePageRef.current >= totalPosts / LIMIT && (
           <p>You have seen all the {entityType}</p>
         )}
+        <p>No Further Archived Posts</p>
       </div>
     </div>
   );
@@ -277,4 +280,4 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
 
 }
 
-export default Feed;
+export default Archive;

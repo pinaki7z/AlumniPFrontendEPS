@@ -1,7 +1,7 @@
 import React from 'react';
 import { ThumbUpRounded, ChatBubbleOutlineRounded, NearMeRounded, DeleteRounded, MoreVert } from '@mui/icons-material';
 import PlayCircleOutlineRoundedIcon from '@mui/icons-material/PlayCircleOutlineRounded';
-import { Avatar, TextField, IconButton, Typography, Menu, MenuItem } from '@mui/material';
+import { Avatar, TextField, IconButton, Typography, Menu, MenuItem, Modal, Box, Button } from '@mui/material';
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
@@ -20,8 +20,8 @@ import postDelete from "../../images/post-delete.svg";
 import baseUrl from "../../config";
 import CreatePost1 from '../CreatePost1';
 
-function Post({ userId, postId, profilePicture, username, text, timestamp, image, video, likes, handleLikes, handleComments, className, onDeletePost, entityType, showDeleteButton, groupID }) {
-  console.log('video pathh', video)
+function Post({ userId, postId, profilePicture, username, text, timestamp, image, video, likes, handleLikes, handleComments, className, onDeletePost, entityType, showDeleteButton, groupID,archived }) {
+  console.log('video pathh', video);
 
   const PrevButton = ({ onClick }) => {
     return <button className="slick-arrow slick-prev" style={{ background: 'black' }} onClick={onClick}>Previous</button>;
@@ -52,6 +52,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
   const [showCreatePost, setShowCreatePost] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
   const videoRef = useRef(null);
   const profile = useSelector((state) => state.profile);
   const loggedInUserId = profile._id;
@@ -138,9 +139,31 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
   };
 
   const handleArchivePost = () => {
-    console.log("Archive post");
     setMenuAnchor(null);
+    setIsArchiveModalOpen(true);
   };
+
+  const confirmArchivePost = async () => {
+    setIsArchiveModalOpen(false); 
+    try {
+        const url = `${baseUrl}/posts/${postId}/archive`;
+        const response = await axios.put(url);
+
+        if (response.status === 200) {
+            console.log("Post archived successfully");
+            //toast.success("Post archived successfully");
+            // Optionally, update UI state or reload the page
+            window.location.reload(); // Refresh the page to reflect changes
+        } else {
+            console.error("Failed to archive post");
+            //toast.error("Failed to archive post");
+        }
+    } catch (error) {
+        console.error("Error occurred while archiving post:", error);
+        //toast.error("Error occurred while archiving post");
+    }
+};
+
 
   const formatCreatedAt = (timestamp) => {
     const options = { hour: 'numeric', minute: 'numeric', hour12: true };
@@ -177,7 +200,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
                   onClose={() => setMenuAnchor(null)}
                 >
                   <MenuItem onClick={handleEditPost}>Edit</MenuItem>
-                  <MenuItem onClick={handleArchivePost}>Archive</MenuItem>
+                  <MenuItem onClick={handleArchivePost}>{archived? 'Unarchive' : 'Archive'}</MenuItem>
                   <MenuItem onClick={() => handleDeletePost(userId)}>Delete</MenuItem>
                 </Menu>
               </>
@@ -258,8 +281,39 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
           </div>
         </div>
       )}
+      <Modal
+        open={isArchiveModalOpen}
+        onClose={() => setIsArchiveModalOpen(false)}
+        aria-labelledby="archive-modal-title"
+        aria-describedby="archive-modal-description"
+      >
+        <Box sx={{ ...modalStyle, width: 400 }}>
+          <Typography id="archive-modal-title" variant="h6" component="h2">
+            Are you sure you want to {archived? 'unarchive' : 'archive'} this post?
+          </Typography>
+          <Box mt={2}>
+            <Button variant="contained" color="primary" onClick={confirmArchivePost}>
+              Yes
+            </Button>
+            <Button variant="outlined" color="secondary" onClick={() => setIsArchiveModalOpen(false)} sx={{ ml: 2 }}>
+              No
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
     </div>
   );
 }
+
+const modalStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
 export default Post;
