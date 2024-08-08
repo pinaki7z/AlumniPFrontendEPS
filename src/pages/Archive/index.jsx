@@ -154,7 +154,7 @@ function Archive({ photoUrl, username, showCreatePost, entityId, entityType, sho
       }
       else {
         const response = await axios.get(
-          `${baseUrl}/posts?page=${page}&size=${LIMIT}`
+          `${baseUrl}/posts/posts/archive?page=${page}&size=${LIMIT}`
         );
         const postsData = response.data.records;
         setPosts((prevItems) => [...prevItems, ...postsData]);
