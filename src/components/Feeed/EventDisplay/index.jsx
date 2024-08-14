@@ -32,6 +32,7 @@ const EventDisplay = ({ event,archived }) => {
   const [open, setOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
 
   useEffect(() => {
@@ -120,14 +121,45 @@ const EventDisplay = ({ event,archived }) => {
   };
   const handleClose = () => setOpen(false);
 
-  const handleDeleteEvent = async () => {
-    console.log('deleting event');
+  // const handleDeleteEvent = async () => {
+  //   console.log('deleting event');
+  //   try {
+  //     const url = `${baseUrl}/events/${event._id}`;
+  //     const requestBody = {
+  //       groupName: event.title
+  //     };
+  //     const response = await axios.delete(url, { data: requestBody });
+
+  //     if (response.status === 200) {
+  //       console.log("Event deleted successfully");
+  //       toast.success("Event deleted successfully");
+  //       window.location.reload();
+  //     } else {
+  //       console.error("Failed to delete event");
+  //       toast.error("Failed to delete event");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error occurred while deleting event:", error);
+  //   }
+  // };
+
+  const handleDeleteEvent = () => {
+    setIsDeleteModalOpen(true); 
+    
+    setMenuAnchor(null);
+  };
+
+  const confirmDeleteEvent = async () => {
+    setIsDeleteModalOpen(false); 
+    toast.success('Event deleted');
+    console.log('event id',event._id)
+
     try {
       const url = `${baseUrl}/events/${event._id}`;
-      const requestBody = {
-        groupName: event.title
-      };
-      const response = await axios.delete(url, { data: requestBody });
+      // const requestBody = {
+      //   groupName: event.title
+      // };
+      const response = await axios.delete(url);
 
       if (response.status === 200) {
         console.log("Event deleted successfully");
@@ -141,6 +173,7 @@ const EventDisplay = ({ event,archived }) => {
       console.error("Error occurred while deleting event:", error);
     }
   };
+
 
   const handleEditEvent = () => {
     console.log("Edit event");
@@ -621,6 +654,16 @@ const EventDisplay = ({ event,archived }) => {
           </Box>
         </Box>
       </MMModal>
+      <Modal show={isDeleteModalOpen} onHide={() => setIsDeleteModalOpen(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Confirm Delete</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Are you sure you want to delete this event?</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setIsDeleteModalOpen(false)}>No</Button>
+            <Button variant="primary" onClick={confirmDeleteEvent}>Yes</Button>
+          </Modal.Footer>
+        </Modal>
     </>
   );
 }

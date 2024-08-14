@@ -185,7 +185,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
             Create
           </button>
         </div>}
-      <div className='infiniteScroll' ref={scrollContainerRef} style={{ height: "120vh", marginTop: '10px', overflowY: "auto", width: "100%", display: "flex", flexDirection: "column", alignItems: "center", paddingTop: '27px' }}>
+      <div className='infiniteScroll' ref={scrollContainerRef} style={{ height: "93%", marginTop: '10px', overflowY: "auto", width: "100%", display: "flex", flexDirection: "column", alignItems: "center", paddingTop: '27px' }}>
         {posts.map((post, index) => {
           if (post.type === 'Post' && post.groupID === _id && (post.archive === false || post.archive === undefined)) {
             return (
@@ -200,6 +200,9 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
                   video={post.videoPath}
                   timestamp={post.createdAt}
                   likes={post.likes}
+                  thumbsUp={post.thumbsUp}
+                  clap={post.clap}
+                  smile={post.smile}
                   entityType={entityType}
                   admin={admin}
                   showDeleteButton={showDeleteButton}
@@ -208,8 +211,8 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
                   groupID={post.groupID}
                 />
                 {console.log("entityType", entityType)}
-                {(entityType === 'posts' || entityType === 'forums') && (profile.profileLevel === 0 || profile.profileLevel === 1) &&(<CommentSection entityId={post._id} entityType="posts" onCommentSubmit={refreshComments}
-                  onDeleteComment={refreshComments} comments={post ? post.comments : null} />)}
+                {/* {(entityType === 'posts' || entityType === 'forums') && (profile.profileLevel === 0 || profile.profileLevel === 1) &&(<CommentSection entityId={post._id} entityType="posts" onCommentSubmit={refreshComments}
+                  onDeleteComment={refreshComments} comments={post ? post.comments : null} />)} */}
               </div>
             );
           } else if (post.type === 'Internship' && (post.groupID === _id)) {

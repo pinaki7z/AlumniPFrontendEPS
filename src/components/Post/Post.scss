@@ -55,6 +55,11 @@
     word-wrap: break-word;
   }
 
+  .reactions-count:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
   .image {
     img {
       width: 100%;

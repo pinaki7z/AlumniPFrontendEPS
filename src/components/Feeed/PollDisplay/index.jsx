@@ -21,6 +21,7 @@ const PollDisplay = ({ poll, archived }) => {
     const [archiveModalOpen, setArchiveModalOpen] = useState(false);
     const profile = useSelector((state) => state.profile);
     const [showPollModal, setShowPollModal] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     useEffect(() => {
         const userVoted = poll.options.some(option =>
@@ -128,11 +129,11 @@ const PollDisplay = ({ poll, archived }) => {
 
     const confirmArchivePoll = async () => {
         setArchiveModalOpen(false); // Close the confirmation modal
-    
+
         try {
             const url = `${baseUrl}/poll/${poll._id}/archive`;
             const response = await axios.put(url);
-    
+
             if (response.status === 200) {
                 console.log("Poll archived successfully");
                 toast.success("Poll archived successfully");
@@ -147,9 +148,34 @@ const PollDisplay = ({ poll, archived }) => {
             toast.error("Error occurred while archiving poll");
         }
     };
-    
+
 
     const handleDeletePoll = async () => {
+
+        setIsDeleteModalOpen(true);
+
+        setMenuAnchor(null);
+        // try {
+        //     const url = `${baseUrl}/poll/${poll._id}`;
+        //     const response = await axios.delete(url);
+
+        //     if (response.status === 200) {
+        //         console.log("Poll deleted successfully");
+        //         toast.success("Poll deleted successfully");
+        //         window.location.reload();
+        //     } else {
+        //         console.error("Failed to delete poll");
+        //         toast.error("Failed to delete poll");
+        //     }
+        // } catch (error) {
+        //     console.error("Error occurred while deleting poll:", error);
+        // }
+    };
+
+    const confirmDeletePoll = async () => {
+        setIsDeleteModalOpen(false);
+        toast.success('deleted poll');
+        console.log('poll id', poll._id)
         try {
             const url = `${baseUrl}/poll/${poll._id}`;
             const response = await axios.delete(url);
@@ -217,7 +243,7 @@ const PollDisplay = ({ poll, archived }) => {
                             onClose={() => setMenuAnchor(null)}
                         >
                             <MenuItem onClick={handleEditPoll}>Edit</MenuItem>
-                            <MenuItem onClick={handleArchivePoll}>{archived? 'Unarchive' : 'Archive'}</MenuItem>
+                            <MenuItem onClick={handleArchivePoll}>{archived ? 'Unarchive' : 'Archive'}</MenuItem>
                             <MenuItem onClick={handleDeletePoll}>Delete</MenuItem>
                         </Menu>
                     </>
@@ -272,9 +298,9 @@ const PollDisplay = ({ poll, archived }) => {
 
             <Modal show={archiveModalOpen} onHide={() => setArchiveModalOpen(false)}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Confirm {archived? 'Unarchive' : 'Archive'}</Modal.Title>
+                    <Modal.Title>Confirm {archived ? 'Unarchive' : 'Archive'}</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>Are you sure you want to {archived? 'unarchive' : 'archive'} this poll?</Modal.Body>
+                <Modal.Body>Are you sure you want to {archived ? 'unarchive' : 'archive'} this poll?</Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setArchiveModalOpen(false)}>
                         No
@@ -282,6 +308,16 @@ const PollDisplay = ({ poll, archived }) => {
                     <Button variant="primary" onClick={confirmArchivePoll}>
                         Yes
                     </Button>
+                </Modal.Footer>
+            </Modal>
+            <Modal show={isDeleteModalOpen} onHide={() => setIsDeleteModalOpen(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Confirm Delete</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Are you sure you want to delete this poll?</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setIsDeleteModalOpen(false)}>No</Button>
+                    <Button variant="primary" onClick={confirmDeletePoll}>Yes</Button>
                 </Modal.Footer>
             </Modal>
 

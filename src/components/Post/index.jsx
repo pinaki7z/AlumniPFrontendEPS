@@ -19,8 +19,11 @@ import unliked from "../../images/unliked.svg";
 import postDelete from "../../images/post-delete.svg";
 import baseUrl from "../../config";
 import CreatePost1 from '../CreatePost1';
+import { FaHandsClapping } from "react-icons/fa6";
+import { ImSmile2 } from "react-icons/im";
+import { BiSolidLike } from "react-icons/bi";
 
-function Post({ userId, postId, profilePicture, username, text, timestamp, image, video, likes, handleLikes, handleComments, className, onDeletePost, entityType, showDeleteButton, groupID,archived }) {
+function Post({ userId, postId, profilePicture, username, text, timestamp, image, video, likes, smile, thumbsUp, clap, handleLikes, handleComments, className, onDeletePost, entityType, showDeleteButton, groupID, archived }) {
   console.log('video pathh', video);
 
   const PrevButton = ({ onClick }) => {
@@ -45,6 +48,9 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
 
   const { _id } = useParams();
   const [isLiked, setLiked] = useState(false);
+  const [isThumbsUp, setIsThumbsUp] = useState(false);
+  const [isClapped, setIsClapped] = useState(false);
+  const [isSmile, setIsSmile] = useState(false);
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]);
   const [cookie, setCookie] = useCookies(['access_token']);
@@ -56,6 +62,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
   const videoRef = useRef(null);
   const profile = useSelector((state) => state.profile);
   const loggedInUserId = profile._id;
+  const [isReactionsModalOpen, setIsReactionsModalOpen] = useState(false);
   let admin;
   if (profile.profileLevel === 0) {
     admin = true;
@@ -79,12 +86,20 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
     }
   };
 
+
+
   useEffect(() => {
     if (loggedInUserId && postId) {
       const postLiked = likes.some((like) => like.userId === loggedInUserId);
       setLiked(postLiked);
+      const postSmiled = smile.some((smile) => smile.userId === loggedInUserId);
+      setIsSmile(postSmiled);
+      const postClapped = clap.some((clap) => clap.userId === loggedInUserId);
+      setIsClapped(postClapped);
+      const postThumbsUp = thumbsUp.some((thumbsUp) => thumbsUp.userId === loggedInUserId);
+      setIsThumbsUp(postThumbsUp);
     }
-  }, [likes, loggedInUserId, postId]);
+  }, [likes, loggedInUserId, postId, smile, thumbsUp, clap]);
 
   const fetchComments = async () => {
     try {
@@ -103,7 +118,76 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
         `${baseUrl}/posts/${postId}/likes`,
         {
           userId: loggedInUserId,
-          userName: username,
+          userName: `${profile.firstName} ${profile.lastName}`,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const id = await response.data._id;
+      handleLikes(id);
+    } catch (error) {
+      console.error("Error liking post:", error);
+    }
+  };
+
+  const handleThumbsUp = async (e) => {
+    setIsThumbsUp(!isThumbsUp);
+    try {
+      const response = await axios.patch(
+        `${baseUrl}/posts/${postId}/thumbsUp`,
+        {
+          userId: loggedInUserId,
+          userName: `${profile.firstName} ${profile.lastName}`,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const id = await response.data._id;
+      handleLikes(id);
+    } catch (error) {
+      console.error("Error liking post:", error);
+    }
+  };
+
+  const handleSmile = async (e) => {
+    setIsSmile(!isSmile);
+    try {
+      const response = await axios.patch(
+        `${baseUrl}/posts/${postId}/smile`,
+        {
+          userId: loggedInUserId,
+          userName: `${profile.firstName} ${profile.lastName}`,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const id = await response.data._id;
+      handleLikes(id);
+    } catch (error) {
+      console.error("Error liking post:", error);
+    }
+  };
+
+  const handleClap = async (e) => {
+    setIsClapped(!isClapped);
+    try {
+      const response = await axios.patch(
+        `${baseUrl}/posts/${postId}/clap`,
+        {
+          userId: loggedInUserId,
+          userName: `${profile.firstName} ${profile.lastName}`,
         },
         {
           headers: {
@@ -144,25 +228,25 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
   };
 
   const confirmArchivePost = async () => {
-    setIsArchiveModalOpen(false); 
+    setIsArchiveModalOpen(false);
     try {
-        const url = `${baseUrl}/posts/${postId}/archive`;
-        const response = await axios.put(url);
+      const url = `${baseUrl}/posts/${postId}/archive`;
+      const response = await axios.put(url);
 
-        if (response.status === 200) {
-            console.log("Post archived successfully");
-            //toast.success("Post archived successfully");
-            // Optionally, update UI state or reload the page
-            window.location.reload(); // Refresh the page to reflect changes
-        } else {
-            console.error("Failed to archive post");
-            //toast.error("Failed to archive post");
-        }
+      if (response.status === 200) {
+        console.log("Post archived successfully");
+        //toast.success("Post archived successfully");
+        // Optionally, update UI state or reload the page
+        window.location.reload(); // Refresh the page to reflect changes
+      } else {
+        console.error("Failed to archive post");
+        //toast.error("Failed to archive post");
+      }
     } catch (error) {
-        console.error("Error occurred while archiving post:", error);
-        //toast.error("Error occurred while archiving post");
+      console.error("Error occurred while archiving post:", error);
+      //toast.error("Error occurred while archiving post");
     }
-};
+  };
 
 
   const formatCreatedAt = (timestamp) => {
@@ -171,6 +255,15 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
     const dateString = new Date(timestamp).toLocaleDateString();
 
     return `${dateString} ${timeString}`;
+  };
+
+  const handleOpenReactionsModal = () => {
+    setIsReactionsModalOpen(true);
+  };
+
+  // Handle closing of reactions modal
+  const handleCloseReactionsModal = () => {
+    setIsReactionsModalOpen(false);
   };
 
   return (
@@ -200,7 +293,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
                   onClose={() => setMenuAnchor(null)}
                 >
                   <MenuItem onClick={handleEditPost}>Edit</MenuItem>
-                  <MenuItem onClick={handleArchivePost}>{archived? 'Unarchive' : 'Archive'}</MenuItem>
+                  <MenuItem onClick={handleArchivePost}>{archived ? 'Unarchive' : 'Archive'}</MenuItem>
                   <MenuItem onClick={() => handleDeletePost(userId)}>Delete</MenuItem>
                 </Menu>
               </>
@@ -242,29 +335,105 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
               </div>
             </div>
           )}
-          {console.log('entity type1', entityType)}
+          <div className="reactions-count" onClick={handleOpenReactionsModal} style={{cursor: 'pointer'}}>
+            {likes.length + smile.length + thumbsUp.length + clap.length} people reacted
+          </div>
+          <Modal open={isReactionsModalOpen} onClose={handleCloseReactionsModal}>
+            <Box
+              sx={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: 400,
+                bgcolor: 'background.paper',
+                border: '2px solid #000',
+                boxShadow: 24,
+                p: 4,
+                display: 'flex',
+                flexDirection: 'column',
+                width: 'auto',
+                height: 'auto'
+              }}
+            >
+              <Typography variant="h6" component="h2">
+                Reactions
+              </Typography>
+              <div style={{display: 'flex', gap: '30px'
+              }}>
+                <Box sx={{ mt: 2,minWidth: '200px' }}>
+
+                  <Typography variant="body1">
+                  <img src={liked} alt="" style={{ width: '20px', height: '20px', cursor: 'pointer' }} />
+                  </Typography>
+                  <ul style={{paddingLeft: '0px'}}>
+                    {likes.map((user) => (
+                      <li key={user.userId} style={{listStyleType: 'none',paddingTop: '20px'}}>{user.userName}</li>
+                    ))}
+                  </ul>
+                </Box>
+                <Box sx={{ mt: 2,minWidth: '200px' }}>
+                  <Typography variant="body1">
+                  <ImSmile2 style={{ width: '20px', height: '20px', cursor: 'pointer' }} />
+                  </Typography>
+                  <ul style={{paddingLeft: '0px'}}>
+                    {smile.map((user) => (
+                      <li key={user.userId} style={{listStyleType: 'none',paddingTop: '20px'}}>{user.userName}</li>
+                    ))}
+                  </ul>
+                </Box>
+                <Box sx={{ mt: 2,minWidth: '200px' }}>
+                  <Typography variant="body1">
+                  <BiSolidLike style={{ width: '20px', height: '20px', cursor: 'pointer' }} />
+                  </Typography>
+                  <ul style={{paddingLeft: '0px'}}>
+                    {thumbsUp.map((user) => (
+                      <li key={user.userId} style={{listStyleType: 'none',paddingTop: '20px'}}>{user.userName}</li>
+                    ))}
+                  </ul>
+                </Box>
+                <Box sx={{ mt: 2,minWidth: '200px'}}>
+                  <Typography variant="body1">
+                  <FaHandsClapping style={{ width: '20px', height: '20px', cursor: 'pointer' }} />
+                  </Typography>
+                  <ul style={{paddingLeft: '0px'}}>
+                    {clap.map((user) => (
+                      <li key={user.userId} style={{listStyleType: 'none',paddingTop: '20px'}}>{user.userName}</li>
+                    ))}
+                  </ul>
+                </Box>
+              </div>
+              <Button onClick={handleCloseReactionsModal} variant="contained" sx={{ mt: 3 }}>
+                Close
+              </Button>
+            </Box>
+          </Modal>
           {entityType === 'posts' && (
-            <div className='bottomAction'>
-              {(profile.profileLevel === 0 || profile.profileLevel === 1) && (
-                <>
-                  <div className='action'>
-                    <img src={commentIcon} alt='comment-icon' className={`postAction grey`} />
-                    <h4>Comment</h4>
-                  </div>
-                  <div className='action'>
-                    <img src={share} alt='share-icon' className={`postAction grey`} />
-                    <h4>Share</h4>
-                  </div>
-                </>
+            <div className='bottomAction' style={{ padding: '25px' }}>
+
+              {isThumbsUp ? (<BiSolidLike style={{ width: '20px', height: '20px', color: 'red', cursor: 'pointer' }} onClick={handleThumbsUp} />) : (
+                <BiSolidLike style={{ width: '20px', height: '20px', cursor: 'pointer' }} onClick={handleThumbsUp} />
               )}
-              <div className='action' onClick={handleLike}>
+              {isSmile ? (<ImSmile2 style={{ width: '20px', height: '20px', color: 'red', cursor: 'pointer' }} onClick={handleSmile} />) : (
+                <ImSmile2 style={{ width: '20px', height: '20px', cursor: 'pointer' }} onClick={handleSmile} />
+              )}
+              {isClapped ? (<FaHandsClapping style={{ width: '20px', height: '20px', color: 'red', cursor: 'pointer' }} onClick={handleClap} />) : (
+                <FaHandsClapping style={{ width: '20px', height: '20px', cursor: 'pointer' }} onClick={handleClap} />
+              )}
+              {isLiked ? (
+                <img src={liked} alt="" style={{ width: '20px', height: '20px', cursor: 'pointer' }} onClick={handleLike} />
+              ) : (
+                <img src={unliked} alt="" style={{ width: '20px', height: '20px', cursor: 'pointer' }} onClick={handleLike} />
+              )}
+
+              {/* <div className='action' onClick={handleLike}>
                 {isLiked ? (
                   <img src={liked} alt="" />
                 ) : (
                   <img src={unliked} alt="" />
                 )}
                 <h4>{isLiked ? 'Liked' : 'Like'}</h4>
-              </div>
+              </div> */}
             </div>
           )}
         </>
@@ -272,11 +441,11 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
       {showCreatePost && (
         <div className="post-overlay">
           <div className="post-overlay-content">
-            <CreatePost1 
-            closeButton={() => setShowCreatePost(false)}
-            close={true}
-            entityType='posts'
-            postId = {postId}
+            <CreatePost1
+              closeButton={() => setShowCreatePost(false)}
+              close={true}
+              entityType='posts'
+              postId={postId}
             />
           </div>
         </div>
@@ -289,7 +458,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
       >
         <Box sx={{ ...modalStyle, width: 400 }}>
           <Typography id="archive-modal-title" variant="h6" component="h2">
-            Are you sure you want to {archived? 'unarchive' : 'archive'} this post?
+            Are you sure you want to {archived ? 'unarchive' : 'archive'} this post?
           </Typography>
           <Box mt={2}>
             <Button variant="contained" color="primary" onClick={confirmArchivePost}>
