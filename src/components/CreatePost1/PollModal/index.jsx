@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import './pollModal.css';
 
-const PollModal = ({ show, onHide, onCreatePoll,edit }) => {
+const PollModal = ({ show, onHide, onCreatePoll, edit }) => {
   const [pollQuestion, setPollQuestion] = useState('');
   const [pollOptions, setPollOptions] = useState(['', '', '', '', '']);
   const [optionCount, setOptionCount] = useState(2);
@@ -62,11 +62,17 @@ const PollModal = ({ show, onHide, onCreatePoll,edit }) => {
             />
           </div>
         ))}
+         <div class="checkbox-apple">
+          <input class="yep" id="check-apple" type="checkbox" />
+          <label for="check-apple"></label>
+          <p>Allow Multiple Answers</p>
+        </div>
         {optionCount < 5 && (
           <button onClick={handleAddOption}>Add Option</button>
         )}
-        <div style={{display: 'flex', gap: '10px'}}>
-          <button onClick={handleCreatePoll}>{edit? 'Edit Poll' : 'Create Poll'}</button>
+       
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button onClick={handleCreatePoll}>{edit ? 'Edit Poll' : 'Create Poll'}</button>
           <button onClick={onHide}>Cancel</button>
         </div>
 
