@@ -279,14 +279,15 @@ const CreatePost1 = ({ name, onNewPost, entityType,closeButton,close,postId }) =
     }
   };
 
-  const handleCreatePoll = async (question, options) => {
-    console.log('question1',question, options);
+  const handleCreatePoll = async (question, options,multipleAnswers) => {
+    console.log('question1',question, options,multipleAnswers);
     const pollData = {
       userId: profile._id,
       userName: `${profile.firstName} ${profile.lastName}`,
       profilePicture: profile.profilePicture,
       question: question,
       options: options,
+      multipleAnswers
     };
     if (_id) pollData.groupID = _id;
 

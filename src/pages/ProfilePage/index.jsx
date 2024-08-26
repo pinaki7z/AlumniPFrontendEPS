@@ -798,7 +798,7 @@ const ProfilePage = () => {
           </div>
         </div >
         <div style={{ display: 'flex', gap: '2%' }}>
-          <div style={{ width: '70%' }}><Feeed entityType='posts' showCreatePost={true} showDeleteButton={true} userId={member._id} /></div>
+          <div style={{ width: '70%' }}><Feeed entityType='posts' showCreatePost={false} showDeleteButton={true} userId={member._id} /></div>
           <div style={{ width: '28%', paddingTop: '37px' }}>
             <div>
               <div style={{ backgroundColor: '#004C8A', color: '#F8F8FF', borderRadius: '12px 12px 0px 0px', padding: '12px 16px 12px 16px', display: 'flex', alignItems: 'center', gap: '15px' }}>

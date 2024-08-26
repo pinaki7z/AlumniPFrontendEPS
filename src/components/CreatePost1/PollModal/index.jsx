@@ -1,4 +1,3 @@
-// PollModal.js
 import React, { useState } from 'react';
 import './pollModal.css';
 
@@ -6,6 +5,7 @@ const PollModal = ({ show, onHide, onCreatePoll, edit }) => {
   const [pollQuestion, setPollQuestion] = useState('');
   const [pollOptions, setPollOptions] = useState(['', '', '', '', '']);
   const [optionCount, setOptionCount] = useState(2);
+  const [multipleAnswers, setMultipleAnswers] = useState(false); // New state to track checkbox
 
   const handleOptionChange = (index, value) => {
     const newOptions = [...pollOptions];
@@ -25,11 +25,12 @@ const PollModal = ({ show, onHide, onCreatePoll, edit }) => {
       .map(option => ({ option, votes: [] }));
 
     if (pollQuestion.trim() && validOptions.length >= 2) {
-      console.log('question', pollQuestion, validOptions);
-      onCreatePoll(pollQuestion, validOptions);
+      console.log('question', pollQuestion, validOptions, 'Allow Multiple:', multipleAnswers);
+      onCreatePoll(pollQuestion, validOptions, multipleAnswers);
       setPollQuestion('');
       setPollOptions(['', '', '', '', '']);
       setOptionCount(2);
+      setMultipleAnswers(false); // Reset the checkbox state
       onHide();
     } else {
       alert('Please provide a poll question and at least 2 options.');
@@ -43,7 +44,7 @@ const PollModal = ({ show, onHide, onCreatePoll, edit }) => {
   return (
     <div className="modal-overlay-poll">
       <div className="modal-content-poll">
-        <h2>Create Poll</h2>
+        <h2>{edit ? 'Edit Poll' : 'Create Poll'}</h2>
         <div>
           <label>Poll Question:</label>
           <input
@@ -62,20 +63,24 @@ const PollModal = ({ show, onHide, onCreatePoll, edit }) => {
             />
           </div>
         ))}
-         <div class="checkbox-apple">
-          <input class="yep" id="check-apple" type="checkbox" />
-          <label for="check-apple"></label>
+        <div className="checkbox-apple">
+          <input
+            className="yep"
+            id="check-apple"
+            type="checkbox"
+            checked={multipleAnswers}
+            onChange={() => setMultipleAnswers(!multipleAnswers)} // Toggle the multipleAnswers state
+          />
+          <label htmlFor="check-apple"></label>
           <p>Allow Multiple Answers</p>
         </div>
         {optionCount < 5 && (
           <button onClick={handleAddOption}>Add Option</button>
         )}
-       
         <div style={{ display: 'flex', gap: '10px' }}>
           <button onClick={handleCreatePoll}>{edit ? 'Edit Poll' : 'Create Poll'}</button>
           <button onClick={onHide}>Cancel</button>
         </div>
-
       </div>
     </div>
   );

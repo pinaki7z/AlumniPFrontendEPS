@@ -11,6 +11,12 @@ import PollModal from '../../CreatePost1/PollModal';
 import { useParams } from "react-router-dom";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import { lineSpinner } from 'ldrs'
+
+lineSpinner.register()
+
+
+
 
 const PollDisplay = ({ poll, archived }) => {
     const { _id } = useParams();
@@ -22,6 +28,7 @@ const PollDisplay = ({ poll, archived }) => {
     const profile = useSelector((state) => state.profile);
     const [showPollModal, setShowPollModal] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const userVoted = poll.options.some(option =>
@@ -35,8 +42,16 @@ const PollDisplay = ({ poll, archived }) => {
     }, [poll, profile._id]);
 
     const handleVote = async (optionId) => {
+        setLoading(true);
         if (poll.userId === profile._id) {
             toast.error("You cannot vote on your own poll.");
+            setLoading(false);
+            return;
+        }
+
+        if (hasVoted && !poll.multipleAnswers) {
+            toast.error("You have already voted on this poll.");
+            setLoading(false);
             return;
         }
 
@@ -45,7 +60,8 @@ const PollDisplay = ({ poll, archived }) => {
                 userId: profile._id,
                 optionId: optionId,
                 userName: `${profile.firstName} ${profile.lastName}`,
-                profilePicture: profile.profilePicture
+                profilePicture: profile.profilePicture,
+                multipleAnswers: poll.multipleAnswers
             };
 
             const response = await axios.put(
@@ -57,13 +73,16 @@ const PollDisplay = ({ poll, archived }) => {
                 toast.success('Vote submitted successfully.');
                 setUpdatedPoll(response.data.poll);
                 setHasVoted(true);
+                setLoading(false);
             } else {
                 console.error('Unexpected response status:', response.status, response.message);
                 alert('An unexpected error occurred. Please try again.');
+                setLoading(false);
             }
         } catch (error) {
             console.error('Error submitting vote:', error);
             toast.error(error.response.data.message);
+            setLoading(false);
         }
     };
 
@@ -76,6 +95,7 @@ const PollDisplay = ({ poll, archived }) => {
     };
 
     const calculatePercentages = (options) => {
+        console.log('calculating percent', options)
         const totalVotes = options.reduce((acc, option) => acc + option.votes.length, 0);
         return options.map(option => ({
             ...option,
@@ -95,7 +115,7 @@ const PollDisplay = ({ poll, archived }) => {
         setModalOpen(false);
     };
 
-    const handleEditPoll = async (question, options) => {
+    const handleEditPoll = async (question, options, multipleAnswers) => {
         console.log("Edit poll");
         setShowPollModal(true)
         setMenuAnchor(null);
@@ -106,6 +126,7 @@ const PollDisplay = ({ poll, archived }) => {
             profilePicture: profile.profilePicture,
             question: question,
             options: options,
+            multipleAnswers
         };
         if (_id) pollData.groupID = _id;
 
@@ -193,7 +214,7 @@ const PollDisplay = ({ poll, archived }) => {
         }
     };
 
-    const handleCreatePoll = async (question, options) => {
+    const handleCreatePoll = async (question, options, multipleAnswers) => {
         console.log('question1', question, options);
         const pollData = {
             userId: profile._id,
@@ -201,6 +222,7 @@ const PollDisplay = ({ poll, archived }) => {
             profilePicture: profile.profilePicture,
             question: question,
             options: options,
+            multipleAnswers
         };
         if (_id) pollData.groupID = _id;
 
@@ -219,6 +241,7 @@ const PollDisplay = ({ poll, archived }) => {
 
     const pollData = hasVoted ? updatedPoll : poll;
     const optionsWithPercentages = calculatePercentages(pollData.options);
+    console.log('options with percentages', optionsWithPercentages)
 
     return (
         <>
@@ -253,6 +276,12 @@ const PollDisplay = ({ poll, archived }) => {
 
             <div className="options-container">
                 {poll.userId === profile._id && <div className='see-poll-results' style={{ textAlign: 'right' }} onClick={handleOpenModal}>See Poll Results</div>}
+                {loading && <><l-line-spinner
+                    size="20"
+                    stroke="3"
+                    speed="1"
+                    color="black"
+                ></l-line-spinner></>}
                 {optionsWithPercentages.map(option => (
                     <div
                         key={option._id}
@@ -264,6 +293,7 @@ const PollDisplay = ({ poll, archived }) => {
                             <div className="percentage-bar-container" onClick={() => handleVote(option._id)}>
                                 <div className="percentage-bar" style={{ width: `${option.percentage}%` }}>
                                     {option.percentage.toFixed(2)}%
+                                    {console.log('option per', option.percentage)}
                                 </div>
                             </div>
                         )}
@@ -324,7 +354,7 @@ const PollDisplay = ({ poll, archived }) => {
             <PollModal
                 show={showPollModal}
                 onHide={() => setShowPollModal(false)}
-                onCreatePoll={handleEditPoll}
+                onCreatePoll={handleCreatePoll}
                 edit={true}
             />
         </>
