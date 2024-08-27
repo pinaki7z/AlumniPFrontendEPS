@@ -185,7 +185,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
             Create
           </button>
         </div>}
-      <div className='infiniteScroll' ref={scrollContainerRef} style={{ height: "93%", marginTop: '10px', overflowY: "auto", width: "100%", display: "flex", flexDirection: "column", alignItems: "center", paddingTop: '27px' }}>
+      <div className='infiniteScroll' ref={scrollContainerRef} style={{ height: "90%", marginTop: '10px', overflowY: "auto", width: "100%", display: "flex", flexDirection: "column", alignItems: "center", paddingTop: '27px' }}>
         {posts.map((post, index) => {
           if (post.type === 'Post' && post.groupID === _id && (post.archive === false || post.archive === undefined)) {
             return (
