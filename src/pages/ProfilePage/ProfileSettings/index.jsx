@@ -355,7 +355,7 @@ export const ProfileSettings = () => {
                 <Form.Label>Graduating Year</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Enter which class you are studying"
+                  placeholder="Enter your graduating year"
                   name="graduatingYear"
                   value={formData.graduatingYear}
                   onChange={handleInputChange}
@@ -383,7 +383,7 @@ export const ProfileSettings = () => {
                 <Form.Label>Job Role</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Enter which class you are studying"
+                  placeholder="Enter your job role"
                   name="jobRole"
                   value={formData.jobRole}
                   onChange={handleInputChange}
