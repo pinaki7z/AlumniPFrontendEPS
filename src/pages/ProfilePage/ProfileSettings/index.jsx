@@ -79,6 +79,10 @@ export const ProfileSettings = () => {
       location: profile.location || '',
       city: profile.city || '',
       country: profile.country || '',
+      graduatingYear: profile.graduatingYear || '',
+      class: profile.class || '',
+      jobRole: profile.jobRole || '',
+
     }));
 
   }, [profile._id]);
@@ -93,6 +97,9 @@ export const ProfileSettings = () => {
     city: '',
     country: '',
     student: false,
+    graduatingYear: '',
+    class: '',
+    jobRole: ''
   });
 
   const handleProfileImageChange = (e) => {
@@ -138,7 +145,7 @@ export const ProfileSettings = () => {
   const handleCurrentStudentChange = () => {
     setIsCurrentStudent(!isCurrentStudent);
     if (!isCurrentStudent) {
-      setFormData({ ...formData, workingAt: '', student: true });
+      setFormData({ ...formData, workingAt: '', student: true,graduatingYear: '',jobRole: '' });
     }
   };
 
@@ -315,6 +322,7 @@ export const ProfileSettings = () => {
                   onChange={handleInputChange}
                 />
               </Form.Group>
+              
             </Col>
           </Row>
           {/* <Form.Group className="mb-3" controlId="formBasicAddress">
@@ -327,6 +335,64 @@ export const ProfileSettings = () => {
               onChange={handleInputChange}
             />
           </Form.Group> */}
+          <Row>
+            <Col>
+            <Form.Group className="mb-3" controlId="formBasicWorking">
+                <Form.Label>Class</Form.Label>
+                <Form.Control
+                  type="number"
+                  placeholder="Enter which class you are studying"
+                  name="class"
+                  value={formData.class}
+                  onChange={handleInputChange}
+                  required
+                  disabled={!isCurrentStudent}
+                />
+              </Form.Group>
+            </Col>
+            <Col>
+            <Form.Group className="mb-3" controlId="formBasicWorking">
+                <Form.Label>Graduating Year</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter which class you are studying"
+                  name="graduatingYear"
+                  value={formData.graduatingYear}
+                  onChange={handleInputChange}
+                  required
+                  disabled={isCurrentStudent}
+                />
+              </Form.Group>
+            </Col>
+            {/* <Col>
+            <Form.Group className="mb-3" controlId="formBasicWorking">
+                <Form.Label>Graduating From Class</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter which class you are studying"
+                  name="workingAt"
+                  value={formData.workingAt}
+                  onChange={handleSearch}
+                  required
+                  disabled={!isCurrentStudent}
+                />
+              </Form.Group>
+            </Col> */}
+            <Col>
+            <Form.Group className="mb-3" controlId="formBasicWorking">
+                <Form.Label>Job Role</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter which class you are studying"
+                  name="jobRole"
+                  value={formData.jobRole}
+                  onChange={handleInputChange}
+                  required
+                  disabled={isCurrentStudent}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
           <Row>
             <Col>
               <Form.Group className="mb-3" controlId="formBasicCity">

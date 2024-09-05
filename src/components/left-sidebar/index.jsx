@@ -41,7 +41,7 @@ const LeftSidebar = () => {
     return (
         <div style={{ width: '20%',backgroundColor: '#004C8A',height: '100vh',position: 'fixed' }}>
             <div style={{ textAlign: 'center', marginTop: '3em'}}>
-                        <img src={eps} alt="" width="115px" height="145px"/>
+                        <img src={eps} alt="" width="115px" height="155px"/>
                     </div>
                 <div className='sideBar'>                    
                     <ul style={{paddingLeft: '0px', width: '100%'}}>
