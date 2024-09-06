@@ -272,7 +272,11 @@ const PollDisplay = ({ poll, archived }) => {
                     </>
                 )}
             </div>
-            <h3 style={{ fontWeight: '600', fontSize: '20px', paddingTop: '30px', color: '#3A3A3A', fontFamily: 'Inter' }}>{poll.question}</h3>
+            <h3 style={{ fontWeight: '600', fontSize: '20px', paddingTop: '30px', color: '#3A3A3A', fontFamily: 'Inter' }}>{poll.question}       {poll.multipleAnswers ? (
+                <p style={{color: 'grey', fontSize: '15px',paddingTop: '10px'}}>(Multiple choices can be made)</p>
+            ) : (
+                <p style={{color: 'grey', fontSize: '15px',paddingTop: '10px'}}>(Choose only one option)</p>
+            )}</h3>
 
             <div className="options-container">
                 {poll.userId === profile._id && <div className='see-poll-results' style={{ textAlign: 'right' }} onClick={handleOpenModal}>See Poll Results</div>}
