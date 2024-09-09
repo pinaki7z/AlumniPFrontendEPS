@@ -684,7 +684,7 @@
     gap: var(--gap-33xl);
     max-width: 100%;
   }
-  @media screen and (max-width: 975px) {
+  /* @media screen and (max-width: 975px) {
     .welcome-back {
       font-size: var(--font-size-7xl);
     }
@@ -717,7 +717,7 @@
     .credentials-input {
       gap: var(--gap-7xl);
     }
-  }
+  } */
 
   @media screen and (max-width: 480px) {
     .logo {
@@ -734,7 +734,7 @@
     .login-fields,
     .welcome-message {
         width: 100%;
-        padding: 0 10px;
+        padding: 15px;
     }
     .button1 {
         font-size: var(--body-size);
@@ -743,7 +743,10 @@
     .credentials-input {
         gap: var(--gap-7xl);
     }
-    .account-details-parent{
-      margin-top: 40px;
+    /* .account-details-parent{
+      margin-top: 20px;
+    } */
+    .bhu-alumni-association-container{
+      height: auto;
     }
 }
