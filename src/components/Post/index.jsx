@@ -88,18 +88,18 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
 
 
 
-  useEffect(() => {
-    if (loggedInUserId && postId) {
-      const postLiked = likes.some((like) => like.userId === loggedInUserId);
-      setLiked(postLiked);
-      const postSmiled = smile.some((smile) => smile.userId === loggedInUserId);
-      setIsSmile(postSmiled);
-      const postClapped = clap.some((clap) => clap.userId === loggedInUserId);
-      setIsClapped(postClapped);
-      const postThumbsUp = thumbsUp.some((thumbsUp) => thumbsUp.userId === loggedInUserId);
-      setIsThumbsUp(postThumbsUp);
-    }
-  }, [likes, loggedInUserId, postId, smile, thumbsUp, clap]);
+  // useEffect(() => {
+  //   if (loggedInUserId && postId) {
+  //     const postLiked = likes.some((like) => like.userId === loggedInUserId);
+  //     setLiked(postLiked);
+  //     const postSmiled = smile.some((smile) => smile.userId === loggedInUserId);
+  //     setIsSmile(postSmiled);
+  //     const postClapped = clap.some((clap) => clap.userId === loggedInUserId);
+  //     setIsClapped(postClapped);
+  //     const postThumbsUp = thumbsUp.some((thumbsUp) => thumbsUp.userId === loggedInUserId);
+  //     setIsThumbsUp(postThumbsUp);
+  //   }
+  // }, [likes, loggedInUserId, postId, smile, thumbsUp, clap]);
 
   const fetchComments = async () => {
     try {
@@ -336,9 +336,9 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
             </div>
           )}
           <div className="reactions-count" onClick={handleOpenReactionsModal} style={{cursor: 'pointer'}}>
-            {likes.length + smile.length + thumbsUp.length + clap.length} people reacted
+            {/* {likes.length + smile.length + thumbsUp.length + clap.length} people reacted */}
           </div>
-          <Modal open={isReactionsModalOpen} onClose={handleCloseReactionsModal}>
+          {/* <Modal open={isReactionsModalOpen} onClose={handleCloseReactionsModal}>
             <Box
               sx={{
                 position: 'absolute',
@@ -407,7 +407,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
                 Close
               </Button>
             </Box>
-          </Modal>
+          </Modal> */}
           {entityType === 'posts' && (
             <div className='bottomAction' style={{ padding: '25px' }}>
 
