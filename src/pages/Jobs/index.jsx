@@ -20,7 +20,7 @@ const Jobs = () => {
     const [archivedJobs, setArchivedJobs] = useState([]);
     const [archivedInternships, setArchivedInternships] = useState([]);
     const [loading, setLoading] = useState(true);
-    const buttontext1 = 'All Jobs';
+    const buttontext1 = 'All Internships';
     const [buttontext2, setButtontext2] = useState('');
     const [buttontext3, setButtontext3] = useState('');
     const buttontext1Link = "/jobs";
@@ -70,7 +70,7 @@ const Jobs = () => {
             setButtontext2('Starred');
             setButtontext3('Applied');
             setButtontext4('Archive');
-            setButtontext5('My Jobs');
+            setButtontext5('My Internships');
             setButtontext2Link('/jobs/starred');
             setButtontext3Link('/jobs/applied');
             setButtontext4Link('/jobs/archive');
@@ -170,27 +170,27 @@ const Jobs = () => {
                 />
                 <Routes>
                     <Route path="/" element={
-                        <div style={{ marginTop: '215px', zIndex: '1' }}>
+                        <div style={{ zIndex: '1' }}>
                             <PageSubTitle buttontext1={buttontext1} buttontext2={buttontext2} buttontext3={buttontext3} buttontext4={buttontext4} buttontext5={buttontext5} buttontext1Link={buttontext1Link} buttontext2Link={buttontext2Link} buttontext3Link={buttontext3Link} buttontext4Link={buttontext4Link} buttontext5Link={buttontext5Link} name='jobs' create={false} />
                         </div>
                     } />
                     <Route path="/archive" element={
-                        <div style={{ marginTop: '215px', zIndex: '1' }}>
+                        <div style={{zIndex: '1' }}>
                             <PageSubTitle buttontext1={buttontext1} buttontext2={buttontext2} buttontext3={buttontext3} buttontext4={buttontext4} buttontext5={buttontext5} buttontext1Link={buttontext1Link} buttontext2Link={buttontext2Link} buttontext3Link={buttontext3Link} buttontext4Link={buttontext4Link} buttontext5Link={buttontext5Link} name='jobs' create={false} />
                         </div>
                     } />
                     <Route path="/starred" element={
-                        <div style={{ marginTop: '215px', zIndex: '1' }}>
+                        <div style={{ zIndex: '1' }}>
                             <PageSubTitle buttontext1={buttontext1} buttontext2={buttontext2} buttontext3={buttontext3} buttontext4={buttontext4} buttontext5={buttontext5} buttontext1Link={buttontext1Link} buttontext2Link={buttontext2Link} buttontext3Link={buttontext3Link} buttontext4Link={buttontext4Link} buttontext5Link={buttontext5Link} name='jobs' create={false} />
                         </div>
                     } />
                     <Route path="/applied" element={
-                        <div style={{ marginTop: '215px', zIndex: '1' }}>
+                        <div style={{ zIndex: '1' }}>
                             <PageSubTitle buttontext1={buttontext1} buttontext2={buttontext2} buttontext3={buttontext3} buttontext4={buttontext4} buttontext5={buttontext5} buttontext1Link={buttontext1Link} buttontext2Link={buttontext2Link} buttontext3Link={buttontext3Link} buttontext4Link={buttontext4Link} buttontext5Link={buttontext5Link} name='jobs' create={false} />
                         </div>
                     } />
                     <Route path="/myJobs" element={
-                        <div style={{ marginTop: '215px', zIndex: '1' }}>
+                        <div style={{ zIndex: '1' }}>
                             <PageSubTitle buttontext1={buttontext1} buttontext2={buttontext2} buttontext3={buttontext3} buttontext4={buttontext4} buttontext5={buttontext5} buttontext1Link={buttontext1Link} buttontext2Link={buttontext2Link} buttontext3Link={buttontext3Link} buttontext4Link={buttontext4Link} buttontext5Link={buttontext5Link} name='jobs' create={false} />
                         </div>
                     } />

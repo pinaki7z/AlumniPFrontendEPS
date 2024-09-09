@@ -55,7 +55,7 @@ const LeftSidebar = () => {
                         <li><Link to="/donations" style={{ textDecoration: 'none' }}><BsCurrencyRupee className="dashboard-icon" /><p>Business Connect</p></Link></li> */}
                         {/* <li><Link to="/sponsorships" style={{ textDecoration: 'none' }}><GoSponsorTiers className="dashboard-icon" /><p>Sponsorships</p></Link></li> */}
                         <li><Link to="/events" style={{ textDecoration: 'none' }}><MdOutlineEvent className="dashboard-icon" /><p>Events</p></Link></li>
-                        <li><Link to="/jobs" style={{ textDecoration: 'none' }}><FaBriefcase className="dashboard-icon" /><p>Internships</p></Link></li>
+                        <li><Link to="/internships" style={{ textDecoration: 'none' }}><FaBriefcase className="dashboard-icon" /><p>Internships</p></Link></li>
                         {/* <li><Link to="/internships" style={{ textDecoration: 'none' }}><HiOutlineBriefcase style={{ color: '#407093' }} /><p>Internships</p></Link></li> */}
                         <li><Link to="/archive" style={{ textDecoration: 'none' }}><HiOutlineBriefcase className="dashboard-icon" /><p>Archive</p></Link></li>
                         <li><Link to="/notifications" style={{ textDecoration: 'none' }}><IoIosNotifications className="dashboard-icon" /><p>Notifications</p></Link></li>

@@ -104,7 +104,7 @@ const Dashboard = ({ handleLogout }) => {
             <Route path="/notifications/*" element={<NotificationsPage />} />
             <Route path="/events/*" element={<Events />} />
             {/* <Route path="/chat/*" element={<Chat />} /> */}
-            <Route path="/jobs/*" element={<Jobs />} />
+            <Route path="/internships/*" element={<Jobs />} />
             {/* <Route path="/internships/*" element={<Internships />} /> */}
             <Route path="/settings/*" element={<Settings />} />
             <Route path="/jobs/:_id/:title" element={<IndividualJobPost />} />

@@ -38,12 +38,12 @@
     margin-bottom: 16px;
     background-color: #fff;
     width: 34vw;
-    height: 60vh;
+    /* height: 60vh; */
     max-width: 100%;
     overflow: hidden;
     position: relative;
     display: flex;
-    flex-direction: column;
+    /* flex-direction: column; */
 }
 
 .menu{

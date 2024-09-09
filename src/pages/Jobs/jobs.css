@@ -10,6 +10,7 @@
     font-size: 24px; /* Adjust font size as needed */
     font-weight: 200; /* Adjust font weight as needed */
     height: 20vh;
+    border-radius: inherit;
     position: relative;
     /* Add any additional styling as desired */
   }
@@ -18,29 +19,29 @@
     display: flex;
     justify-content: center;
     min-height: 20vh; 
-    position: relative;
+    width: 100%;
+    padding-top: 15px;
 }
 
 .centered-content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 100vh; /* Use viewport height to center vertically */
+    /* height: 100vh;  */
 }
 
   
   .jobs-card {
-    width: 80%; /* Adjust the width as needed */
+    width: 100%; /* Adjust the width as needed */
      /* Add a maximum width to prevent it from getting too wide */
-    border: 1px solid #ccc;
+    /* border: 1px solid #ccc; */
     border-radius: 5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 20px; /* Add padding to the card content */
-    margin: 0 auto; /* Center the card horizontally */
+    /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
+    /* padding: 20px;  */
+    /* margin: 0 auto;  */
     background-color: white;
-    border-radius: 0 0 5px 5px; /* Rounded corners only at the bottom */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    border-radius: 0 0 5px 5px; 
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
     border-radius: 8px;
 }
 

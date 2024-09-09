@@ -718,3 +718,32 @@
       gap: var(--gap-7xl);
     }
   }
+
+  @media screen and (max-width: 480px) {
+    .logo {
+        font-size: 24px;
+    }
+    .login-panel {
+        font-size: 36px;
+        padding: 0;
+    }
+    .content-area {
+        flex-direction: column;
+        gap: 20px;
+    }
+    .login-fields,
+    .welcome-message {
+        width: 100%;
+        padding: 0 10px;
+    }
+    .button1 {
+        font-size: var(--body-size);
+        line-height: 16px;
+    }
+    .credentials-input {
+        gap: var(--gap-7xl);
+    }
+    .account-details-parent{
+      margin-top: 40px;
+    }
+}
