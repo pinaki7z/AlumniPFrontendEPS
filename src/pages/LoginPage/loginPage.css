@@ -734,14 +734,14 @@
     .login-fields,
     .welcome-message {
         width: 100%;
-        padding: 15px;
+        padding: 30px;
     }
     .button1 {
         font-size: var(--body-size);
         line-height: 16px;
     }
     .credentials-input {
-        gap: var(--gap-7xl);
+        gap: var(--gap-5xs);
     }
     /* .account-details-parent{
       margin-top: 20px;
