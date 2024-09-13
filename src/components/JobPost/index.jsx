@@ -14,6 +14,9 @@ import { IoIosInformationCircle } from "react-icons/io";
 import { CiLocationArrow1 } from "react-icons/ci";
 import { RiHomeSmileLine } from "react-icons/ri";
 import baseUrl from "../../config";
+import location from "../../images/location-vector.svg";
+import categoryV from "../../images/category.svg";
+import amount from "../../images/amount.svg"
 
 const JobPost = ({ userId, id, jobTitle, title, titleS, description, salaryMin, createdAt, picture, salaryMax, duration, jobType, questions, category, currency, attachments, appliedCandidates, searchQuery, type, locationType, company }) => {
     const profile = useSelector((state) => state.profile);
@@ -129,8 +132,8 @@ const JobPost = ({ userId, id, jobTitle, title, titleS, description, salaryMin, 
     }
 
     return (
-        <div className="donation-card">
-            <div className="donation-card-image">
+        <div className="donation-card" style={{ height: '100%', width: '100%' }}>
+            <div className="donation-card-image" style={{ height: 'auto', width: '30%' }}>
                 {attachments && attachments.map((attachment, index) => {
                     if (!attachment.endsWith('.pdf')) {
                         return (
@@ -145,10 +148,10 @@ const JobPost = ({ userId, id, jobTitle, title, titleS, description, salaryMin, 
                     return null;
                 })}
             </div>
-            <div style={{ padding: '16px' }}>
-                <div style={{ border: '1px', padding: '5px', backgroundColor: "white", width: '100%' }}>
+            <div style={{ padding: '16px', width: '70%' }}>
+                <div style={{ border: '1px', backgroundColor: "white", width: '100%' }}>
                     <div className="donation-card-title" style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                        <h2 onClick={handleClick} style={{ cursor: 'pointer' }}>{jobTitle}</h2>
+                        <p onClick={handleClick} style={{ cursor: 'pointer', fontFamily: 'Inter', fontSize: '24px',fontWeight: '600' }}>{jobTitle}</p>
                         {appliedCandidates && appliedCandidates.map(candidate => {
                             if (candidate.userId === profile._id) {
                                 return (
@@ -199,29 +202,31 @@ const JobPost = ({ userId, id, jobTitle, title, titleS, description, salaryMin, 
                     </div>
                 </div>
                 <div className="user-details">
-                    <RiHomeSmileLine />
-                    <p>{company}</p>
+                    <p style={{ cursor: 'pointer', fontFamily: 'Inter', fontSize: '20px',fontWeight: '600',marginLeft: '0px' }}>{company}</p>
                 </div>
-                <div className="user-details">
-                    <GiMoneyStack />
-                    {(salaryMin === null && salaryMax === null) ? <p>Unpaid</p> : (
-                        <>
-                            <p>{salaryMin} <span style={{ marginLeft: '5px' }}>-</span> <span style={{ marginLeft: '5px' }}>{salaryMax}</span></p>
-                        </>
-                    )}
-                </div>
-                {locationType && <div className="user-details">
-                    <CiLocationArrow1 />
-                    <p>{Object.keys(locationType).find(key => locationType[key])}</p>
-                </div>}
+                <div style={{display: 'flex', justifyContent: 'space-between',marginTop: '15px'}}>
+                    
+                    {locationType && <div className="user-details">
+                        <img src={location} />
+                        <p style={{ cursor: 'pointer', fontFamily: 'Inter', fontSize: '16px',fontWeight: '500' }}>{Object.keys(locationType).find(key => locationType[key])}</p>
+                    </div>}
 
-                <div className="user-details">
-                    <AiFillGold />
-                    <p>{category}</p>
-                </div>
-                <div className="user-details">
-                    <FaBriefcase />
-                    <p>{type}</p>
+                    <div className="user-details">
+                        <img src={categoryV} />
+                        <p style={{ cursor: 'pointer', fontFamily: 'Inter', fontSize: '16px',fontWeight: '500' }}>{category}</p>
+                    </div>
+                    <div className="user-details">
+                    <img src={amount} />
+                        {(salaryMin === null && salaryMax === null) ? <p style={{ cursor: 'pointer', fontFamily: 'Inter', fontSize: '16px',fontWeight: '500' }}>Unpaid</p> : (
+                            <>
+                                <p style={{ cursor: 'pointer', fontFamily: 'Inter', fontSize: '16px',fontWeight: '500' }}>{salaryMin} <span style={{ marginLeft: '5px' }}>-</span> <span style={{ marginLeft: '5px',cursor: 'pointer', fontFamily: 'Inter', fontSize: '16px',fontWeight: '500' }}>{salaryMax}</span></p>
+                            </>
+                        )}
+                    </div>
+                    {/* <div className="user-details">
+                        <FaBriefcase />
+                        <p>{type}</p>
+                    </div> */}
                 </div>
                 {(userId === profile._id) && (
                     <div className="job-post-delete" >

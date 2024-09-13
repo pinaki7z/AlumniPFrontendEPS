@@ -292,12 +292,12 @@ const Jobs = () => {
                     } />
                     <Route path="/" element={<>
                         <div className="job-poztt">
-                            <div style={{ display: 'flex', flexDirection: 'row', gap: '5vw', flexWrap: 'wrap', paddingTop: '20px' }}>
+                            <div style={{ display: 'flex', flexDirection: 'row', gap: '5vw', flexWrap: 'wrap', padding: '2% 5%', height: '30vh' }}>
                                 {loading ? (
                                     <div>Loading.....</div>
                                 ) : filteredJobs.length ? (
                                     filteredJobs.map((job) => (
-                                        <div key={job._id} className="job-post">
+                                        <div key={job._id} className="job-post" style={{height: '100%', width: '100%'}}>
                                             <JobPost
                                                 userId={job.userId}
                                                 id={job._id}
@@ -323,7 +323,7 @@ const Jobs = () => {
                                         </div>
                                     ))
                                 ) : (
-                                    <div>No jobs posted</div>
+                                    <div>No internships posted</div>
                                 )}
                             </div>
                         </div>
