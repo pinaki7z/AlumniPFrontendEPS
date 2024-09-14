@@ -267,12 +267,12 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
   };
 
   return (
-    <div className={`post ${className}`}>
+    <div className={`   ${className}`}>
       {loading ? (
         <div>Loading...</div>
       ) : (
         <>
-          <div className='top'>
+          <div className=' flex mb-2 justify-between items-center  '>
             {profilePicture ? (
               <img src={profilePicture} style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
             ) : (
@@ -307,14 +307,14 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
           {image.length > 1 ? (
             <Slider {...settings}>
               {image.map((img, index) => (
-                <div key={index} className='image'>
-                  <img src={img} alt={`Post Image ${index + 1}`} />
+                <div key={index} className=''>
+                  <img  src={img} alt={`Post Image ${index + 1}`} />
                 </div>
               ))}
             </Slider>
           ) : image.length === 1 ? (
             <div>
-              <img src={image} alt={`image`} style={{ width: '-webkit-fill-available' }} />
+              <img className='shadow-sm'  src={image} alt={`image`} style={{ width: '-webkit-fill-available' , borderRadius:"5px"}} />
             </div>
           ) : null}
 

@@ -18,6 +18,7 @@ import { useEffect } from "react";
 import { IoIosNotifications } from "react-icons/io";
 import baseUrl from "../../config";
 import eps from "../../images/EPS _ Logo.png";
+import { Avatar } from "@mui/material";
 
 const LeftSidebar = () => {
   console.log("env ", process.env.REACT_APP_URL);
@@ -45,14 +46,13 @@ const LeftSidebar = () => {
   return (
     <div
       style={{
-        // width: "20%",
         backgroundColor: "#004C8A",
         height: "100vh",
         position: "fixed",
       }}
     >
-      <div style={{ textAlign: "center", marginTop: "3em" }}>
-        <img src={eps} alt="" width="115px" height="155px" />
+      <div className="flex justify-center " style={{ textAlign: "center", marginTop: "3em" }}>
+        <img src={eps} alt="" style={{width:"100px" , height:"100px"}} />
       </div>
       <div className="sideBar">
         <ul style={{ paddingLeft: "0px", width: "100%" }}>

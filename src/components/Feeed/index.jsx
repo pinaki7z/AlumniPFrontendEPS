@@ -189,7 +189,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
         {posts.map((post, index) => {
           if (post.type === 'Post' && post.groupID === _id && (post.archive === false || post.archive === undefined)) {
             return (
-              <div key={post._id} className="post-box">
+              <div key={post._id} className="post-box p-2 lg:p-4 ">
                 <Post
                   userId={post.userId}
                   postId={post._id}
@@ -217,7 +217,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
             );
           } else if (post.type === 'Internship' && (post.groupID === _id)) {
             return (
-              <div key={post._id} className="job-box" style={{ width: '100%' }}>
+              <div key={post._id} className="post-box p-2 lg:p-4 " style={{ width: '100%' }}>
                 <JobIntDisplay
                   jobId={post._id}
                   picture={post.coverImage}
@@ -234,20 +234,20 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
             );
           } else if ((post.type === 'poll') && (post.archive === false || post.archive === undefined)) {
             return (
-              <div key={post._id} className="post-box">
+              <div key={post._id} className="post-box p-2 lg:p-4 ">
                 <PollDisplay poll={post} />
               </div>
             );
           } else if ((post.type === 'event') && (post.archive === false || post.archive === undefined)) {
             return (
-              <div key={post._id} className="post-box">
+              <div key={post._id} className="post-box p-2 lg:p-4">
                 <EventDisplay event={post} />
               </div>
             );
           }
           else if (entityType === 'news') {
             return (
-              <div key={post._id} style={{ width: '100%' }}>
+              <div key={post._id} className='p-2 lg:p-4' style={{ width: '100%' }}>
                 <DisplayNews
                   userId={post.userId}
                   postId={post._id}

@@ -508,7 +508,7 @@ const SideWidgets = () => {
                             style={{
                                 backgroundColor: '#004C8A',
                                 color: '#FFFFF0',
-                                width: '125px',
+                                width: '100%',
                                 height: '45px',
                                 borderRadius: '8px',
                                 border: 'none',
@@ -536,7 +536,7 @@ const SideWidgets = () => {
                     //setSelectedEventDetails(null);
                 }}
             />
-            <div className="sideWidget-post-card">
+            <div className="sideWidget-post-card mt-4">
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <img src={profile.profilePicture} alt="Profile" width="60px" height="60px" style={{ borderRadius: '50%' }} />
                     <Link to='/profile' style={{ textDecoration: 'none', color: 'black' }}>
