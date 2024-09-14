@@ -47,7 +47,7 @@
   
   .sideWidget2-post-card {
     width: 100%;
-    max-width: 25vw;
+    /* max-width: 25vw; */
     background-color: #FEF7E7;
     border: 1px solid #e0e0e0;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
@@ -84,7 +84,7 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    max-width: 25vw;
+    /* max-width: 25vw; */
     background-color: #004C8A;
     border: 1px solid #e0e0e0;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);

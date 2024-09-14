@@ -467,8 +467,10 @@ const SideWidgets = () => {
 
 
     return (
-        <div className="sideWidget-feed">
-            <div style={{ float: 'right' }}>
+        <div className="">
+            <div 
+            // style={{ float: 'right' }}
+            >
                 <OverlayTrigger
                     trigger="click"
                     key='bottom'

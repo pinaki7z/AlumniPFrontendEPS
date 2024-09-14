@@ -45,7 +45,7 @@ const LeftSidebar = () => {
   return (
     <div
       style={{
-        width: "20%",
+        // width: "20%",
         backgroundColor: "#004C8A",
         height: "100vh",
         position: "fixed",

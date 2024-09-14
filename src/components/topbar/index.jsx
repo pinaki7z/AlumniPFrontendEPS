@@ -132,50 +132,17 @@ const TopBar = ({ handleLogout }) => {
 
     return (
         <>
-            <div className=" h-20 flex justify-center items-center  bg-[#FEF7E7]">
+            <div className=" h-20 ml-[60px] lg:mx-8 flex justify-center items-center  bg-[#FEF7E7]">
                 <div className="topBar">
-                    {/* <div className='top'>
-                        <img src={logo} alt="io" width='150px' height='40px' />
-                        <div>
-                            <a href="/">
-                                <button style={{ cursor: 'pointer', backgroundColor: 'rgb(255 255 255 / 15%)' }}><FaHome />Home</button>
-                            </a>
-                        </div>
-                        <div>
-                            <OverlayTrigger
-                                trigger="click"
-                                key='bottom'
-                                show={showPopover}
-                                placement='bottom'
-                                overlay={
-                                    <Popover id={`popover-positioned-bottom`}>
-                                        <Popover.Body>
-                                            <div className='img-job-vide' style={{ flexDirection: 'column', gap: '10px' }}>
-                                                <label style={{ backgroundColor: '#f3f3f3', textAlign: 'center', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em' }}>
-                                                    <a href="/groups/create" style={{ textDecoration: 'none', color: 'black' }}><HiUserGroup style={{ color: 'ffcf63' }} /> Create Group</a>
-                                                </label>
-                                                <button style={{ backgroundColor: '#f3f3f3', color: 'black', padding: '5px 10px' }} onClick={() => {
-                                                    setShowModal(true);
-                                                }}><BiSolidBriefcase style={{ color: 'black' }} />Create Job</button>
-                                                {showModal && <JobsInt modalShow={showModal} onHideModal={onHideModal} popover={popover} />}
-                                                <label style={{ backgroundColor: '#f3f3f3', textAlign: 'center', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em' }}>
-                                                    <a href="/donations/create" style={{ textDecoration: 'none', color: 'black' }}><BsCurrencyRupee style={{ color: 'c8d1da' }} /> Create Donations</a>
-                                                </label>
-                                                <label style={{ backgroundColor: '#f3f3f3', textAlign: 'center', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em' }}>
-                                                    <a href="/sponsorships/create" style={{ textDecoration: 'none', color: 'black' }}><GoSponsorTiers style={{ color: '#d8887d' }} /> Create Sponsorships</a>
-                                                </label>
-                                            </div>
-                                        </Popover.Body>
-                                    </Popover>
-                                }
-                            >
-                                <button onClick={() => setShowPopover(!showPopover)} style={{ backgroundColor: '#174873' }}><FaPlus />Create</button>
-                            </OverlayTrigger>
-                        </div>
-                    </div> */}
+                   
 
-                    <div className="search" style={{ display: 'flex', width: '67%' }}>
-                        <form onSubmit={handleSearch} style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                    <div className="search w-100" 
+                    // style={{ display: 'flex', width: '67%' }}
+                    >
+                        <form onSubmit={handleSearch} 
+                        className='w-100'
+                        // style={{ display: 'flex', alignItems: 'center', width: '100%' }}
+                        >
                             <div style={{ position: 'relative', width: '100%' }}>
                                 <input
                                     type="search"
@@ -247,7 +214,10 @@ const TopBar = ({ handleLogout }) => {
                             setShowProfileOptions(!showProfileOptions);
                         }} >
                             <img src={profile.profilePicture ? profile.profilePicture : profilePic} alt='profile-pic' width='40px' height='40px' style={{ borderRadius: '50%'}} />
-                            <p style={{ marginBottom: '0px', color: '#3A3A3A', fontWeight: '600', fontSize: '20px', lineHeight: '24.2px' }}>{profile.firstName}</p>
+                            <p 
+                            className='hidden md:block text-black'
+                            // style={{ marginBottom: '0px', color: '#3A3A3A', fontWeight: '600', fontSize: '20px', lineHeight: '24.2px' }}
+                            >{profile.firstName}</p>
                         </div>
                         {showProfileOptions && (
                             <ul className="profile-options" >
