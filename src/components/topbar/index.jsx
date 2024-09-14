@@ -132,7 +132,7 @@ const TopBar = ({ handleLogout }) => {
 
     return (
         <>
-            <div className="top-bar">
+            <div className=" h-20 flex justify-center items-center  bg-[#FEF7E7]">
                 <div className="topBar">
                     {/* <div className='top'>
                         <img src={logo} alt="io" width='150px' height='40px' />
@@ -181,10 +181,11 @@ const TopBar = ({ handleLogout }) => {
                                     type="search"
                                     name="search"
                                     id="search"
+                                    className='rounded-sm'
                                     placeholder="Search for people and groups"
                                     value={searchText}
                                     onChange={handleChange}
-                                    style={{ width: '100%', padding: '10px 40px 10px 10px', border: '1px solid #004C8A' }}
+                                    style={{ width: '100%', padding: '10px 40px 10px 10px', border: '2px solid #004C8A' }}
                                 />
                                 <button
                                     type="submit"

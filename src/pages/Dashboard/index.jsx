@@ -57,7 +57,7 @@ const Dashboard = ({ handleLogout }) => {
         }}
       >
         <LeftSidebar />
-        <div style={{ marginLeft: '20%', width: '80%' }}>
+        <div className="" style={{ marginLeft: '20%', width: '80%' }}>
           <TopBar handleLogout={handleLogout} />
           <Routes>
 

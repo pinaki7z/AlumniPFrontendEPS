@@ -7,7 +7,7 @@
   color: white;
   width: 94%;
   justify-content: space-between;
-  padding-right: 70px;
+  /* padding-right: 30px; */
   /* margin-right: 130px; */
 }
 .top-bar {
@@ -28,7 +28,7 @@
 
 .search input {
   width: 80%;
-  border-radius: 10px;
+  border-radius: 6px;
   color: green !important;
   background: #FEF7E7;
   padding-left: 15px;

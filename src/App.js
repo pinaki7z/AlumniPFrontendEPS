@@ -23,6 +23,7 @@ import IndividualGroup from "./components/Groups/IndividualGroup";
 import { GiConsoleController } from "react-icons/gi";
 import { useSelector } from "react-redux";
 import Events from "./pages/Events";
+import './tailwind.css';
 
 function App() {
   const [cookies, removeCookie] = useCookies(["token"]);
@@ -59,9 +60,9 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className="App lexend-bold">
       <ToastContainer />
-      <div>
+      <div> 
         <Router>
           <Routes>
             <Route
