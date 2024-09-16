@@ -99,12 +99,12 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
   return (
     <div className="member-container">
       <div
-        style={{
-          paddingBottom: '2em',
-          display: 'flex',
-          flexDirection: 'column',
-          paddingTop: '25px'
-        }}
+        // style={{
+        //   paddingBottom: '2em',
+        //   display: 'flex',
+        //   flexDirection: 'column',
+        //   paddingTop: '25px'
+        // }}
       >
         <p style={{ fontWeight: '600', paddingBottom: '0px', color: '#3A3A3A', fontSize: '32px' }}>Members</p>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -154,25 +154,22 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
         <Route path="/" element={
 
           <>
-            {/* <div>
-              <PageSubTitle
-                buttontext1={`All Members (${profile.profileLevel === 0 ? 'superadmin' : profile.profileLevel === 1 ? 'admin' : 'alumni/current'})`}
-                name='members'
-                create={admin}
-              />
-
-            </div> */}
+      
             <div
-              className="pro"
-              style={{
-                marginTop: '1em',
-                display: 'flex',
-                flexWrap: 'wrap',
-                paddingBottom: '20px',
-              }}
+              // className="pro"
+              // style={{
+              //   marginTop: '1em',
+              //   display: 'flex',
+              //   flexWrap: 'wrap',
+              //   paddingBottom: '20px',
+              // }}
+              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4"
             >
               <Link to={`/members/create`} style={{ textDecoration: 'none', color: 'black' }}>
-                <div style={{ border: '2px dotted #F8A700', borderRadius: '8px', width: '17vw', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <div 
+                className='border-2 border-[2px dotted #F8A700] rounded-3xl min-h-[200px] h-100 w-100 flex items-center justify-center'
+                // style={{ border: '2px dotted #F8A700', borderRadius: '8px', width: '17vw', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                >
                   <img src={createMember} alt="" srcset="" />
                 </div>
               </Link>

@@ -1,15 +1,31 @@
-import React from 'react';
-import { ThumbUpRounded, ChatBubbleOutlineRounded, NearMeRounded, DeleteRounded, MoreVert } from '@mui/icons-material';
-import PlayCircleOutlineRoundedIcon from '@mui/icons-material/PlayCircleOutlineRounded';
-import { Avatar, TextField, IconButton, Typography, Menu, MenuItem, Modal, Box, Button } from '@mui/material';
-import { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
-import { useCookies } from 'react-cookie';
-import './Post.scss';
-import { useSelector } from 'react-redux';
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import React from "react";
+import {
+  ThumbUpRounded,
+  ChatBubbleOutlineRounded,
+  NearMeRounded,
+  DeleteRounded,
+  MoreVert,
+} from "@mui/icons-material";
+import PlayCircleOutlineRoundedIcon from "@mui/icons-material/PlayCircleOutlineRounded";
+import {
+  Avatar,
+  TextField,
+  IconButton,
+  Typography,
+  Menu,
+  MenuItem,
+  Modal,
+  Box,
+  Button,
+} from "@mui/material";
+import { useState, useEffect, useRef } from "react";
+import axios from "axios";
+import { useCookies } from "react-cookie";
+import "./Post.scss";
+import { useSelector } from "react-redux";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import { useParams } from "react-router-dom";
 import deleteButton from "../../images/delete.svg";
 import commentIcon from "../../images/comment.svg";
@@ -18,20 +34,57 @@ import liked from "../../images/liked.svg";
 import unliked from "../../images/unliked.svg";
 import postDelete from "../../images/post-delete.svg";
 import baseUrl from "../../config";
-import CreatePost1 from '../CreatePost1';
+import CreatePost1 from "../CreatePost1";
 import { FaHandsClapping } from "react-icons/fa6";
 import { ImSmile2 } from "react-icons/im";
 import { BiSolidLike } from "react-icons/bi";
 
-function Post({ userId, postId, profilePicture, username, text, timestamp, image, video, likes, smile, thumbsUp, clap, handleLikes, handleComments, className, onDeletePost, entityType, showDeleteButton, groupID, archived }) {
-  console.log('video pathh', video);
+function Post({
+  userId,
+  postId,
+  profilePicture,
+  username,
+  text,
+  timestamp,
+  image,
+  video,
+  likes,
+  smile,
+  thumbsUp,
+  clap,
+  handleLikes,
+  handleComments,
+  className,
+  onDeletePost,
+  entityType,
+  showDeleteButton,
+  groupID,
+  archived,
+}) {
+  console.log("video pathh", video);
 
   const PrevButton = ({ onClick }) => {
-    return <button className="slick-arrow slick-prev" style={{ background: 'black' }} onClick={onClick}>Previous</button>;
+    return (
+      <button
+        className="slick-arrow slick-prev"
+        style={{ background: "black" }}
+        onClick={onClick}
+      >
+        Previous
+      </button>
+    );
   };
 
   const NextButton = ({ onClick }) => {
-    return <button className="slick-arrow slick-next" style={{ background: 'black' }} onClick={onClick}>Next</button>;
+    return (
+      <button
+        className="slick-arrow slick-next"
+        style={{ background: "black" }}
+        onClick={onClick}
+      >
+        Next
+      </button>
+    );
   };
 
   const settings = {
@@ -43,7 +96,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
     autoplay: true,
     autoplaySpeed: 2000,
     prevArrow: <PrevButton />,
-    nextArrow: <NextButton />
+    nextArrow: <NextButton />,
   };
 
   const { _id } = useParams();
@@ -51,9 +104,9 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
   const [isThumbsUp, setIsThumbsUp] = useState(false);
   const [isClapped, setIsClapped] = useState(false);
   const [isSmile, setIsSmile] = useState(false);
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
-  const [cookie, setCookie] = useCookies(['access_token']);
+  const [cookie, setCookie] = useCookies(["access_token"]);
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [showCreatePost, setShowCreatePost] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -68,7 +121,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
     admin = true;
   }
 
-  console.log('groupIds in feed', _id, groupID);
+  console.log("groupIds in feed", _id, groupID);
 
   const handlePlay = async () => {
     if (videoRef.current) {
@@ -77,7 +130,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
           await videoRef.current.pause();
           setIsPlaying(false);
         } catch (error) {
-          console.error('Error playing video:', error);
+          console.error("Error playing video:", error);
         }
       } else {
         videoRef.current.play();
@@ -85,8 +138,6 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
       }
     }
   };
-
-
 
   // useEffect(() => {
   //   if (loggedInUserId && postId) {
@@ -209,7 +260,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
         await axios.delete(`${baseUrl}/${entityType}/${postId}`);
         onDeletePost(postId);
       } catch (error) {
-        console.error('Error deleting post:', error);
+        console.error("Error deleting post:", error);
       }
     } else {
       console.log("Cannot Delete");
@@ -248,10 +299,12 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
     }
   };
 
-
   const formatCreatedAt = (timestamp) => {
-    const options = { hour: 'numeric', minute: 'numeric', hour12: true };
-    const timeString = new Date(timestamp).toLocaleTimeString(undefined, options);
+    const options = { hour: "numeric", minute: "numeric", hour12: true };
+    const timeString = new Date(timestamp).toLocaleTimeString(
+      undefined,
+      options
+    );
     const dateString = new Date(timestamp).toLocaleDateString();
 
     return `${dateString} ${timeString}`;
@@ -266,25 +319,48 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
     setIsReactionsModalOpen(false);
   };
 
+  const handlePlayPause = () => {
+    if (isPlaying) {
+      videoRef.current.pause();
+    } else {
+      videoRef.current.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
   return (
-    <div className={`post ${className}`}>
+    <div className={`   ${className}`}>
       {loading ? (
         <div>Loading...</div>
       ) : (
         <>
-          <div className='top'>
+          <div className=" flex mb-2 justify-between items-center  ">
             {profilePicture ? (
-              <img src={profilePicture} style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
+              <img
+                src={profilePicture}
+                style={{ width: "50px", height: "50px", borderRadius: "50%" }}
+              />
             ) : (
-              <Avatar src={comment} style={{ width: '50px', height: '50px' }} />
+              <Avatar src={comment} style={{ width: "50px", height: "50px" }} />
             )}
-            <div className='info'>
+            <div className="info">
               <h4>{username}</h4>
-              <span style={{ fontSize: '14px', fontWeight: '500', color: '#004C8A' }}>{formatCreatedAt(timestamp)}</span>
+              <span
+                style={{
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  color: "#004C8A",
+                }}
+              >
+                {formatCreatedAt(timestamp)}
+              </span>
             </div>
             {(admin || userId === profile._id) && (
               <>
-                <IconButton onClick={(e) => setMenuAnchor(e.currentTarget)} className='more-button' style={{ marginLeft: 'auto', color: 'black' }}>
+                <IconButton
+                  onClick={(e) => setMenuAnchor(e.currentTarget)}
+                  className="more-button"
+                  style={{ marginLeft: "auto", color: "black" }}
+                >
                   <MoreVert />
                 </IconButton>
                 <Menu
@@ -293,49 +369,108 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
                   onClose={() => setMenuAnchor(null)}
                 >
                   <MenuItem onClick={handleEditPost}>Edit</MenuItem>
-                  <MenuItem onClick={handleArchivePost}>{archived ? 'Unarchive' : 'Archive'}</MenuItem>
-                  <MenuItem onClick={() => handleDeletePost(userId)}>Delete</MenuItem>
+                  <MenuItem onClick={handleArchivePost}>
+                    {archived ? "Unarchive" : "Archive"}
+                  </MenuItem>
+                  <MenuItem onClick={() => handleDeletePost(userId)}>
+                    Delete
+                  </MenuItem>
                 </Menu>
               </>
             )}
           </div>
           {text && (
-            <div className='texxt'>
+            <div className="texxt">
               <p>{text}</p>
             </div>
           )}
           {image.length > 1 ? (
             <Slider {...settings}>
               {image.map((img, index) => (
-                <div key={index} className='image'>
+                <div key={index} className="">
                   <img src={img} alt={`Post Image ${index + 1}`} />
                 </div>
               ))}
             </Slider>
           ) : image.length === 1 ? (
             <div>
-              <img src={image} alt={`image`} style={{ width: '-webkit-fill-available' }} />
+              <img
+                className="shadow-sm"
+                src={image}
+                alt={`image`}
+                style={{ width: "-webkit-fill-available", borderRadius: "5px" }}
+              />
             </div>
           ) : null}
 
           {video && (
-            <div className='video'>
+            <div className="relative video-player-container w-full">
               <video
                 ref={videoRef}
-                autoPlay={isPlaying}
+                className="w-full h-auto rounded-md"
+                autoPlay={false}
                 preload="auto"
                 controls={false}
-                onClick={handlePlay}
+                onClick={handlePlayPause}
               >
-                <source src={video.videoPath} type='video/mp4' />
+                <source src={video.videoPath} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
-              <div className={`play-button ${isPlaying ? '' : ''}`} onClick={handlePlay}>
-                <PlayCircleOutlineRoundedIcon fontSize='large' />
+
+              {/* Play/Pause Button */}
+              <div
+                className={`absolute inset-0 flex justify-center items-center transition-opacity duration-300 ${
+                  isPlaying ? "opacity-0" : "opacity-100"
+                }`}
+                onClick={handlePlayPause}
+              >
+                {isPlaying ? (
+                  <div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="90"
+                      height="90"
+                      fill="currentColor"
+                      style={{color:"white"}}
+                      class="bi bi-pause-btn"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M6.25 5C5.56 5 5 5.56 5 6.25v3.5a1.25 1.25 0 1 0 2.5 0v-3.5C7.5 5.56 6.94 5 6.25 5m3.5 0c-.69 0-1.25.56-1.25 1.25v3.5a1.25 1.25 0 1 0 2.5 0v-3.5C11 5.56 10.44 5 9.75 5" />
+                      <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z" />
+                    </svg>
+                  </div>
+                ) : (
+                  <div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="90"
+                      height="90"
+                      fill="currentColor"
+                      class="bi bi-play-btn"
+                      style={{color:"white"}}
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z" />
+                      <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z" />
+                    </svg>
+                  </div>
+                )}
               </div>
+
+              {/* Custom Play/Pause Button (Visible when clicked) */}
+              <button
+                className="absolute bottom-4 w-[150px] left-1/2 transform -translate-x-1/2 text-white bg-black/50 px-4 py-2 rounded-full"
+                onClick={handlePlayPause}
+              >
+                {isPlaying ? "Pause" : "Play"}
+              </button>
             </div>
           )}
-          <div className="reactions-count" onClick={handleOpenReactionsModal} style={{cursor: 'pointer'}}>
+          <div
+            className="reactions-count"
+            onClick={handleOpenReactionsModal}
+            style={{ cursor: "pointer" }}
+          >
             {/* {likes.length + smile.length + thumbsUp.length + clap.length} people reacted */}
           </div>
           {/* <Modal open={isReactionsModalOpen} onClose={handleCloseReactionsModal}>
@@ -408,22 +543,70 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
               </Button>
             </Box>
           </Modal> */}
-          {entityType === 'posts' && (
-            <div className='bottomAction' style={{ padding: '25px' }}>
-
-              {isThumbsUp ? (<BiSolidLike style={{ width: '20px', height: '20px', color: 'red', cursor: 'pointer' }} onClick={handleThumbsUp} />) : (
-                <BiSolidLike style={{ width: '20px', height: '20px', cursor: 'pointer' }} onClick={handleThumbsUp} />
+          {entityType === "posts" && (
+            <div className="bottomAction" style={{ padding: "25px" }}>
+              {isThumbsUp ? (
+                <BiSolidLike
+                  style={{
+                    width: "20px",
+                    height: "20px",
+                    color: "red",
+                    cursor: "pointer",
+                  }}
+                  onClick={handleThumbsUp}
+                />
+              ) : (
+                <BiSolidLike
+                  style={{ width: "20px", height: "20px", cursor: "pointer" }}
+                  onClick={handleThumbsUp}
+                />
               )}
-              {isSmile ? (<ImSmile2 style={{ width: '20px', height: '20px', color: 'red', cursor: 'pointer' }} onClick={handleSmile} />) : (
-                <ImSmile2 style={{ width: '20px', height: '20px', cursor: 'pointer' }} onClick={handleSmile} />
+              {isSmile ? (
+                <ImSmile2
+                  style={{
+                    width: "20px",
+                    height: "20px",
+                    color: "red",
+                    cursor: "pointer",
+                  }}
+                  onClick={handleSmile}
+                />
+              ) : (
+                <ImSmile2
+                  style={{ width: "20px", height: "20px", cursor: "pointer" }}
+                  onClick={handleSmile}
+                />
               )}
-              {isClapped ? (<FaHandsClapping style={{ width: '20px', height: '20px', color: 'red', cursor: 'pointer' }} onClick={handleClap} />) : (
-                <FaHandsClapping style={{ width: '20px', height: '20px', cursor: 'pointer' }} onClick={handleClap} />
+              {isClapped ? (
+                <FaHandsClapping
+                  style={{
+                    width: "20px",
+                    height: "20px",
+                    color: "red",
+                    cursor: "pointer",
+                  }}
+                  onClick={handleClap}
+                />
+              ) : (
+                <FaHandsClapping
+                  style={{ width: "20px", height: "20px", cursor: "pointer" }}
+                  onClick={handleClap}
+                />
               )}
               {isLiked ? (
-                <img src={liked} alt="" style={{ width: '20px', height: '20px', cursor: 'pointer' }} onClick={handleLike} />
+                <img
+                  src={liked}
+                  alt=""
+                  style={{ width: "20px", height: "20px", cursor: "pointer" }}
+                  onClick={handleLike}
+                />
               ) : (
-                <img src={unliked} alt="" style={{ width: '20px', height: '20px', cursor: 'pointer' }} onClick={handleLike} />
+                <img
+                  src={unliked}
+                  alt=""
+                  style={{ width: "20px", height: "20px", cursor: "pointer" }}
+                  onClick={handleLike}
+                />
               )}
 
               {/* <div className='action' onClick={handleLike}>
@@ -444,7 +627,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
             <CreatePost1
               closeButton={() => setShowCreatePost(false)}
               close={true}
-              entityType='posts'
+              entityType="posts"
               postId={postId}
             />
           </div>
@@ -458,13 +641,23 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
       >
         <Box sx={{ ...modalStyle, width: 400 }}>
           <Typography id="archive-modal-title" variant="h6" component="h2">
-            Are you sure you want to {archived ? 'unarchive' : 'archive'} this post?
+            Are you sure you want to {archived ? "unarchive" : "archive"} this
+            post?
           </Typography>
           <Box mt={2}>
-            <Button variant="contained" color="primary" onClick={confirmArchivePost}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={confirmArchivePost}
+            >
               Yes
             </Button>
-            <Button variant="outlined" color="secondary" onClick={() => setIsArchiveModalOpen(false)} sx={{ ml: 2 }}>
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={() => setIsArchiveModalOpen(false)}
+              sx={{ ml: 2 }}
+            >
               No
             </Button>
           </Box>
@@ -475,12 +668,12 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
 }
 
 const modalStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  bgcolor: "background.paper",
+  border: "2px solid #000",
   boxShadow: 24,
   p: 4,
 };

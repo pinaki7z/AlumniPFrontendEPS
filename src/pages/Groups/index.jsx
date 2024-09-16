@@ -36,12 +36,18 @@ const Groups = () => {
 
 
   return (
-    <div style={{ width: '100%', padding: '5%' }}>
+    <div 
+    // style={{ width: '100%', padding: '5%' }}
+    className="p-5"
+    >
       <Routes>
         <Route path="/" element={
           <>
             {/* <PageTitle title={title} icon={icon} /> */}
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div 
+            // style={{ display: 'flex', justifyContent: 'space-between' }}
+            className="flex justify-between"
+            >
               <div className="search" style={{ display: 'flex', width: '75%' }}>
                 <form style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                   <div style={{ position: 'relative', width: '100%' }}>

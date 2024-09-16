@@ -145,16 +145,16 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
     <>
       <div
         className="card"
-        style={{
-          width: "17vw",
-          backgroundPosition: "center",
-          WebkitBackgroundSize: "cover",
-          position: 'relative',
-          height: '42vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
+        // style={{
+        //   width: "17vw",
+        //   backgroundPosition: "center",
+        //   WebkitBackgroundSize: "cover",
+        //   position: 'relative',
+        //   height: '42vh',
+        //   display: 'flex',
+        //   flexDirection: 'column',
+        //   alignItems: 'center',
+        // }}
       >
         {addButton && (
           <button

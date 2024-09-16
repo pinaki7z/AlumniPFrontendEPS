@@ -391,7 +391,7 @@ const IndividualJobPost = () => {
     );
 
     const viewCandidatesButton = (
-        <button onClick={() => setCandidateModalShow(true)}>View Interested Candidates (<span>{appliedCandidatesDetails.length}</span>)</button>
+        <button className="mb-4" onClick={() => setCandidateModalShow(true)}>View Interested Candidates (<span>{appliedCandidatesDetails.length}</span>)</button>
     );
 
     const renderImages = () => {
@@ -465,7 +465,10 @@ const IndividualJobPost = () => {
 
 
     return (
-        <div key={jobs._id} style={{ width: '55%', display: 'flex', justifyContent: 'center' }}>
+        <div key={jobs._id}
+        //  style={{ width: '55%', display: 'flex', justifyContent: 'center' }}
+        className="mx-2"
+         >
             {loading ? (<div>Loading..</div>) :
                 (
                     <div className="ijp-card-container" style={{ backgroundColor: '#f9f9f9' }}>
@@ -478,15 +481,21 @@ const IndividualJobPost = () => {
                                 borderRadius: '50%',
                                 marginRight: '10px'
                             }} /> */}
-                            <div className="ijp-title">
-                                <p>{jobs.title}</p>
+                            <div 
+                            // className="ijp-title"
+                            className="mt-4"
+                            >
+                                <p className="font-bold text-2xl md:text-3xl text-center ">{jobs.title}</p>
                             </div>
                             {/* <div className="ijp-user-details">
 
                                 <p>{profile.firstName} </p>
 
                             </div> */}
-                            <div className="ijp-location-bar">
+                            <div 
+                            // className="ijp-location-bar"
+                            className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4 mb-4"
+                            >
                                 <div className="ijp-location">
                                     <RiHomeSmileLine />
                                     <p>{jobs.company}</p>
@@ -542,7 +551,10 @@ const IndividualJobPost = () => {
 
                             <CandidatesModal />
 
-                            <div className="ijp-desc-salary">
+                            <div 
+                            // className="ijp-desc-salary"
+                            className="border-2 border-[1px solid #ccc] p-4 rounded-lg w-75 bg-[#f0f2f5] mt-4"
+                            >
                                 <div className="ijp-user-details">
                                     {jobs.salaryMin !== null || jobs.salaryMax !== null ? (
                                         <>
