@@ -234,7 +234,7 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
           </div>
         )}
 
-        {console.log('groupType', group.groupType, group.members)}
+        {/* {console.log('groupType', group.groupType, group.members)} */}
         {(group.groupType === 'Public' || group.groupType === 'Private') &&
           !group.members.some(member => member.userId === profile._id) && (
             <div className='display-post-edit'>
