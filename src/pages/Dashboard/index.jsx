@@ -152,7 +152,7 @@ const Dashboard = ({ handleLogout }) => {
         </div>
 
         {/* Chatbox */}
-        <div className="fixed right-0 bottom-0 w-[300px] bg-white">
+        <div className="fixed hidden lg:block right-0 bottom-0 w-[300px] bg-white">
           <Chatbox />
         </div>
       </div>

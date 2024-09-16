@@ -251,7 +251,7 @@ const Chat = ({userId}) => {
 
 
   return (
-    <div style={{ height: '100%', display: 'flex',  flexDirection: 'row', backgroundColor: 'aquamarine',borderRadius:'10px'  }}>
+    <div className="" style={{ height: '100%', display: 'flex',  flexDirection: 'row', backgroundColor: 'aquamarine',borderRadius:'10px'  }}>
       <div style={{backgroundColor: '#919294', width: '25%',borderRadius: '10px 0px 0px 10px', paddingLeft:'50px'}}>
         <div style={{marginTop:'5px'}}>
         <Logo />

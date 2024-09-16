@@ -141,7 +141,7 @@ const TopBar = ({ handleLogout }) => {
                   type="search"
                   name="search"
                   id="search"
-                  className="rounded-sm h-10 lg:h-12"
+                  className="rounded-sm h-10 "
                   placeholder="Search for people and groups"
                   value={searchText}
                   onChange={handleChange}

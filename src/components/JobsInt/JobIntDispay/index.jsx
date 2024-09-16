@@ -43,7 +43,7 @@ const JobIntDisplay = ({ picture, jobId, jobTitle, location, salaryMin, salaryMa
                 (
                     <div className="ijp-card-container">
                         <div className="ijp-card">
-                            <div className="ijp-image" style={{ backgroundImage: picture ? `url(${picture})` : `url(${coverImage})`, backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }}>
+                            <div className="ijp-image rounded-t-md" style={{ backgroundImage: picture ? `url(${picture})` : `url(${coverImage})`, backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }}>
                                
                             </div>
                         
@@ -81,7 +81,7 @@ const JobIntDisplay = ({ picture, jobId, jobTitle, location, salaryMin, salaryMa
                                     </div>
                                 </div>
                                 <div className="ijp-description">
-                                    <p>{title === 'Jobs' ? 'Job Description' : title === 'Internships' ? 'Internship Description' : ''}</p>
+                                    <p className='mb-3 text-lg'>{title === 'Jobs' ? 'Job Description' : title === 'Internships' ? 'Internship Description' : ''}</p>
                                     <p style={{ fontSize: 'small', marginTop: '-15px' }}>{description}</p>
                                 </div>
                             </div>

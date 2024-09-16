@@ -473,7 +473,7 @@ const CreatePost1 = ({
           </div>
           <div className="w-full   lg:w-[150px] ">
             <button
-              className=" h-10 pt-1 "
+              className=" h-10  "
               onClick={handleSubmit}
               style={{
                 color: "#ffffff",
