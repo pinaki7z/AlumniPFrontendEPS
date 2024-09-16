@@ -181,7 +181,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
       )}
       {showCreateButton &&
         <div style={{ width: '100%' }}>
-          <button style={{ fontFamily: 'Inter', fontWeight: '500', fontSize: '20px', padding: '30px', borderRadius: '8px', border: 'none', height: '0vh', width: '20%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '20px' }}>
+          <button className='' style={{ fontFamily: 'Inter', fontWeight: '500', fontSize: '20px', padding: '30px', borderRadius: '8px', border: 'none', width: '20%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '20px' }}>
             Create
           </button>
         </div>}
@@ -210,14 +210,14 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
                   onDeletePost={() => handleDeletePost(post._id)}
                   groupID={post.groupID}
                 />
-                {console.log("entityType", entityType)}
+                {/* {console.log("entityType", entityType)} */}
                 {/* {(entityType === 'posts' || entityType === 'forums') && (profile.profileLevel === 0 || profile.profileLevel === 1) &&(<CommentSection entityId={post._id} entityType="posts" onCommentSubmit={refreshComments}
                   onDeleteComment={refreshComments} comments={post ? post.comments : null} />)} */}
               </div>
             );
           } else if (post.type === 'Internship' && (post.groupID === _id)) {
             return (
-              <div key={post._id} className="post-box p-2 lg:p-4 " style={{ width: '100%' }}>
+              <div key={post._id} className="post-box  p-2 lg:p-4 " style={{ width: '100%' }}>
                 <JobIntDisplay
                   jobId={post._id}
                   picture={post.coverImage}
