@@ -1,20 +1,19 @@
-import './displayPost.css';
-import NoGroups from '../Groups/NoGroups';
-import picture from '../../images/d-group.jpg';
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { lineSpinner } from 'ldrs';
-import { useNavigate } from 'react-router-dom';
+import "./displayPost.css";
+import NoGroups from "../Groups/NoGroups";
+import picture from "../../images/d-group.jpg";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { lineSpinner } from "ldrs";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
-import React from 'react';
-import baseUrl from '../../config';
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
+import React from "react";
+import baseUrl from "../../config";
 import groupMembers from "../../images/Groups-c.svg";
-import groupPic from "../../images/d-group.jpg"
-
+import groupPic from "../../images/d-group.jpg";
 
 lineSpinner.register();
 
@@ -26,7 +25,7 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
   const [selectedGroupName, setSelectedGroupName] = useState("");
   const [selectedGroupUserId, setSelectedGroupUserId] = useState("");
   const navigateTo = useNavigate();
-  console.log('groups display post', groups)
+  console.log("groups display post", groups);
   const admin = profile.profileLevel === 0;
 
   const getRequest = async () => {
@@ -43,8 +42,8 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
   }, []);
 
   const GroupItem = ({ group }) => {
-    const [requestStatus, setRequestStatus] = useState('Request to Join');
-    console.log('request ', requestStatus);
+    const [requestStatus, setRequestStatus] = useState("Request to Join");
+    console.log("request ", requestStatus);
 
     function MyVerticallyCenteredModal(props) {
       return (
@@ -61,7 +60,11 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
           </Modal.Header>
           <Modal.Body>
             <h4>Upload a document:-</h4>
-            <input type="file" name="businessVerification" id="businessVerification" />
+            <input
+              type="file"
+              name="businessVerification"
+              id="businessVerification"
+            />
           </Modal.Body>
           <Modal.Footer>
             <Button onClick={handleRequest}>Submit</Button>
@@ -71,21 +74,29 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
       );
     }
 
-
     useEffect(() => {
       const matchingNotification = notificationList.find(
-        (notification) => notification.groupId === group._id && notification.userId === profile._id
+        (notification) =>
+          notification.groupId === group._id &&
+          notification.userId === profile._id
       );
       if (matchingNotification) {
-        setRequestStatus('Requested');
+        setRequestStatus("Requested");
       } else {
-        setRequestStatus('Request to Join');
+        setRequestStatus("Request to Join");
       }
     }, [group._id, notificationList, profile._id]);
 
-    const handleRequest = async (ownerId, groupId, userId, groupName, firstName, lastName) => {
-      if (document.getElementById('businessVerification')) {
-        setRequestStatus('Loading...');
+    const handleRequest = async (
+      ownerId,
+      groupId,
+      userId,
+      groupName,
+      firstName,
+      lastName
+    ) => {
+      if (document.getElementById("businessVerification")) {
+        setRequestStatus("Loading...");
         const formData = new FormData();
         const requestedUserName = `${profile.firstName} ${profile.lastName}`;
         const userId = profile._id;
@@ -94,11 +105,12 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
           groupId: selectedGroupId,
           userId,
           groupName: selectedGroupName,
-          requestedUserName
+          requestedUserName,
         };
-        const pdfFile = document.getElementById('businessVerification').files[0];
+        const pdfFile = document.getElementById("businessVerification")
+          .files[0];
 
-        formData.append('businessVerification', pdfFile);
+        formData.append("businessVerification", pdfFile);
 
         for (const key in body) {
           formData.append(key, body[key]);
@@ -107,24 +119,26 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
         try {
           const config = {
             headers: {
-              'Content-Type': 'multipart/form-data'
-            }
+              "Content-Type": "multipart/form-data",
+            },
           };
-          const response = await axios.post(`${baseUrl}/groups/createRequest`, formData, config);
+          const response = await axios.post(
+            `${baseUrl}/groups/createRequest`,
+            formData,
+            config
+          );
           setModalShow(false);
-          toast.success('requested');
+          toast.success("requested");
           if (response.data.requested === true) {
-
-            setRequestStatus('Requested');
-            console.log('requested if');
-          }
-          else setRequestStatus('Request to Join');
+            setRequestStatus("Requested");
+            console.log("requested if");
+          } else setRequestStatus("Request to Join");
         } catch (error) {
           console.error("Error creating request:", error);
         }
       }
 
-      setRequestStatus('Loading...');
+      setRequestStatus("Loading...");
       try {
         const requestedUserName = `${firstName} ${lastName}`;
         const body = {
@@ -132,123 +146,138 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
           groupId,
           userId,
           groupName,
-          requestedUserName
+          requestedUserName,
         };
-        const response = await axios.post(`${baseUrl}/groups/createRequest`, body);
-        console.log('body', response.data);
-        if (response.data.requested === true) setRequestStatus('Requested');
-        else setRequestStatus('Request');
+        const response = await axios.post(
+          `${baseUrl}/groups/createRequest`,
+          body
+        );
+        console.log("body", response.data);
+        if (response.data.requested === true) setRequestStatus("Requested");
+        else setRequestStatus("Request");
       } catch (error) {
         console.error("Error creating request:", error);
       }
     };
 
-
     const handleAddMember = async (groupId) => {
-      console.log('adding member', groupId);
+      console.log("adding member", groupId);
       try {
-        const response = await axios.put(`${baseUrl}/groups/members/${groupId}`, {
-          members: {
-            userId: profile._id,
-            profilePicture: profile.profilePicture,
-            userName: `${profile.firstName} ${profile.lastName}`,
-            profileLevel: profile.profileLevel
+        const response = await axios.put(
+          `${baseUrl}/groups/members/${groupId}`,
+          {
+            members: {
+              userId: profile._id,
+              profilePicture: profile.profilePicture,
+              userName: `${profile.firstName} ${profile.lastName}`,
+              profileLevel: profile.profileLevel,
+            },
           }
-        });
+        );
 
         if (response.status === 200) {
           const { isUserAdded } = response.data;
           if (isUserAdded === true) {
-            toast.success('added')
-            navigateTo(`/groups/${groupId}`)
+            toast.success("added");
+            navigateTo(`/groups/${groupId}`);
           }
           if (isUserAdded === false) {
-            toast.success('removed')
+            toast.success("removed");
           }
-          console.log('User added/removed to/from the group:', isUserAdded);
+          console.log("User added/removed to/from the group:", isUserAdded);
         } else {
-
-          console.error('Failed to add/remove user to/from the group');
+          console.error("Failed to add/remove user to/from the group");
         }
       } catch (error) {
-
-        console.error('Error adding/removing user to/from the group:', error);
+        console.error("Error adding/removing user to/from the group:", error);
       }
     };
 
     return (
-      <div key={group._id} className='w-100 min-h-[400px]'>
-        {console.log('group individual post', group)}
+      <div
+        key={group._id}
+        className="w-full min-h-[400px] bg-[#FEF7E7] border border-gray-300 rounded-lg overflow-hidden shadow-lg"
+      >
         {profile.profileLevel === 0 ||
-          (group.groupType === 'Public' && group.members.some(member => member.userId === profile._id)) ||
-          (group.groupType === 'Private' && group.members.some(member => member.userId === profile._id)) ||
-          group.businessConnect === true ? (
-          <div style={{
-            width: '100%', height: '80%', border: '1px solid black', background: '#FEF7E7'
-          }}>
-            <Link to={`/groups/${group._id}`} style={{ textDecoration: 'none', color: 'black' }}>
-              <div className='display-post-image' style={{ position: 'relative' }}>
-                {/* <img src={picture} alt="" width="100px" height="100px" style={{ position: 'absolute' }} /> */}
-                <div style={{
-                  width: '100%', height: '100%', backgroundImage: group.groupPicture ? `url(${group.groupPicture})` : `url(${groupPic})`,
-                  backgroundColor: group.groupPicture ? 'transparent' : '#FFFFFF',
-                  backgroundSize: 'cover',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundPosition: 'center',
-                }}></div>
-                <p style={{ position: 'absolute', top: '10px', right: '20px', backgroundColor: '#FFFFFF', padding: '8px 32px', border: '1px solid', fontWeight: '500', fontSize: '12px', fontFamily: 'Inter' }}>{group.groupType}</p>
-              </div>
-              <div className='display-post-title'>
-                <p style={{ marginBottom: '0rem', fontWeight: '600', fontSize: '20px', fontWeight: '600', fontFamily: 'Inter' }}>{group.groupName}</p>
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                  <img src={groupMembers} alt="" srcSet="" style={{ color: '#004C8A' }} />
-                  <p style={{ marginBottom: '0rem', color: '#7b7b7b', fontWeight: '500', fontSize: '16px', fontWeight: 'Inter' }}>{group.members.length} </p>
+        (group.groupType === "Public" &&
+          group.members.some((member) => member.userId === profile._id)) ||
+        (group.groupType === "Private" &&
+          group.members.some((member) => member.userId === profile._id)) ||
+        group.businessConnect === true ? (
+          <Link to={`/groups/${group._id}`} className="block h-full">
+            <div className="relative w-full h-[80%] overflow-hidden rounded-t-lg">
+              <div
+                className="w-full h-full bg-cover bg-center"
+                style={{
+                  backgroundImage: group.groupPicture
+                    ? `url(${group.groupPicture})`
+                    : `url(${groupPic})`,
+                  backgroundColor: group.groupPicture
+                    ? "transparent"
+                    : "#FFFFFF",
+                }}
+              ></div>
+              <p className="absolute top-2 right-4 bg-white py-1 px-3 border border-gray-200 text-sm font-semibold rounded-lg">
+                {group.groupType}
+              </p>
+            </div>
+            <div className="p-4">
+              <p className=" font-semibold text-lg">{group.groupName}</p>
+              <div className="flex items-center justify-between  gap-2">
+                <div className="flex justify-center gap-3">
+                  <img src={groupMembers} alt="" className="w-5 h-5" />
+                  <p className="text-gray-500 text-sm font-medium">
+                    {group.members.length} Members
+                  </p>
+                </div>
+                <div className="text-gray-500 text-md font-medium ">
+                  22nd April 2024
                 </div>
               </div>
-              <div style={{ padding: '0px 12px', fontWeight: '500', fontSize: '12px' }}>
-                22nd April 2024
-              </div>
-            </Link>
-          </div>
+            </div>
+          </Link>
         ) : (
-          <div style={{
-            width: '100%', height: '80%', border: '1px solid black', background: '#FEF7E7'
-          }}>
-            <div className='display-post-image' style={{ position: 'relative' }}>
-              {/* <img src={picture} alt="" width="100px" height="100px" style={{ position: 'absolute' }} /> */}
-              <div style={{
-                width: '100%', height: '100%', backgroundImage: group.groupPicture ? `url(${group.groupPicture})` : `url(${groupPic})`,
-                backgroundColor: group.groupPicture ? 'transparent' : '#FFFFFF',
-                backgroundSize: 'cover',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center',
-              }}></div>
-              <p style={{ position: 'absolute', top: '10px', right: '20px', backgroundColor: '#FFFFFF', padding: '8px 32px', border: '1px solid', fontWeight: '500', fontSize: '12px', fontFamily: 'Inter' }}>{group.groupType}</p>
-            </div>
-            <div className='display-post-title'>
-              <p style={{ marginBottom: '0rem', fontWeight: '600', fontSize: '20px', fontWeight: '600', fontFamily: 'Inter' }}>{group.groupName}</p>
-              <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                <img src={groupMembers} alt="" srcSet="" />
-                <p style={{ marginBottom: '0rem', color: '#7b7b7b', fontWeight: '500', fontSize: '16px', fontWeight: 'Inter' }}>{group.members.length} </p>
-              </div>
-            </div>
-            <div style={{ padding: '0px 12px', fontWeight: '500', fontSize: '12px' }}>
-              22nd April 2024
-            </div>
+          <div className="relative w-full overflow-hidden rounded-t-lg">
+            <div
+              className="w-full h-full bg-cover bg-center"
+              style={{
+                backgroundImage: group.groupPicture
+                  ? `url(${group.groupPicture})`
+                  : `url(${groupPic})`,
+                backgroundColor: group.groupPicture ? "transparent" : "#FFFFFF",
+              }}
+            ></div>
+            <p className="absolute top-2 right-4 bg-white py-1 px-3 border border-gray-200 text-sm font-semibold rounded-lg">
+              {group.groupType}
+            </p>
           </div>
         )}
 
-        {/* {console.log('groupType', group.groupType, group.members)} */}
-        {(group.groupType === 'Public' || group.groupType === 'Private') &&
-          !group.members.some(member => member.userId === profile._id) && (
-            <div className='display-post-edit'>
-              {group.groupType === 'Public' ? (
-                <button onClick={() => handleAddMember(group._id)} style={{ padding: '8px 32px', fontWeight: '500', fontSize: '20px', backgroundColor: '#004C8A', color: '#F8F8FF' }}>Join</button>
-              ) : (profile.department === group.department || group.category === "Business Connect" || group.department === 'All') && (
-                <button style={{ padding: '8px 32px', fontWeight: '500', fontSize: '20px', backgroundColor: '#004C8A', color: '#F8F8FF' }} onClick={() => {
+        <div className="p-4 flex justify-end">
+          {group.groupType === "Public" &&
+          !group.members.some((member) => member.userId === profile._id) ? (
+            <button
+              onClick={() => handleAddMember(group._id)}
+              className="py-2 px-6 bg-blue-600 text-white text-sm font-semibold rounded-md hover:bg-blue-500 transition"
+            >
+              Join
+            </button>
+          ) : (
+            group.groupType === "Private" &&
+            !group.members.some((member) => member.userId === profile._id) && (
+              <button
+                className="py-2 px-6 bg-blue-600 text-white text-sm font-semibold rounded-md hover:bg-blue-500 transition"
+                onClick={() => {
                   if (group.category === "Business Connect") {
-                    if (requestStatus === 'Requested') {
-                      handleRequest(group.userId, group._id, profile._id, group.groupName, profile.firstName, profile.lastName);
+                    if (requestStatus === "Requested") {
+                      handleRequest(
+                        group.userId,
+                        group._id,
+                        profile._id,
+                        group.groupName,
+                        profile.firstName,
+                        profile.lastName
+                      );
                     } else {
                       setModalShow(true);
                       setSelectedGroupId(group._id);
@@ -256,12 +285,22 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
                       setSelectedGroupUserId(group.userId);
                     }
                   } else {
-                    handleRequest(group.userId, group._id, profile._id, group.groupName, profile.firstName, profile.lastName);
+                    handleRequest(
+                      group.userId,
+                      group._id,
+                      profile._id,
+                      group.groupName,
+                      profile.firstName,
+                      profile.lastName
+                    );
                   }
-                }}>{requestStatus}</button>
-              )}
-            </div>
+                }}
+              >
+                {requestStatus}
+              </button>
+            )
           )}
+        </div>
 
         <MyVerticallyCenteredModal
           show={modalShow}
@@ -271,22 +310,26 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
     );
   };
 
-
   let filteredGroups;
-  if (profile.department === 'All') {
+  if (profile.department === "All") {
     filteredGroups = groups;
   } else {
-
-    filteredGroups = groups.filter(group => group.groupType === 'Public' || (group.groupType === 'Private' && profile.department === group.department) || group.category === 'Business Connect' || group.department === 'All');
+    filteredGroups = groups.filter(
+      (group) =>
+        group.groupType === "Public" ||
+        (group.groupType === "Private" &&
+          profile.department === group.department) ||
+        group.category === "Business Connect" ||
+        group.department === "All"
+    );
   }
-
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  w-100 gap-5 mt-4 rounded-xl">
       {loading ? (
         <div
           // style={{ display: 'flex', width: '100vw', height: '40vh', alignItems: 'center', justifyContent: 'center' }}
-          className='flex justify-center items-center w-[75vw] h-[40vh]'
+          className="flex justify-center items-center w-[75vw] h-[40vh]"
         >
           <l-line-spinner
             size="40"
@@ -296,12 +339,12 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
           ></l-line-spinner>
         </div>
       ) : filteredGroups.length > 0 ? (
-        filteredGroups.map((group) => <GroupItem key={group._id} group={group} />)
+        filteredGroups.map((group) => (
+          <GroupItem key={group._id} group={group} />
+        ))
       ) : (
-        <div className='display-post-noGroups'>No groups</div>
+        <div className="display-post-noGroups">No groups</div>
       )}
-
-
     </div>
   );
 };
