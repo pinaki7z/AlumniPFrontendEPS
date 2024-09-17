@@ -548,7 +548,7 @@ const SideWidgets = () => {
       <div
       // style={{ float: 'right' }}
       >
-        <OverlayTrigger
+   {(profile.profileLevel === 0 || profile.profileLevel === 1) &&     <OverlayTrigger
           trigger="click"
           key="bottom"
           show={showPopover}
@@ -609,7 +609,7 @@ const SideWidgets = () => {
               Create
             </button>
           )}
-        </OverlayTrigger>
+        </OverlayTrigger>}
       </div>
       <PollModal
         show={showPollModal}
