@@ -8,20 +8,29 @@ import { BiUserPlus } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useCookies } from "react-cookie";
-import { orbit } from 'ldrs';
+import { orbit } from "ldrs";
 import { useParams } from "react-router-dom";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import delButton from "../../images/deleteButton.svg";
 import profileImage from "../../images/profileImage.png";
 import { MdOutlineRestore } from "react-icons/md";
 import { MdOutlineDelete } from "react-icons/md";
 import baseUrl from "../../config";
-import { updateProfile } from '../../store/profileSlice';
+import { updateProfile } from "../../store/profileSlice";
 import { toast } from "react-toastify";
+import { Avatar } from "@mui/material";
 
-orbit.register()
+orbit.register();
 
-const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButton, handleDelete }) => {
+const Profilecard = ({
+  member,
+  name,
+  addButton,
+  groupMembers,
+  owner,
+  deleteButton,
+  handleDelete,
+}) => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [cookie, setCookie] = useCookies(["access_token"]);
   const [loading, setLoading] = useState(true);
@@ -33,12 +42,15 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
   if (profile.profileLevel === 0 || profile.profileLevel === 1) {
     admin = true;
   }
-  const isFollowPresent = window.location.href.includes('follow');
-  console.log('isFollowPresent', member)
+  const isFollowPresent = window.location.href.includes("follow");
+  console.log("isFollowPresent", member);
 
-
-  const isGroupURL = window.location.href.includes("http://localhost:3000/groups/");
-  const isForumURL = window.location.href.includes("http://localhost:3000/forums/");
+  const isGroupURL = window.location.href.includes(
+    "http://localhost:3000/groups/"
+  );
+  const isForumURL = window.location.href.includes(
+    "http://localhost:3000/forums/"
+  );
 
   useEffect(() => {
     // if (isGroupURL) {
@@ -73,31 +85,35 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
     setLoading(true);
     try {
       if (!isFollowing) {
-        const response = await axios.patch(`${baseUrl}/alumni/${member._id}/follow`, {
-          userId: profile._id,
-        });
+        const response = await axios.patch(
+          `${baseUrl}/alumni/${member._id}/follow`,
+          {
+            userId: profile._id,
+          }
+        );
         if (response.status === 200) {
           const responseData = await response.data;
           const { alumni } = responseData;
           dispatch(updateProfile(alumni));
-          toast.success('Followed');
+          toast.success("Followed");
           setIsFollowing(true);
           setLoading(false);
         }
-
       } else {
-        const response = await axios.patch(`${baseUrl}/alumni/${member._id}/follow`, {
-          userId: profile._id,
-        });
+        const response = await axios.patch(
+          `${baseUrl}/alumni/${member._id}/follow`,
+          {
+            userId: profile._id,
+          }
+        );
         if (response.status === 200) {
           const responseData = await response.data;
           const { alumni } = responseData;
           dispatch(updateProfile(alumni));
-          toast.success('Unfollowed');
+          toast.success("Unfollowed");
           setIsFollowing(false);
           setLoading(false);
         }
-
       }
     } catch (error) {
       console.error("Error toggling follow status:", error);
@@ -106,17 +122,21 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
   };
 
   const handleAddMember = async (groupId, memberId) => {
-    console.log('handle add ', groupId, memberId)
-    setLoading(true)
+    console.log("handle add ", groupId, memberId);
+    setLoading(true);
     try {
       const response = await axios.put(
-        `${baseUrl}/${isGroupURL ? `groups/members/${groupId}` : isForumURL ? `forums/members/${groupId}` : ''}`,
+        `${baseUrl}/${
+          isGroupURL
+            ? `groups/members/${groupId}`
+            : isForumURL
+            ? `forums/members/${groupId}`
+            : ""
+        }`,
         {
           userId: memberId,
         }
       );
-
-
 
       if (response.status === 200) {
         const { isUserAdded } = response.data;
@@ -128,14 +148,12 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
           setIsAdded(false);
           setLoading(false);
         }
-        console.log('User added/removed to/from the group:', isUserAdded);
+        console.log("User added/removed to/from the group:", isUserAdded);
       } else {
-
-        console.error('Failed to add/remove user to/from the group');
+        console.error("Failed to add/remove user to/from the group");
       }
     } catch (error) {
-
-      console.error('Error adding/removing user to/from the group:', error);
+      console.error("Error adding/removing user to/from the group:", error);
     }
   };
 
@@ -143,83 +161,105 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
 
   return (
     <>
-      <div
-        className="card"
-        // style={{
-        //   width: "17vw",
-        //   backgroundPosition: "center",
-        //   WebkitBackgroundSize: "cover",
-        //   position: 'relative',
-        //   height: '42vh',
-        //   display: 'flex',
-        //   flexDirection: 'column',
-        //   alignItems: 'center',
-        // }}
-      >
+      <div className="border text-card-foreground py-4 sm:py-6 px-2 sm:px-4 bg-background shadow-md rounded-lg overflow-hidden relative w-full sm:w-96 md:w-80 lg:w-64">
         {addButton && (
           <button
-            onClick={isOwner ? null : () => handleAddMember(_id ? _id : id, member._id)}
+            onClick={
+              isOwner ? null : () => handleAddMember(_id ? _id : id, member._id)
+            }
             disabled={isOwner}
+            className="absolute top-2 right-2 bg-gray-200 hover:bg-gray-300 text-black rounded-full p-2"
           >
-            {isOwner ? "Group Admin" : isAdded ? "Remove" : <BiUserPlus style={{ fontSize: '17px' }} />}
+            {isOwner ? (
+              "Group Admin"
+            ) : isAdded ? (
+              "Remove"
+            ) : (
+              <BiUserPlus style={{ fontSize: "17px" }} />
+            )}
           </button>
         )}
-        <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-          <img src={profileImage} alt="" style={{ width: '150px' }} />
-          {admin && deleteButton && !(profile.profileLevel === 1 && member.profileLevel === 1) && (
-            <>{member.accountDeleted === true ? <MdOutlineRestore onClick={handleDelete} style={{ width: '25px', height: '25px', position: 'absolute', right: '15px', top: '10px', cursor: 'pointer' }} /> : <img src={delButton} onClick={handleDelete} style={{ position: 'absolute', right: '15px', top: '10px', backgroundColor: 'white', cursor: 'pointer' }} />}</>
-          )}
+        <div className="flex flex-col items-center">
+          <div className="flex justify-center mb-4">
+            <Avatar
+              src={member?.profilePicture}
+              alt="Member Avatar"
+              style={{ width: "65px", height: "65px" }}
+              className="rounded-full object-cover w-20 h-20 sm:w-20 sm:h-20"
+            />
+          </div>
+          {admin &&
+            deleteButton &&
+            !(profile.profileLevel === 1 && member.profileLevel === 1) && (
+              <>
+                {member.accountDeleted === true ? (
+                  <MdOutlineRestore
+                    onClick={handleDelete}
+                    className="absolute top-2 right-2 text-gray-500 cursor-pointer"
+                    style={{ width: "25px", height: "25px" }}
+                  />
+                ) : (
+                  <img
+                    src={delButton}
+                    onClick={handleDelete}
+                    className="absolute top-2 right-2 bg-white p-1 cursor-pointer"
+                    style={{ width: "25px", height: "25px" }}
+                  />
+                )}
+              </>
+            )}
         </div>
         <Link
-          to={isFollowPresent ? `/members/${member.userId}` : `/members/${member._id}`}
-          style={{ textDecoration: "none", color: "black" }}
+          to={
+            isFollowPresent
+              ? `/members/${member.userId}`
+              : `/members/${member._id}`
+          }
+          className="text-center mb-3 no-underline text-black"
         >
-          <div style={{ textAlign: 'center' }}>
-            <h3 style={{ paddingTop: "1em", fontWeight: "600", fontSize: '20px', fontFamily: 'Inter', color: '#000000' }}>
-              {member.userName ? member.userName: `${member.firstName} ${member.lastName}`}
+          <h3 className="font-semibold text-md mb-1 ">
+            {member.userName || `${member.firstName} ${member.lastName}`}
+          </h3>
+          <div className="flex justify-center ">
+            <h3 className="text-md border px-2 rounded-[4px] bg-[#F8A700] mb-1  font-semibold">
+              {member.profileLevel === 1
+                ? "ADMIN"
+                : member.profileLevel === 2
+                ? "ALUMNI"
+                : member.profileLevel === 3
+                ? "STUDENT"
+                : "SUPER ADMIN"}
             </h3>
-            <p style={{ fontSize: '14px', fontWeight: '300', fontFamily: 'Inter', color: '#3A3A3A' }}>{member.profileLevel === 1 ? 'ADMIN' : member.profileLevel === 2 ? 'ALUMNI' : member.profileLevel === 3 ? 'STUDENT' : 'SUPER ADMIN'}</p>
-            <p style={{ fontSize: '14px', fontWeight: '300', fontFamily: 'Inter', color: '#3A3A3A' }}>{member.department}</p>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
-              <div>
-                <p style={{ color: '#636364', fontWeight: '500', fontSize: '14px', fontFamily: 'Inter' }}>Followers</p>
-                <p style={{ color: '#000000', fontWeight: '500', fontSize: '16px', fontFamily: 'Inter' }}>0</p>
-              </div>
-              <div>
-                <p style={{ color: '#636364', fontWeight: '500', fontSize: '14px', fontFamily: 'Inter' }}>Following</p>
-                <p style={{ color: '#000000', fontWeight: '500', fontSize: '16px', fontFamily: 'Inter' }}>0</p>
-              </div>
+          </div>
+          <p className="text-muted-foreground">{member.department}</p>
+          <div className="flex justify-center mb-2 gap-4 mt-2">
+            <div>
+              <p className="text-gray-600 font-medium text-sm">Followers</p>
+              <p className="text-black font-medium text-lg">0</p>
+            </div>
+            <div>
+              <p className="text-gray-600 font-medium text-sm">Following</p>
+              <p className="text-black font-medium text-lg">0</p>
             </div>
           </div>
         </Link>
+        <br />
         {loading ? (
-          <div style={{ textAlign: 'center' }}>
-            <l-orbit
-              size="35"
-              speed="1.5"
-              color="black"
-            ></l-orbit>
+          <div className="text-center mt-4">
+            <l-orbit size="35" speed="1.5" color="black"></l-orbit>
           </div>
         ) : (
           name !== "follow" && (
             <button
               onClick={handleFollowToggle}
-              style={{
-                width: '100%',
-                position: 'absolute',
-                bottom: '0px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: '8px 8px 0px 0px',
-                height: '6vh',
-                fontSize: '20px',
-                fontWeight: '500',
-                fontFamily: 'Inter',
-                backgroundColor: '#004C8A',
-              }}
+              className={`absolute left-0 bottom-0 w-full h-12 font-semibold text-lg ${
+                isFollowing
+                  ? "bg-[#004C8A] text-white"
+                  : "bg-[#F8A700] text-black"
+              } hover:bg-[#F8A700]`}
+              style={{ borderRadius: "0 0 8px 8px" }}
             >
-              {isFollowing ? "Following" : <><BiUserPlus style={{ fontSize: "17px" }} /> Follow</>}
+              {isFollowing ? "Following" : "Follow"}
             </button>
           )
         )}

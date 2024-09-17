@@ -15,7 +15,7 @@ const PageSubTitle = ({ buttontext1, buttontext2, buttontext3, buttontext4, butt
           <li style={{ listStyleType: 'none', padding: '10px', width: '30%', textAlign: 'center' }} className={location.pathname === buttontext1Link ? 'active-link1' : ''}>
             <Link to={buttontext1Link}
               // style={{ textDecoration: 'none', color: 'black', fontSize: '20px', fontFamily: 'Inter', fontWeight: '600' }}
-              className='font-bold  md:text-lg'
+              className='font-bold  text-nowrap md:text-lg'
             >{buttontext1}</Link>
           </li>
           <li style={{ listStyleType: 'none', padding: '10px', width: '30%', textAlign: 'center' }} className={location.pathname === buttontext2Link ? 'active-link2' : ''}>
@@ -28,21 +28,10 @@ const PageSubTitle = ({ buttontext1, buttontext2, buttontext3, buttontext4, butt
             style={{ listStyleType: 'none', padding: '10px', marginLeft: '0px', width: '30%', textAlign: 'center' }}
           >
             <Link to={buttontext3Link}
-              // style={{ textDecoration: 'none', color: 'black', fontSize: '20px', fontFamily: 'Inter', fontWeight: '600' }}
               className='font-bold  md:text-lg'
             >{buttontext3}</Link>
           </li>
-          {/* <li style={{ listStyleType: 'none', padding: '10px',marginLeft: '0px' }}><Link to={buttontext4Link} className={location.pathname === buttontext4Link ? 'active-link3' : ''} style={{ textDecoration: 'none', color: 'black' }}>{buttontext4}</Link></li>
-          <li style={{ listStyleType: 'none', padding: '10px',marginLeft: '0px' }}><Link to={buttontext5Link} className={location.pathname === buttontext5Link ? 'active-link3' : ''} style={{ textDecoration: 'none', color: 'black' }}>{buttontext5}</Link></li> */}
-          {create && <li
-            style={{ listStyleType: 'none' }}>
-            <Link to={`/${name}/create`}
-              style={{ textDecoration: 'none', color: 'black' }}>
-              <button>
-                <FaPlus />Create
-              </button>
-            </Link>
-          </li>}
+         
         </ul>
       </div>
     </div>

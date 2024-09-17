@@ -97,7 +97,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
 
 
   return (
-    <div className="member-container">
+    <div className="member-container mb-10">
       <div
         // style={{
         //   paddingBottom: '2em',
@@ -107,8 +107,8 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
         // }}
       >
         <p style={{ fontWeight: '600', paddingBottom: '0px', color: '#3A3A3A', fontSize: '32px' }}>Members</p>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <div className="search" style={{ display: 'flex', width: '75%' }}>
+        <div className='grid grid-cols-1 lg:grid-cols-2 lg:flex  gap-3'>
+          <div className="search" style={{ display: 'flex', width: '100%' }}>
             <form style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
               <div style={{ position: 'relative', width: '100%' }}>
                 <input
@@ -141,12 +141,15 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
 
             </form>
           </div>
-          <select className='select-dropdown'>
+          <div className=' w-full lg:w-[340px]   '>
+
+          <select className='w-full h-12 select-dropdown rounded shadow' >
             <option value="">All Roles</option>
             <option value="Admin">Admin</option>
             <option value="Alumni">Alumni</option>
             <option value="Current Student">Current Student</option>
           </select>
+          </div>
         </div>
 
       </div>
@@ -163,15 +166,16 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
               //   flexWrap: 'wrap',
               //   paddingBottom: '20px',
               // }}
-              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4"
+              className="flex flex-wrap gap-10 py-4  "
             >
               <Link to={`/members/create`} style={{ textDecoration: 'none', color: 'black' }}>
-                <div 
-                className='border-2 border-[2px dotted #F8A700] rounded-3xl min-h-[200px] h-100 w-100 flex items-center justify-center'
-                // style={{ border: '2px dotted #F8A700', borderRadius: '8px', width: '17vw', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                <button 
+                className='relative lg:w-64 w-[330px]'
+                // className='border-2 border-[2px dotted #F8A700] rounded-3xl min-h-[200px] h-100 w-100 flex items-center justify-center'
+                style={{ border: '2px dotted #F8A700', borderRadius: '8px',  height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
                 >
-                  <img src={createMember} alt="" srcset="" />
-                </div>
+                  <img src={createMember} alt="" className='lg:w-20 py-5 text-center  w-10' srcset="" />
+                </button>
               </Link>
               {displayedMembers.map((member) => (
                 <Profilecard

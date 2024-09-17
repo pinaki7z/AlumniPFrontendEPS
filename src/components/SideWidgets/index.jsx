@@ -840,7 +840,7 @@ const SideWidgets = () => {
         ) : (
           notifications.map((notification) => (
             <div
-            className="border-t-2"
+            className="border-t-2 py-3"
               key={notification._id}
               style={{
                 display: "flex",
@@ -849,8 +849,8 @@ const SideWidgets = () => {
                 // gap: "7px",
                 paddingLeft: "15px",
                 paddingRight: "5px",
-                paddingTop: "15px",
-                height: "7vh",
+                // paddingTop: "15px",
+                // height: "15vh",
               }}
             >
               <p
