@@ -26,9 +26,7 @@ import editProfilePicture from "../../../images/edit-profile-picture.svg";
 import { useCookies } from "react-cookie";
 import { lineSpinner } from "ldrs";
 import searchIcon from "../../../images/search.svg";
-import { fetchMembers } from "../../../store";
 import { Avatar } from "@mui/material";
-
 lineSpinner.register();
 
 const IndividualGroup = () => {
@@ -48,21 +46,6 @@ const IndividualGroup = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [saving, setSaving] = useState(false);
   const [allMembers, setAllMembers] = useState([]);
-
-  const getMembers = async () => {
-    try {
-      const membersData = await fetchMembers(); // Call the function from Redux
-      if (membersData) {
-        setAllMembers(membersData);
-      }
-    } catch (error) {
-      console.error("Error fetching members:", error);
-    }
-  };
-
-  useEffect(() => {
-    getMembers();
-  }, []);
 
   const token = cookie.token;
   let admin;
@@ -107,8 +90,7 @@ const IndividualGroup = () => {
       );
 
       if (response.status === 200) {
-        const responseData = await response.data;
-        const { alumni } = responseData;
+        const { alumni } = await response.data;
         dispatch(updateProfile(alumni));
       }
       setIsLoading((prevLoading) => ({ ...prevLoading, [memberId]: false }));
@@ -152,7 +134,6 @@ const IndividualGroup = () => {
         ];
       }
     });
-
     setSendMembers((prevSelected) => {
       const memberIndex = prevSelected.findIndex(
         (member) => member.userId === memberId
@@ -192,6 +173,52 @@ const IndividualGroup = () => {
       console.error("Error updating members:", error);
       toast.error("Failed to update members.");
       setSaving(false);
+    }
+  };
+
+  const handleFileChange = (event, fileType) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSelectedFile(reader.result);
+        handleSubmit(reader.result, fileType);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSubmit = async (fileData, fileType) => {
+    setLoading(true);
+    try {
+      const response = await axios.put(
+        `${baseUrl}/groups/${_id}`,
+        {
+          [fileType]: fileData,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        getGroup();
+        toast.success(
+          `${
+            fileType === "groupPicture"
+              ? "Group Picture"
+              : fileType === "coverPicture"
+              ? "Cover Picture"
+              : "Image"
+          } updated successfully.`
+        );
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error("Error updating picture:", error);
+      setLoading(false);
     }
   };
 
@@ -527,7 +554,11 @@ const IndividualGroup = () => {
         />
         <Route
           path="/add"
-          element={<GroupMembers members={groupMembers} />}
+          element={
+            <>
+              <GroupMembers members={groupMembers} />
+            </>
+          }
         />
       </Routes>
     </div>
