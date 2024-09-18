@@ -196,7 +196,7 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
     return (
       <div
         key={group._id}
-        className="w-full min-h-[400px] bg-[#FEF7E7] border border-gray-300 rounded-lg overflow-hidden shadow-lg"
+        className="w-full min-h-[300px] md:min-h-[400px] bg-[#FEF7E7] border border-gray-300 rounded-lg overflow-hidden shadow-lg"
       >
         {profile.profileLevel === 0 ||
         (group.groupType === "Public" &&
@@ -205,7 +205,7 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
           group.members.some((member) => member.userId === profile._id)) ||
         group.businessConnect === true ? (
           <Link to={`/groups/${group._id}`} className="block h-full">
-            <div className="relative w-full h-[80%] overflow-hidden rounded-t-lg">
+            <div className="relative w-full h-[50vw] md:h-[80%] overflow-hidden rounded-t-lg">
               <div
                 className="w-full h-full bg-cover bg-center"
                 style={{
@@ -217,27 +217,33 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
                     : "#FFFFFF",
                 }}
               ></div>
-              <p className="absolute top-2 right-4 bg-white py-1 px-3 border border-gray-200 text-sm font-semibold rounded-lg">
+              <p className="absolute top-2 right-4 bg-white py-1 px-3 border border-gray-200 text-xs md:text-sm font-semibold rounded-lg">
                 {group.groupType}
               </p>
             </div>
-            <div className="p-4">
-              <p className=" font-semibold text-lg">{group.groupName}</p>
-              <div className="flex items-center justify-between  gap-2">
-                <div className="flex justify-center gap-3">
-                  <img src={groupMembers} alt="" className="w-5 h-5" />
-                  <p className="text-gray-500 text-sm font-medium">
+            <div className="p-2 md:p-4">
+              <p className="font-semibold text-base md:text-lg">
+                {group.groupName}
+              </p>
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 mt-2">
+                <div className="flex justify-start gap-3">
+                  <img
+                    src={groupMembers}
+                    alt=""
+                    className="w-4 h-4 md:w-5 md:h-5"
+                  />
+                  <p className="text-gray-500 text-xs md:text-sm font-medium">
                     {group.members.length} Members
                   </p>
                 </div>
-                <div className="text-gray-500 text-md font-medium ">
+                <div className="text-gray-500 text-xs md:text-md font-medium">
                   22nd April 2024
                 </div>
               </div>
             </div>
           </Link>
         ) : (
-          <div className="relative w-full overflow-hidden rounded-t-lg">
+          <div className="relative w-full h-[50vw] md:h-[80%] overflow-hidden rounded-t-lg">
             <div
               className="w-full h-full bg-cover bg-center"
               style={{
@@ -247,18 +253,18 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
                 backgroundColor: group.groupPicture ? "transparent" : "#FFFFFF",
               }}
             ></div>
-            <p className="absolute top-2 right-4 bg-white py-1 px-3 border border-gray-200 text-sm font-semibold rounded-lg">
+            <p className="absolute top-2 right-4 bg-white py-1 px-3 border border-gray-200 text-xs md:text-sm font-semibold rounded-lg">
               {group.groupType}
             </p>
           </div>
         )}
 
-        <div className="p-4 flex justify-end">
+        <div className="p-2 md:p-4 flex justify-end">
           {group.groupType === "Public" &&
           !group.members.some((member) => member.userId === profile._id) ? (
             <button
               onClick={() => handleAddMember(group._id)}
-              className="py-2 px-6 bg-blue-600 text-white text-sm font-semibold rounded-md hover:bg-blue-500 transition"
+              className="py-1 md:py-2 px-4 md:px-6 bg-blue-600 text-white text-xs md:text-sm font-semibold rounded-md hover:bg-blue-500 transition"
             >
               Join
             </button>
@@ -266,7 +272,7 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
             group.groupType === "Private" &&
             !group.members.some((member) => member.userId === profile._id) && (
               <button
-                className="py-2 px-6 bg-blue-600 text-white text-sm font-semibold rounded-md hover:bg-blue-500 transition"
+                className="py-1 md:py-2 px-4 md:px-6 bg-blue-600 text-white text-xs md:text-sm font-semibold rounded-md hover:bg-blue-500 transition"
                 onClick={() => {
                   if (group.category === "Business Connect") {
                     if (requestStatus === "Requested") {
