@@ -247,7 +247,7 @@ const IndividualGroup = () => {
   };
 
   return (
-    <div className="w-full">
+    <div className="">
       <Routes>
         <Route
           exact
@@ -308,7 +308,7 @@ const IndividualGroup = () => {
                           <img
                             src={editProfilePicture}
                             alt="edit-profile-picture"
-                            className="rounded-full border-4 border-white absolute top-5  right-5 cursor-pointer"
+                            className="rounded-full border-4 border-white absolute top-0  right-0 cursor-pointer"
                             onClick={() =>
                               document.getElementById("profilePicture").click()
                             }
@@ -363,30 +363,32 @@ const IndividualGroup = () => {
                       </div>
                     </div>
 
-                    <div className="flex flex-col lg:flex-row w-full container mx-auto gap-6 py-6">
-                      <Routes>
-                        <Route
-                          exact
-                          path="/"
-                          element={
-                            <SocialMediaPost
-                              className="ml-0"
-                              showCreatePost={true}
-                              groupID={_id}
-                            />
-                          }
-                        />
-                        <Route
-                          exact
-                          path="/groupInvite"
-                          element={<GroupInvite className="w-full pt-12" />}
-                        />
-                        <Route
-                          exact
-                          path="/invite"
-                          element={<JoinGroup className="w-full" />}
-                        />
-                      </Routes>
+                    <div className="flex flex-col lg:flex-row w-full  mx-auto gap-6 py-6">
+                      <div className="lg:w-[70%]">
+                        <Routes>
+                          <Route
+                            exact
+                            path="/"
+                            element={
+                              <SocialMediaPost
+                                className="ml-0"
+                                showCreatePost={true}
+                                groupID={_id}
+                              />
+                            }
+                          />
+                          <Route
+                            exact
+                            path="/groupInvite"
+                            element={<GroupInvite className="w-full pt-12" />}
+                          />
+                          <Route
+                            exact
+                            path="/invite"
+                            element={<JoinGroup className="w-full" />}
+                          />
+                        </Routes>
+                      </div>
                       <div className="w-full lg:w-[35%] pt-12">
                         <div className="ig-lc-card">
                           {(profile._id === groupItem.userId || admin) && (
@@ -396,7 +398,7 @@ const IndividualGroup = () => {
                                   className="flex justify-end"
                                   onClick={() => setShowModal(true)}
                                 >
-                                  <div className="bg-[#F8A700] hover:bg-[#eab751] w-full flex gap-2 font-bold text-md cursor-pointer text-gray-800 rounded-lg p-2">
+                                  <div className="bg-[#F8A700]  hover:bg-[#eab751] w-full flex gap-2 font-bold text-md cursor-pointer text-gray-800 rounded-lg p-2">
                                     <img src={Add} alt="" />
                                     Add or Remove Members From Group
                                   </div>
@@ -416,9 +418,9 @@ const IndividualGroup = () => {
                             </div>
                           )}
                         </div>
-                        <div className="sideWidget2-post-card">
+                        <div className="sideWidget2-post-card mb-10">
                           <div className="sideWidget2-post-header">
-                            <p className="mb-0 font-medium text-xl">
+                            <p className="mb-0 font-medium text-lg text-nowrap">
                               Active Group Members
                             </p>
                           </div>
@@ -428,13 +430,13 @@ const IndividualGroup = () => {
                               .map((member) => (
                                 <div
                                   key={member._id}
-                                  className="flex gap-2 items-center p-3 border border-gray-300 rounded-lg"
+                                  className="flex gap-2 justify-between items-center p-3  border-gray-300 border-t-2 "
                                 >
                                   {member.profilePicture ? (
                                     <Avatar
                                       src={member.profilePicture}
                                       alt="Profile"
-                                      className="w-12 h-12 rounded-full"
+                                      className="w-10 h-10 rounded-full"
                                     />
                                   ) : (
                                     <img
@@ -443,7 +445,7 @@ const IndividualGroup = () => {
                                       className="w-14 h-14 rounded-full"
                                     />
                                   )}
-                                  <p className="mb-0 font-medium">
+                                  <p className="mb-0 text-xs font-medium">
                                     {member.userName}
                                   </p>
                                   <button
@@ -451,7 +453,7 @@ const IndividualGroup = () => {
                                       isFollowing(member.userId)
                                         ? "bg-[#F8A700] text-white"
                                         : "bg-white text-[#F8A700] border border-[#F8A700]"
-                                    } rounded-full px-6 py-2 ml-auto`}
+                                    } rounded-full px-4 text-xs p-1 ml-auto`}
                                     onClick={() =>
                                       handleFollowToggle(
                                         member.userId,
