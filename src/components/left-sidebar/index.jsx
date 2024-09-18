@@ -16,7 +16,7 @@ const navItems = [
   { to: '/internships', icon: FaBriefcase, label: 'Internships' },
   { to: '/archive', icon: HiOutlineBriefcase, label: 'Archive' },
   { to: '/notifications', icon: IoIosNotifications, label: 'Notifications' },
-  { to: '/settings', icon: MdSettings, label: 'Settings' },
+  // { to: '/settings', icon: MdSettings, label: 'Settings' },
 ];
 
 export default function LeftSidebar() {

@@ -139,19 +139,7 @@ function Post({
     }
   };
 
-  // useEffect(() => {
-  //   if (loggedInUserId && postId) {
-  //     const postLiked = likes.some((like) => like.userId === loggedInUserId);
-  //     setLiked(postLiked);
-  //     const postSmiled = smile.some((smile) => smile.userId === loggedInUserId);
-  //     setIsSmile(postSmiled);
-  //     const postClapped = clap.some((clap) => clap.userId === loggedInUserId);
-  //     setIsClapped(postClapped);
-  //     const postThumbsUp = thumbsUp.some((thumbsUp) => thumbsUp.userId === loggedInUserId);
-  //     setIsThumbsUp(postThumbsUp);
-  //   }
-  // }, [likes, loggedInUserId, postId, smile, thumbsUp, clap]);
-
+  
   const fetchComments = async () => {
     try {
       const response = await axios.get(`${baseUrl}/posts/${postId}/comments`);
@@ -387,8 +375,8 @@ function Post({
           {image.length > 1 ? (
             <Slider {...settings}>
               {image.map((img, index) => (
-                <div key={index} className="">
-                  <img src={img} alt={`Post Image ${index + 1}`} />
+                <div key={index} className="flex justify-center">
+                  <img src={img} className=" object-cover" alt={`Post Image ${index + 1}`} />
                 </div>
               ))}
             </Slider>
