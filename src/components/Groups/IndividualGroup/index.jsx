@@ -26,6 +26,7 @@ import editProfilePicture from "../../../images/edit-profile-picture.svg";
 import { useCookies } from "react-cookie";
 import { lineSpinner } from 'ldrs';
 import searchIcon from "../../../images/search.svg"
+import { fetchMembers } from "../../../store";
 lineSpinner.register()
 
 const IndividualGroup = () => {
@@ -36,7 +37,7 @@ const IndividualGroup = () => {
     const [isLoading, setIsLoading] = useState({});
     const dispatch = useDispatch();
     const [showModal, setShowModal] = useState(false);
-    const allMembers = useSelector((state) => state.member);
+    // const allMembers = useSelector((state) => state.member);
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedMembers, setSelectedMembers] = useState([]);
     const [sendMembers, setSendMembers] = useState([]);
@@ -45,7 +46,24 @@ const IndividualGroup = () => {
     const [cookie, setCookie] = useCookies(["token"]);
     const [selectedFile, setSelectedFile] = useState(null);
     const [saving,setSaving]= useState(false);
+    const [allMembers, setAllMembers] = useState([]);
 
+    
+  const getMembers = async () => {
+    console.log('inside this function')
+    try {
+      const membersData = await fetchMembers(); // Call the function from Redux
+      if (membersData) {
+        console.log("membersData", membersData);
+        setAllMembers(membersData);
+      }
+    } catch (error) {
+      console.error("Error fetching members:", error);
+    }
+  };
+  useEffect(() => {
+    getMembers();
+  }, []);
     const token = cookie.token;
     let admin;
     if (profile.profileLevel === 0) {

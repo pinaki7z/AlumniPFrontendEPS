@@ -10,7 +10,7 @@ const savedUser = JSON.parse(localStorage.getItem("user"));
 export const fetchMembers = async () => {
   try {
     const response = await axios.get(`${baseUrl}/alumni/all`);
-    console.log("settings data", response.data);
+    // console.log("settings data", response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching members:", error);
@@ -94,7 +94,7 @@ const initializeStore = async () => {
     const [initialSettings, initialProfile, initialMembers] = await Promise.all([
       fetchSettings(),
       fetchProfileData(),
-      fetchMembers(),
+      // fetchMembers(),
     ]);
 
     const preloadedState = {
@@ -108,6 +108,7 @@ const initializeStore = async () => {
       settings: initialSettings || {},
       profile: initialProfile || {},
       member: initialMembers || {},
+      fetchMembers:fetchMembers || {},
       webSocket: {
         ws: null,
       },

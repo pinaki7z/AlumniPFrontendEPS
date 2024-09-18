@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import deleteButton from '../../../images/deleteButton.svg';
 import reply from "../../../images/reply-forum.svg";
 import baseUrl from '../../../config';
+import { fetchMembers } from '../../../store';
 
 const IForum = () => {
   const [forum, setForum] = useState(null);
@@ -24,9 +25,27 @@ const IForum = () => {
   const profile = useSelector((state) => state.profile);
   const [requestStatus, setRequestStatus] = useState('Join Forum');
   const [notificationList, setNotificationList] = useState([]);
-  const allMembers = useSelector((state) => state.member);
+  // const allMembers = useSelector((state) => state.member);
+  // const allMembers = useSelector((state) => state.fetchMembers);
+  const [allMembers, setAllMembers] = useState([]);
   const [selectedMembers, setSelectedMembers] = useState([]);
 
+
+  const getMembers = async () => {
+    console.log('inside this function')
+    try {
+      const membersData = await fetchMembers(); // Call the function from Redux
+      if (membersData) {
+        console.log("membersData", membersData);
+        setAllMembers(membersData);
+      }
+    } catch (error) {
+      console.error("Error fetching members:", error);
+    }
+  };
+  useEffect(() => {
+    getMembers();
+  }, []);
   let admin;
   if (profile.profileLevel === 0) {
     admin = true;

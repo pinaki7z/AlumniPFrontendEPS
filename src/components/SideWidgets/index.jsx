@@ -35,7 +35,7 @@ import { Col, Row } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import Button from "react-bootstrap/Button";
 import { Avatar } from "@mui/material";
-
+import { fetchMembers } from "../../store";
 lineSpinner.register();
 
 // Default values shown
@@ -44,7 +44,10 @@ const SideWidgets = () => {
   const [cookie, setCookie] = useCookies(["access_token"]);
   const profile = useSelector((state) => state.profile);
   const [notifications, setNotifications] = useState([]);
-  const members = useSelector((state) => state.member);
+  // const members = useSelector((state) => state.member);
+  // const members = useSelector((state) => state.fetchMembers);
+  // const fetchMembers = useSelector((state) => state.fetchMembers)
+  const [members, setMembers] = useState([]);
   const [showPopover, setShowPopover] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -61,6 +64,24 @@ const SideWidgets = () => {
   const popover = (popoverVisibility) => {
     setShowPopover(popoverVisibility);
   };
+
+  const getMembers = async () => {
+    console.log('inside this function')
+    try {
+      const membersData = await fetchMembers(); // Call the function from Redux
+      if (membersData) {
+        console.log("membersData", membersData);
+        setMembers(membersData);
+      }
+    } catch (error) {
+      console.error("Error fetching members:", error);
+    }
+  };
+  useEffect(() => {
+    getMembers();
+  }, []);
+
+
 
   const onHideModal = (modalVisibility) => {
     setShowModal(modalVisibility);
@@ -85,11 +106,11 @@ const SideWidgets = () => {
   }, [isloading]);
 
   const followingIds = profile.following.map((follow) => follow.userId);
-  const peopleYouMayKnow = members.filter(
+  const peopleYouMayKnow = members?.filter(
     (member) => !followingIds.includes(member._id)
   );
 
-  const displayedMembers = peopleYouMayKnow.slice(
+  const displayedMembers = peopleYouMayKnow?.slice(
     0,
     currentPage * itemsPerPage
   );

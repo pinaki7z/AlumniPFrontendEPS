@@ -15,6 +15,7 @@ import { GoEyeClosed } from "react-icons/go";
 import CryptoJS from 'crypto-js';
 
 const LoginPage = ({ handleLogin }) => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [cookie, setCookie] = useCookies(["token"]);
@@ -48,73 +49,68 @@ const LoginPage = ({ handleLogin }) => {
       setRememberDevice(true);
     }
   }, []);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
-    if (rememberDevice) {
-      localStorage.setItem('savedEmail', email);
-      localStorage.setItem('savedPassword', encrypt(password));
-    } else {
-      localStorage.removeItem('savedEmail');
-      localStorage.removeItem('savedPassword');
-    }
-
+  
     try {
-      const currentDate = new Date();
+      // Manage remember device
+      if (rememberDevice) {
+        localStorage.setItem('savedEmail', email);
+        localStorage.setItem('savedPassword', encrypt(password));
+      } else {
+        localStorage.removeItem('savedEmail');
+        localStorage.removeItem('savedPassword');
+      }
+  
       const response = await fetch(`${baseUrl}/alumni/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include', 
+        credentials: 'include',
         body: JSON.stringify({ email, password }),
       });
-
-      if (response.ok) {
-      const responseData = await response.json();
   
-      handleLogin();
-      
-      const { token, alumni } = responseData;
-      dispatch(updateProfile(alumni))
-      setCookie("token", token , { path: "/" });
-      if(alumni.profileLevel===0){
-        console.log("level zero")
-        dispatch(setAdmin(true));
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Login failed', errorData);
+        toast.error(errorData.message || 'Login failed');
+        return;
       }
-      
+  
+      const { token, alumni } = await response.json();
+      const currentDate = new Date();
+  
+      // Handle account expiration
       if (alumni.expirationDate && new Date(alumni.expirationDate) < currentDate) {
         toast.error("Your account has expired. Contact admin to recover account");
-        setLoading(false);
-        return; 
+        return;
+      }
+  
+      // Handle successful login
+      handleLogin();
+      dispatch(updateProfile(alumni));
+      setCookie("token", token, { path: "/" });
+  
+      if (alumni.profileLevel === 0) {
+        dispatch(setAdmin(true));
       }
   
       toast.success("Logged in successfully!");
-      setLoading(false); 
-      const currentUrl = window.location.href;
-      
-      const loginPath = '/login';
-      const baseUrl = currentUrl.endsWith(loginPath)
-          ? currentUrl.slice(0, -loginPath.length)
-          : currentUrl;
-
-      if (currentUrl.endsWith(loginPath)) {          
-          window.location.href = baseUrl;
-      } else {          
-          window.location.href = window.location.href;
-      }
+  
+      // Use navigate instead of window.location
+      const isLoginPath = window.location.pathname.endsWith('/login');
+      if (isLoginPath) {
+        navigate('/');
       } else {
-        const errorData = await response.json();
-        console.error('Login failed',errorData);
-        toast.error(errorData);
-        setLoading(false);
+        navigate('/'); // Reload the current page
       }
     } catch (error) {
       console.error('Error during login:', error);
+      toast.error('An error occurred during login.');
+    } finally {
       setLoading(false);
-      
     }
   };
 

@@ -18,7 +18,7 @@ export const Following = () => {
   const [totalFollowing, setTotalFollowing] = useState(0);
   const activePage = useRef(1);
   const profile = useSelector((state)=> state.profile);
-  const member = useSelector((state)=> state.member);
+  // const member = useSelector((state)=> state.member);
   
   const fetchMembers = async (page) => {
     try {
