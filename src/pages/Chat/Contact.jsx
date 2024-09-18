@@ -16,6 +16,7 @@ export default function Contact({id, username, onClick, selected, online}) {
         alignItems: 'center',
         gap: '1vw',
         padding: '10px',
+        borderRadius:"10px",
         width: '100%',
         transition: 'background-color 0.3s', // Add transition for smooth effect
       }}

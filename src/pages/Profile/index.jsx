@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import "./profile.css";
 import picture from "../../images/d-cover.jpg";
-import { BiUserPlus } from 'react-icons/bi';
-import { LuMessageSquare } from 'react-icons/lu';
-import { BsThreeDotsVertical } from 'react-icons/bs';
-import Icons from '../../components/Icons';
-import Icons1 from "../../components/Icons1";
 import { useSelector } from "react-redux";
 import Feeed from "../../components/Feeed";
 import about from "../../images/about.svg";
@@ -15,6 +9,7 @@ import location from "../../images/location.svg";
 import time from "../../images/Time.svg";
 import arrowRight from "../../images/arrowRight.svg";
 import { fetchMembers } from "../../store";
+import { Avatar } from "@mui/material";
 
 const Profile = () => {
   const { id } = useParams();
@@ -23,10 +18,12 @@ const Profile = () => {
   const [currentWork, setCurrentWork] = useState(null);
 
   useEffect(() => {
-    const foundMember = members.find(member => member._id === id);
+    const foundMember = members.find((member) => member._id === id);
     setMember(foundMember);
     if (foundMember) {
-      const currentWorkExp = foundMember.workExperience.find(exp => exp.endMonth.toLowerCase() === 'current');
+      const currentWorkExp = foundMember.workExperience.find(
+        (exp) => exp.endMonth.toLowerCase() === "current"
+      );
       setCurrentWork(currentWorkExp);
     }
   }, [members, id]);
@@ -47,123 +44,146 @@ const Profile = () => {
   }, []);
 
   return (
-    <>
-      <div style={{ width: '100%', padding: '0 5%', paddingTop: '4%' }}>
-        {member ? (
-          <div className="container-div" style={{ width: '100%', borderRadius: '12px', position: 'relative' }}>
-            <div className="upper-div" style={{
+    <div className="w-full px-6 py-8 lg:px-24">
+      {member ? (
+        <div className="relative w-full bg-white rounded-lg shadow-lg">
+          {/* Upper section with cover image */}
+          <div
+            className="w-full h-56 lg:h-72 bg-cover bg-center rounded-t-lg"
+            style={{
               backgroundImage: `url(${member.coverPicture || picture})`,
-              width: '100%',
-              minHeight: '35vh',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              borderRadius: '12px 12px 0px 0px'
-            }}>
-            </div>
-            <div style={{ position: 'absolute', top: '10vh', left: '50%', transform: 'translateX(-50%) translateY(50%)' }}>
-              <img src={member.profilePicture || picture} alt="profile-picture" style={{ width: '200px', height: '200px', borderRadius: '50%', border: '5px solid white' }} />
-            </div>
-            <div className="lower-div" style={{
-              backgroundColor: '#FEF7E7',
-              width: '100%',
-              minHeight: '25vh',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              borderRadius: '0px 0px 12px 12px'
-            }}>
-              <div className="message-follow" style={{ display: 'flex', justifyContent: 'space-around', paddingTop: '20px' }}>
-                <button>Message</button>
-                <button>Follow</button>
-              </div>
-              <div style={{ textAlign: 'center', display: 'flex', justifyContent: 'center' }}>
-                <div style={{ width: '40%', paddingTop: '20px' }}>
-                  <p style={{ fontWeight: '700', color: '#3A3A3A', fontSize: '24px', fontFamily: 'Inter' }}>{member.firstName} {member.lastName}</p>
-                  <p style={{ fontWeight: '300', color: '#000000', fontSize: '14px', fontFamily: 'Inter' }}>
-                    {member.profileLevel === 1 ? 'ADMIN' :
-                     member.profileLevel === 2 ? 'ALUMNI' :
-                     member.profileLevel === 3 ? 'STUDENT' :
-                     'SUPERADMIN'}
-                  </p>
-                  <p style={{ fontWeight: '400', color: '#3A3A3A', fontSize: '16px', fontFamily: 'Inter' }}>
-                    Passionate soul, chasing dreams, inspiring others, embracing life's adventures joyfully.
-                  </p>
-                  <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-                    <div>
-                      <p>Groups</p>
-                      <p style={{ fontWeight: '500', color: '#3A3A3A', fontSize: '18px', fontFamily: 'Inter' }}>0</p>
-                    </div>
-                    <div>
-                      <p>Followers</p>
-                      <p style={{ fontWeight: '500', color: '#3A3A3A', fontSize: '18px', fontFamily: 'Inter' }}>0</p>
-                    </div>
-                    <div>
-                      <p>Following</p>
-                      <p style={{ fontWeight: '500', color: '#3A3A3A', fontSize: '18px', fontFamily: 'Inter' }}>0</p>
-                    </div>
-                  </div>
+            }}
+          ></div>
+
+          {/* Profile Picture */}
+          <div className="absolute top-1/1 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <Avatar
+              src={member.profilePicture || picture}
+              alt="profile"
+              sx={{width:"140px", height:"140px"}}
+              className=" rounded-full border-4 border-white"
+            />
+          </div>
+
+          {/* Lower section with member details */}
+          <div className="bg-gray-50 p-6 rounded-b-lg">
+            <div className="text-center mt-16">
+              <h2 className="text-xl lg:text-2xl font-bold text-gray-800">
+                {member.firstName} {member.lastName}
+              </h2>
+              <p className="text-sm lg:text-base text-gray-500">
+                {member.profileLevel === 1
+                  ? "ADMIN"
+                  : member.profileLevel === 2
+                  ? "ALUMNI"
+                  : member.profileLevel === 3
+                  ? "STUDENT"
+                  : "SUPERADMIN"}
+              </p>
+              <p className="mt-2 text-sm lg:text-base text-gray-700">
+                Passionate soul, chasing dreams, inspiring others, embracing
+                life's adventures joyfully.
+              </p>
+
+              <div className="flex justify-center mt-4 space-x-6">
+                <div className="text-center">
+                  <p className="text-sm lg:text-base text-gray-500">Groups</p>
+                  <p className="font-semibold text-lg lg:text-xl text-gray-800">0</p>
                 </div>
+                <div className="text-center">
+                  <p className="text-sm lg:text-base text-gray-500">Followers</p>
+                  <p className="font-semibold text-lg lg:text-xl text-gray-800">0</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-sm lg:text-base text-gray-500">Following</p>
+                  <p className="font-semibold text-lg lg:text-xl text-gray-800">0</p>
+                </div>
+              </div>
+
+              <div className="flex justify-around mt-6">
+                <button className="px-4 py-2 bg-[#004C8A] text-white rounded font-medium hover:bg-[#1e5887]">
+                  Message
+                </button>
+                <button className="px-4 py-2 bg-[#004C8A] text-white rounded font-medium hover:bg-[#1e5887]">
+                  Follow
+                </button>
               </div>
             </div>
           </div>
-        ) : (
-          <div className="loading-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '90vh' }}>
-        <l-tail-chase size="40" speed="1.75" color="#174873"></l-tail-chase>
-      </div>
-        )}
-        <div style={{ display: 'flex', gap: '2%' }}>
-          {member && (
-            <>
-              <div style={{ width: '70%' }}>
-                <Feeed entityType='posts' showCreatePost={false} showDeleteButton={true} userId={member._id} />
-              </div>
-              <div style={{ width: '28%', paddingTop: '37px' }}>
-                <div>
-                  <div style={{ backgroundColor: '#004C8A', color: '#F8F8FF', borderRadius: '12px 12px 0px 0px', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '15px' }}>
-                    <img src={about} alt="" />
-                    <p style={{ fontFamily: 'Inter', fontWeight: '600', fontSize: '20px' }}>About {member.firstName}</p>
-                  </div>
-                  <p style={{ backgroundColor: '#FEF7E7', borderRadius: '0px 0px 12px 12px', padding: '10px 16px', fontFamily: 'Inter', fontWeight: '500', fontSize: '16px', color: '#636364' }}>
-                    {member.aboutMe || 'User has not updated his Bio'}
-                  </p>
-                </div>
-                <div>
-                  <div style={{ backgroundColor: '#004C8A', color: '#F8F8FF', borderRadius: '12px 12px 0px 0px', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '15px' }}>
-                    <img src={work} alt="" />
-                    <p style={{ fontFamily: 'Inter', fontWeight: '600', fontSize: '20px' }}>Currently Working As</p>
-                  </div>
-                  <div style={{ backgroundColor: '#FEF7E7' }}>
-                    <p style={{ backgroundColor: '#FEF7E7', borderRadius: '0px 0px 12px 12px', padding: '10px 16px', fontFamily: 'Inter', fontWeight: '500', fontSize: '16px', color: '#636364', marginBottom: '0px' }}>
-                      {currentWork ? currentWork.title : 'User has not updated his current work title'}
-                    </p>
-                    <div style={{ padding: '16px' }}>
-                      <p style={{ color: '#004C8A', fontWeight: '500', fontSize: '18px' }}>
-                        {currentWork ? currentWork.companyName : 'User has not updated his current workplace'}
-                      </p>
-                      {currentWork && (currentWork.startMonth && currentWork.startYear && currentWork.endMonth) && (
-                        <div style={{ display: 'flex', gap: '10px' }}>
-                          <img src={time} alt="" />
-                          <p>{`${currentWork.startMonth} ${currentWork.startYear} - ${currentWork.endMonth}`}</p>
-                        </div>
-                      )}
-                      {currentWork && (currentWork.location && currentWork.locationType) && (
-                        <div style={{ display: 'flex', gap: '16px', paddingLeft: '3px' }}>
-                          <img src={location} alt="" />
-                          <p>{`${currentWork.location} - ${currentWork.locationType}`}</p>
-                        </div>
-                      )}
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '2px dotted green', padding: '13px 16px', cursor: 'pointer' }}>
-                      <p style={{ marginBottom: '0px' }}>Work Experience</p>
-                      <img src={arrowRight} alt="" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
         </div>
+      ) : (
+        <div className="flex justify-center items-center h-[90vh]">
+          <div className="spinner-border animate-spin w-8 h-8 border-4 rounded-full border-blue-500"></div>
+        </div>
+      )}
+
+      <div className="lg:flex lg:gap-8 mt-10">
+        {member && (
+          <>
+            {/* Posts/Feed Section */}
+            <div className="w-full lg:w-3/4">
+              <Feeed
+                entityType="posts"
+                showCreatePost={false}
+                showDeleteButton={true}
+                userId={member._id}
+              />
+            </div>
+
+            {/* About & Work Section */}
+            <div className="w-full lg:w-1/4 mt-8 lg:mt-0 space-y-6">
+              {/* About Section */}
+              <div className="bg-white rounded shadow-md ">
+                <div className="flex rounded-t p-2 items-center space-x-4 bg-[#004C8A]">
+                  <img src={about} alt="About Icon" className="w-6 h-6" />
+                  <h3 className="text-lg text-white font-semibold">About {member.firstName}</h3>
+                </div>
+                <p className="mt-4 text-sm p-3 text-gray-600">
+                  {member.aboutMe || "User has not updated their bio"}
+                </p>
+              </div>
+
+              {/* Work Section */}
+              <div className="bg-white rounded-lg shadow-md ">
+                <div className="flex items-center bg-[#004C8A] rounded-t p-3 space-x-4">
+                  <img src={work} alt="Work Icon" className="w-6 h-6" />
+                  <h3 className="text-lg text-white font-semibold">Currently Working As</h3>
+                </div>
+                <p className="mt-4 text-sm p-3 text-gray-600">
+                  {currentWork ? currentWork.title : "No current work info"}
+                </p>
+                {currentWork && (
+                  <div className="mt-4 p-2">
+                    <p className="text-sm font-medium text-blue-600">
+                      {currentWork.companyName}
+                    </p>
+                    {currentWork.startMonth && currentWork.startYear && (
+                      <div className="flex items-center space-x-2 mt-2 text-sm">
+                        <img src={time} alt="Time Icon" className="w-4 h-4" />
+                        <span>
+                          {currentWork.startMonth} {currentWork.startYear} -{" "}
+                          {currentWork.endMonth}
+                        </span>
+                      </div>
+                    )}
+                    {currentWork.location && currentWork.locationType && (
+                      <div className="flex items-center space-x-2 mt-2 text-sm">
+                        <img src={location} alt="Location Icon" className="w-4 h-4" />
+                        <span>{`${currentWork.location} - ${currentWork.locationType}`}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+                <div className="flex p-3 justify-between items-center border-t py-4 mt-4">
+                  <p className="text-sm">Work Experience</p>
+                  <img src={arrowRight} alt="Arrow Right" className="w-4 h-4" />
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
-    </>
+    </div>
   );
 };
 
