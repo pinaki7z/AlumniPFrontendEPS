@@ -1,49 +1,280 @@
-import format from "date-fns/format";
-import getDay from "date-fns/getDay";
-import parse from "date-fns/parse";
-import startOfWeek from "date-fns/startOfWeek";
+"use client";
+
 import React, { useState, useEffect, useRef } from "react";
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
+import format from "date-fns/format";
+import parse from "date-fns/parse";
+import startOfWeek from "date-fns/startOfWeek";
+import getDay from "date-fns/getDay";
+import enUS from "date-fns/locale/en-US";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import enIN from 'date-fns/locale/en-US';
-import './Events.css';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import TimePicker from 'react-time-picker';
-import { Col, Row } from 'react-bootstrap';
-import { FaCalendarPlus } from 'react-icons/fa';
-import { useSelector } from 'react-redux';
+import { FaCalendarPlus } from "react-icons/fa";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import axios from 'axios';
-import pic from "../../images/profilepic.jpg";
-import { Avatar, IconButton, Modal as MModal, Box, Modal as MMModal } from '@mui/material';
+import axios from "axios";
+import { Avatar } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { lineSpinner } from 'ldrs';
-import EventDisplay from "../../components/Feeed/EventDisplay";
 import baseUrl from "../../config";
 
-lineSpinner.register()
+const locales = {
+  "en-US": enUS,
+};
 
+const localizer = dateFnsLocalizer({
+  format,
+  parse,
+  startOfWeek,
+  getDay,
+  locales,
+});
 
-
-
-
-function MyVerticallyCenteredModal(props) {
+export default function EventCalendar() {
+  const [allEvents, setAllEvents] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [attendees, setAttendees] = useState();
   const [isEditing, setIsEditing] = useState(false);
-  const profile = useSelector((state) => state.profile);
-  const [createGroup, setCreateGroup] = useState(false);
+  const [modalShow, setModalShow] = useState(false);
+  const [selectedEventDetails, setSelectedEventDetails] = useState(null);
+  const [selectedEventDetailsPopup, setSelectedEventDetailsPopup] =
+    useState(null);
   const [loading, setLoading] = useState(false);
+  const [reminderModalShow, setReminderModalShow] = useState(false);
+  const calendarRef = useRef(null);
+  const profile = useSelector((state) => state.profile);
+  const { _id } = useParams();
 
   const [newEvent, setNewEvent] = useState({
-    title: "", start: "", end: "", startTime: "00:00",
-    endTime: "00:00", picture: "", cName: "",
-    cNumber: "", cEmail: "", location: ""
+    title: "",
+    start: new Date(),
+    end: new Date(),
+    startTime: "00:00",
+    endTime: "00:00",
+    picture: "",
+    cName: "",
+    cNumber: "",
+    cEmail: "",
+    location: "",
   });
-  const [allEvents, setAllEvents] = useState([]);
-  const [selectedEvent, setSelectedEvent] = useState([props.selectedEvent])
 
+  const isAdmin = profile.profileLevel === 0 || profile.profileLevel === 1;
+
+  useEffect(() => {
+    fetchEvents();
+    if (_id) {
+      fetchEventDetails(_id);
+    }
+  }, [_id]);
+
+  const fetchEvents = async () => {
+    try {
+      const response = await axios.get(`${baseUrl}/events`);
+      const eventsWithDates = response.data.map((event) => ({
+        ...event,
+        start: new Date(event.start),
+        end: new Date(event.end),
+        id: event._id,
+      }));
+      setAllEvents(eventsWithDates);
+    } catch (error) {
+      console.error("Error fetching events:", error);
+      toast.error("Failed to fetch events");
+    }
+  };
+
+  const fetchEventDetails = async (eventId) => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${baseUrl}/events/${eventId}`);
+      setSelectedEventDetailsPopup(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching event details:", error);
+      setLoading(false);
+      toast.error("Failed to fetch event details");
+    }
+  };
+
+  const handleEventClick = (event) => {
+    setSelectedEvent(event);
+    checkAttendanceStatus(event._id);
+    setIsEditing(true);
+    setSelectedEventDetails(event);
+  };
+
+  const checkAttendanceStatus = async (eventId) => {
+    try {
+      const response = await axios.get(
+        `${baseUrl}/events/attendees/${eventId}`
+      );
+      setAttendees(response.data);
+    } catch (error) {
+      console.error("Error fetching attendees:", error);
+      toast.error("Failed to fetch attendees");
+    }
+  };
+
+  const handleAddEvent = async () => {
+    try {
+      const response = await axios.post(`${baseUrl}/events/createEvent`, {
+        ...newEvent,
+        userId: profile._id,
+        userName: `${profile.firstName} ${profile.lastName}`,
+        profilePicture: profile.profilePicture,
+        department: profile.department,
+      });
+      setAllEvents([...allEvents, response.data]);
+      setModalShow(false);
+      toast.success("Event added successfully");
+      resetNewEvent();
+    } catch (error) {
+      console.error("Error adding event:", error);
+      toast.error("Failed to add event");
+    }
+  };
+
+  const handleEditEvent = async () => {
+    try {
+      const response = await axios.put(
+        `${baseUrl}/events/${selectedEvent._id}`,
+        newEvent
+      );
+      const updatedEvents = allEvents.map((event) =>
+        event._id === selectedEvent._id ? response.data : event
+      );
+      setAllEvents(updatedEvents);
+      setModalShow(false);
+      setIsEditing(false);
+      toast.success("Event updated successfully");
+      resetNewEvent();
+    } catch (error) {
+      console.error("Error updating event:", error);
+      toast.error("Failed to update event");
+    }
+  };
+
+  const handleDeleteEvent = async () => {
+    if (!selectedEvent) return;
+    try {
+      await axios.delete(`${baseUrl}/events/${selectedEvent._id}`);
+      setAllEvents(
+        allEvents.filter((event) => event._id !== selectedEvent._id)
+      );
+      setSelectedEvent(null);
+      setIsEditing(false);
+      setSelectedEventDetails(null);
+      toast.success("Event deleted successfully");
+    } catch (error) {
+      console.error("Error deleting event:", error);
+      toast.error("Failed to delete event");
+    }
+  };
+
+  const resetNewEvent = () => {
+    setNewEvent({
+      title: "",
+      start: new Date(),
+      end: new Date(),
+      startTime: "00:00",
+      endTime: "00:00",
+      picture: "",
+      cName: "",
+      cNumber: "",
+      cEmail: "",
+      location: "",
+    });
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
+      year: "numeric",
+      month: "short",
+      day: "2-digit",
+    });
+  };
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-4xl font-semibold text-[#174873] text-center mb-8">
+        Event Calendar
+      </h1>
+      <div ref={calendarRef} className="bg-white rounded-lg shadow-lg p-4">
+        <Calendar
+          localizer={localizer}
+          events={allEvents}
+          startAccessor="start"
+          endAccessor="end"
+          style={{ height: "60vh" }}
+          selectable
+          onSelectEvent={handleEventClick}
+        />
+      </div>
+      <div className="flex justify-end mt-4">
+        {isAdmin && (
+          <button
+            onClick={() => {
+              setIsEditing(false);
+              setModalShow(true);
+            }}
+            className="bg-[#174873] text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl shadow-lg hover:bg-[#0d2b4a] transition-colors duration-300"
+          >
+            <FaCalendarPlus />
+          </button>
+        )}
+      </div>
+
+      {modalShow && (
+        <EventModal
+          isEditing={isEditing}
+          newEvent={newEvent}
+          setNewEvent={setNewEvent}
+          onClose={() => {
+            setModalShow(false);
+            resetNewEvent();
+          }}
+          onSubmit={isEditing ? handleEditEvent : handleAddEvent}
+        />
+      )}
+
+      {selectedEventDetails && (
+        <EventDetailsModal
+          event={selectedEventDetails}
+          onClose={() => setSelectedEventDetails(null)}
+          onEdit={() => {
+            setNewEvent(selectedEventDetails);
+            setModalShow(true);
+          }}
+          onDelete={handleDeleteEvent}
+          onAddReminder={() => setReminderModalShow(true)}
+          attendees={attendees}
+          profile={profile}
+        />
+      )}
+
+      {reminderModalShow && (
+        <ReminderModal
+          event={selectedEventDetails}
+          onClose={() => setReminderModalShow(false)}
+        />
+      )}
+
+      {loading && <LoadingSpinner />}
+    </div>
+  );
+}
+
+function EventModal({ isEditing, newEvent, setNewEvent, onClose, onSubmit }) {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setNewEvent({ ...newEvent, [name]: value });
+  };
+
+  const handleDateChange = (date, field) => {
+    setNewEvent({ ...newEvent, [field]: date });
+  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -56,728 +287,411 @@ function MyVerticallyCenteredModal(props) {
     }
   };
 
-
-
-
-  const handleAddEvent = () => {
-    const { title, start, end, startTime, endTime, picture, cName, cNumber, cEmail, location } = newEvent;
-
-    if (!title || !start || !end || !picture) {
-      alert("Please provide title, start date, end date and image");
-      return;
-    }
-
-    const formattedStart = format(new Date(start), "yyyy-MM-dd");
-    const formattedEnd = format(new Date(end), "yyyy-MM-dd");
-    setLoading(true);
-
-    const eventData = {
-      userId: profile._id,
-      title,
-      start: formattedStart,
-      end: formattedEnd,
-      startTime,
-      userName: `${profile.firstName} ${profile.lastName}`,
-      profilePicture: profile.profilePicture,
-      endTime,
-      picture,
-      cName,
-      cNumber,
-      cEmail,
-      location,
-      department: profile.department,
-      createGroup
-    };
-    console.log('eventData', eventData)
-
-    fetch(`${baseUrl}/events/createEvent`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(eventData),
-    })
-      .then((response) => response.json())
-      .then((createdEvent) => {
-        setAllEvents([...allEvents, createdEvent]);
-        setLoading(false);
-        window.location.reload();
-
-        setNewEvent({ title: "", start: "", end: "", startTime: "", endTime: "", picture: null, cEmail: "", cName: "", cNumber: "", location: "" });
-      })
-      .catch((error) => console.error("Error creating event:", error));
-  };
-
-
-  const handleEditEvent = () => {
-    const { title, start, end, startTime, endTime, picture, cName, cNumber, cEmail, location } = newEvent;
-    const eventId = props.selectedEvent._id;
-
-    if (!title || !start || !end) {
-      alert("Please provide title, start date, and end date.");
-      return;
-    }
-
-    try {
-      const formattedStart = format(new Date(start), "yyyy-MM-dd");
-      const formattedEnd = format(new Date(end), "yyyy-MM-dd");
-
-
-      const updatedEvent = {
-        title: title,
-        start: formattedStart,
-        end: formattedEnd,
-        startTime,
-        endTime,
-        picture,
-        cName,
-        cNumber,
-        cEmail,
-        location
-      };
-
-      const jsonEventData = JSON.stringify(updatedEvent);
-
-      fetch(`${baseUrl}/events/${eventId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: jsonEventData,
-      })
-        .then(() => {
-          const updatedEvents = allEvents.map((event) =>
-            event._id === eventId ? updatedEvent : event
-          );
-
-          setAllEvents(updatedEvents);
-          setSelectedEvent(null);
-          props.onHide();
-          toast.success("Event updated successfully.");
-          window.location.reload();
-        })
-        .catch((error) => console.error("Error updating event:", error));
-    } catch (jsonError) {
-      console.error("JSON serialization error:", jsonError);
-      alert("Error updating event: JSON serialization error");
-    }
-  };
-
-  const handleDateChange = (date, field) => {
-    if (props.isEditing) {
-      const updatedEvent = { ...newEvent };
-      updatedEvent[field] = date;
-      setNewEvent(updatedEvent);
-      setIsEditing(true)
-    } else {
-      setNewEvent({ ...newEvent, [field]: date });
-    }
-  };
-
-  const handleTimeChange = (time, field) => {
-    const updatedEvent = { ...newEvent };
-    updatedEvent[field] = time;
-    setNewEvent(updatedEvent);
-  };
-
-
-
   return (
-    <Modal
-      {...props}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-    >
-      <Modal.Header style={{ backgroundColor: '#f5dad2' }} closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          {props.isEditing ? "Edit Event" : "Add Event"}
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body style={{ display: 'flex', gap: '2em', backgroundColor: '#eaf6ff' }}>
-        <Col>
-          <Row style={{ padding: '0px 5px' }}>
-            <input
-              type="text"
-              placeholder="Add/Edit Title"
-              style={{ width: "100%", padding: "0.5em", borderRadius: "10px" }}
-              value={newEvent.title}
-              onChange={(e) =>
-                setNewEvent({ ...newEvent, title: e.target.value })
-              }
-            />
-            <br />
-            <br />
-            <label htmlFor={newEvent.picture} style={{ marginTop: '20px' }}>Insert a Picture:-</label>
-            <br />
-            <input type="file" name={newEvent.picture}
-              style={{ width: '60%', marginTop: '10px' }}
-              onChange={handleImageChange} />
+    <>
+      <style>
+        {`
+          /* Internal CSS for scrollbar */
+          .custom-scrollbar::-webkit-scrollbar {
+            width: 6px; /* Adjust scrollbar width here */
+          }
+          
+          .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1; /* Track color */
+          }
+          
+          .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #888; /* Thumb color */
+            border-radius: 10px;
+          }
 
-
-            <input
-              type="text"
-              placeholder="Enter Coordinator Name"
-              style={{ width: "100%", padding: "0.5em", borderRadius: "10px", marginTop: '20px' }}
-              value={newEvent.cName}
-              onChange={(e) =>
-                setNewEvent({ ...newEvent, cName: e.target.value })
-              }
-            />
-
-            <input
-              type="text"
-              placeholder="Enter event location"
-              style={{ width: "100%", padding: "0.5em", borderRadius: "10px", marginTop: '10px'  }}
-              value={newEvent.location}
-              onChange={(e) =>
-                setNewEvent({ ...newEvent, location: e.target.value })
-              }
-            />
-
-          </Row>
-
-
-
-        </Col>
-
-
-
-
-        <Col>
-          <DatePicker
-            placeholderText="Start Date"
-            style={{ marginRight: "10px", padding: "0.5em" }}
-            selected={newEvent.start}
-            onChange={(date) => handleDateChange(date, "start")}
-          />
-          <br /><br />
-          <input type="time" id="appt" name="startTime" value={newEvent.startTime} style={{marginTop: '20px'}} onChange={(e) =>
-            setNewEvent({ ...newEvent, startTime: e.target.value })
-          } />
-          <br /><br />
-          <input
-            type="number"
-            placeholder="Enter Coordinator Contact Number"
-            style={{ width: "100%", padding: "0.5em", borderRadius: "10px",marginTop: '35px' }}
-            value={newEvent.cNumber}
-            onChange={(e) =>
-              setNewEvent({ ...newEvent, cNumber: e.target.value })
-            }
-          />
-
-          {/* <input
-            type="text"
-            placeholder="Enter event location"
-            style={{ width: "100%", padding: "0.5em", borderRadius: "10px" }}
-            value={newEvent.location}
-            onChange={(e) =>
-              setNewEvent({ ...newEvent, location: e.target.value })
-            }
-          /> */}
-
-        </Col>
-
-
-        <Col>
-          <Col>
-            <DatePicker
-              placeholderText="End Date"
-              style={{ padding: "0.5em" }}
-              selected={newEvent.end}
-              onChange={(date) => handleDateChange(date, "end")}
-            />
-            <br /><br />
-            <input type="time" id="appt" name="endTime" value={newEvent.endTime} style={{marginTop: '20px'}} onChange={(e) =>
-              setNewEvent({ ...newEvent, endTime: e.target.value })
-            } />
-            <input
-              type="email"
-              placeholder="Enter Coordinator Email"
-              style={{ width: "100%", padding: "0.5em", borderRadius: "10px",marginTop: '55px' }}
-              value={newEvent.cEmail}
-              onChange={(e) =>
-                setNewEvent({ ...newEvent, cEmail: e.target.value })
-              }
-            />
-          </Col>
-
-        </Col>
-
-      </Modal.Body>
-
-      <Modal.Footer style={{ backgroundColor: '#f5dad2' }}>
-        <div style={{ marginRight: 'auto', display: 'flex', alignItems: 'center' }}>
-          <input
-            type="checkbox"
-            id="create-group"
-            checked={createGroup}
-            onChange={(e) => setCreateGroup(e.target.checked)}
-          />
-          <label htmlFor="create-group" style={{ marginLeft: '0.5em' }}>Create a group with the same event title name</label>
+          .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #555; /* Thumb hover color */
+          }
+        `}
+      </style>
+      <div className="fixed inset-0 bg-gray-800 bg-opacity-80   flex justify-center items-center z-50">
+        <div className="  bg-white p-4 rounded-lg mx-3  shadow-xl">
+          <div className="flex justify-between mb-3 items-center">
+            <h2 className="text-2xl font-bold ">
+              {isEditing ? "Edit Event" : "Add Event"}
+            </h2>
+            <div
+              onClick={onClose}
+              className="flex justify-center cursor-pointer items-center p-2  bg-gray-300 text-gray-800 rounded-full hover:bg-gray-400"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-x-lg"
+                viewBox="0 0 16 16"
+              >
+                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+              </svg>
+            </div>
+          </div>
+          <div
+            className=" lg:h-[400px] h-[500px]  w-full bg-gray-100 rounded  p-2 max-w-2xl custom-scrollbar overflow-x-auto"
+            style={{ scrollbarWidth: "thin", scrollbarColor: "#888 #f1f1f1" }}
+          >
+            {" "}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                onSubmit();
+              }}
+              className="space-y-4"
+            >
+              <input
+                type="text"
+                name="title"
+                value={newEvent.title}
+                onChange={handleChange}
+                placeholder="Event Title"
+                className="w-full p-2 border rounded"
+                required
+              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Start Date
+                  </label>
+                  <DatePicker
+                    selected={newEvent.start}
+                    onChange={(date) => handleDateChange(date, "start")}
+                    className="w-full p-2 border rounded"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    End Date
+                  </label>
+                  <DatePicker
+                    selected={newEvent.end}
+                    onChange={(date) => handleDateChange(date, "end")}
+                    className="w-full p-2 border rounded"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input
+                  type="time"
+                  name="startTime"
+                  value={newEvent.startTime}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded"
+                />
+                <input
+                  type="time"
+                  name="endTime"
+                  value={newEvent.endTime}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded"
+                />
+              </div>
+              <input
+                type="text"
+                name="location"
+                value={newEvent.location}
+                onChange={handleChange}
+                placeholder="Event Location"
+                className="w-full p-2 border rounded"
+              />
+              <input
+                type="text"
+                name="cName"
+                value={newEvent.cName}
+                onChange={handleChange}
+                placeholder="Coordinator Name"
+                className="w-full p-2 border rounded"
+              />
+              <input
+                type="tel"
+                name="cNumber"
+                value={newEvent.cNumber}
+                onChange={handleChange}
+                placeholder="Coordinator Number"
+                className="w-full p-2 border rounded"
+              />
+              <input
+                type="email"
+                name="cEmail"
+                value={newEvent.cEmail}
+                onChange={handleChange}
+                placeholder="Coordinator Email"
+                className="w-full p-2 border rounded"
+              />
+              <input
+                type="file"
+                onChange={handleImageChange}
+                className="w-full p-2 border rounded"
+              />
+              <div className="flex mt-2 justify-end space-x-2">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                >
+                  Cancel
+                </button>
+                <button
+                  // type="submit"
+                  onSubmit={onSubmit}
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
+                  {isEditing ? "Update Event" : "Add Event"}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-        <Button
-          onClick={props.isEditing ? handleEditEvent : handleAddEvent}
-        >
-          {loading
-            ? 'Adding Event...'
-            : props.isEditing
-              ? 'Edit Event'
-              : 'Add Event'}
-
-        </Button>
-        <Button onClick={props.onHide}>Close</Button>
-      </Modal.Footer>
-
-    </Modal>
+      </div>
+    </>
   );
 }
 
+function EventDetailsModal({
+  event,
+  onClose,
+  onEdit,
+  onDelete,
+  onAddReminder,
+  attendees,
+  profile,
+}) {
+  return (
+    <>
+      <style>
+        {`
+          /* Internal CSS for scrollbar */
+          .custom-scrollbar::-webkit-scrollbar {
+            width: 6px; /* Adjust scrollbar width here */
+          }
+          
+          .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1; /* Track color */
+          }
+          
+          .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #888; /* Thumb color */
+            border-radius: 10px;
+          }
 
-const locales = {
-  "en-IN": enIN,
-};
-const localizer = dateFnsLocalizer({
-  format,
-  parse,
-  startOfWeek,
-  getDay,
-  locales,
-});
+          .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #555; /* Thumb hover color */
+          }
+        `}
+      </style>
+      <div className="fixed inset-0 bg-gray-600 bg-opacity-80 flex  justify-center items-center z-50">
+        <div className="bg-white  mx-3 p-3 rounded-lg">
+          <div className="flex justify-between mb-2 items-center">
+            <h2 className="text-2xl font-bold ">{event.title}</h2>{" "}
+            <div
+              onClick={onClose}
+              className="flex justify-center cursor-pointer items-center p-2  bg-gray-300 text-gray-800 rounded-full hover:bg-gray-400"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-x-lg"
+                viewBox="0 0 16 16"
+              >
+                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+              </svg>
+            </div>
+          </div>
+          <div className=" lg:h-[350px] h-[500px] custom-scrollbar overflow-x-auto  w-full max-w-2xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <p>
+                  <span className="font-semibold">Start:</span>{" "}
+                  {formatDate(event.start)}
+                </p>
+                <p>
+                  <span className="font-semibold">End:</span>{" "}
+                  {formatDate(event.end)}
+                </p>
+                <p>
+                  <span className="font-semibold">Time:</span> {event.startTime}{" "}
+                  - {event.endTime}
+                </p>
+                <p>
+                  <span className="font-semibold">Location:</span>{" "}
+                  {event.location}
+                </p>
+                <p>
+                  <span className="font-semibold">Coordinator:</span>{" "}
+                  {event.cName}
+                </p>
+                <p>
+                  <span className="font-semibold">Contact:</span>{" "}
+                  {event.cNumber}
+                </p>
+                <p>
+                  <span className="font-semibold">Email:</span> {event.cEmail}
+                </p>
+              </div>
+              <div>
+                <img
+                  src={event.picture}
+                  alt={event.title}
+                  className="w-full h-48 object-cover rounded-lg"
+                />
+              </div>
+            </div>
+            <div className="mt-6 flex flex-wrap lg:justify-between gap-4">
+              <button
+                onClick={onAddReminder}
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+              >
+                Add Reminder
+              </button>
+              {(event.userId === profile._id || profile.profileLevel === 0) && (
+                <>
+                  <button
+                    onClick={() => {
+                      onEdit();
+                      onClose();
+                    }}
+                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                  >
+                    Edit Event
+                  </button>
+                  <button
+                    onClick={onDelete}
+                    className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                  >
+                    Delete Event
+                  </button>
+                </>
+              )}
+            </div>
+            {attendees && (
+              <div className="mt-6">
+                <h3 className="text-xl font-semibold mb-2">Attendees</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  {["willAttend", "mightAttend", "willNotAttend"].map(
+                    (status) => (
+                      <div key={status}>
+                        <h4 className="font-medium mb-2">
+                          {status
+                            .replace(/([A-Z])/g, " $1")
+                            .replace(/^./, (str) => str.toUpperCase())}
+                        </h4>
+                        <div className="space-y-2">
+                          {attendees[status].map((user) => (
+                            <div
+                              key={user.userId}
+                              className="flex items-center gap-2"
+                            >
+                              <Avatar
+                                src={user.profilePicture}
+                                alt={user.userName}
+                                className="w-8 h-8"
+                              />
+                              <span>{user.userName}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
 
-function Events() {
-  const [newEvent, setNewEvent] = useState({ title: "", start: "", end: "", startTime: "", endTime: "", type: "" });
-  const [allEvents, setAllEvents] = useState([]);
-  const [selectedEvent, setSelectedEvent] = useState(null);
-  const [attendees, setAttendees] = useState();
-  const [isEditing, setIsEditing] = useState(false);
-  const [modalShow, setModalShow] = React.useState(false);
-  const [selectedEventDetails, setSelectedEventDetails] = useState(null);
-  const [selectedEventDetailsPopup, setSelectedEventDetailsPopup] = useState(null);
-  const calendarRef = useRef(null);
-  const profile = useSelector((state) => state.profile);
-  const { _id } = useParams();
-  const [loading, setLoading] = useState(false);
-  const [detailsModalShow, setDetailsModalShow] = useState(false);
+function ReminderModal({ event, onClose }) {
+  const [reminderDate, setReminderDate] = useState(new Date());
+  const [reminderTime, setReminderTime] = useState("12:00");
 
-  // const gapi = window.gapi;
-  // const google = window.google;
-
-  // const CLIENT_ID = '221910855256-3ra04lqbdb4elusir5clvsail6ldum53.apps.googleusercontent.com';
-  // const API_KEY = 'AIzaSyCduY-X8qZOq43I8zwsHlf2WWZ1ewDjpdc';
-  // const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
-  // const SCOPES = "https://www.googleapis.com/auth/calendar";
-  // const SCOPES = 'https://www.googleapis.com/auth/calendar.readonly';
-
-
-
-  let admin;
-  if (profile.profileLevel === 0 || profile.profileLevel === 1) {
-    admin = true;
-  }
-
-  const handleClickOutsideCalendar = (event) => {
-    if (
-      calendarRef.current &&
-      !calendarRef.current.contains(event.target) &&
-      !event.target.closest(".modal-open")
-    ) {
-      setIsEditing(false);
-    }
-  };
-
-  useEffect(() => {
-    // Add event listener for clicks outside the calendar
-    window.addEventListener("click", handleClickOutsideCalendar);
-
-    // Remove the event listener when the component unmounts
-    return () => {
-      window.removeEventListener("click", handleClickOutsideCalendar);
-    };
-  }, []);
-
-
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.key === 'Delete') {
-        // Check if an event is selected
-        if (selectedEvent) {
-          handleDeleteEvent();
-        }
-      }
-    };
-
-    // Add event listener for the delete key
-    document.addEventListener('keydown', handleKeyDown);
-
-    // Remove the event listener when the component unmounts
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [selectedEvent]);
-
-
-
-
-  useEffect(() => {
-    fetchEvents();
-    if (_id) {
-      fetchEventDetails(_id);
-    }
-  }, [_id]);
-
-  const fetchEventDetails = (eventId) => {
-    setLoading(true);
-    fetch(`${baseUrl}/events/${eventId}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setSelectedEventDetailsPopup(data);
-        // setModalShow(true);
-        setDetailsModalShow(true)
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching event details:", error)
-        setLoading(false);
-      });
-
-  };
-
-  const fetchEvents = () => {
-    fetch(`${baseUrl}/events`)
-      .then((response) => response.json())
-      .then((data) => {
-        // Convert start and end dates to JavaScript Date objects
-        const eventsWithDates = data.map((event) => ({
-          ...event,
-          start: new Date(event.start),
-          end: new Date(event.end),
-        }));
-
-
-        const eventsWithIds = eventsWithDates.map((event, index) => ({
-          ...event,
-          id: index + 1,
-        }));
-
-        // // Filter events based on profile department
-        // const filteredEvents = eventsWithIds.filter((event) => {
-        //   if (event.department === 'All' || event.type === 'Public' || profile.profileLevel === 0) {
-        //     return true; // Return true for all events if department is 'All'
-        //   } else {
-        //     return event.department === profile.department;
-        //   }
-        // });
-
-        setAllEvents(eventsWithIds);
-      })
-      .catch((error) => console.error("Error fetching events:", error));
-  };
-
-  const checkAttendanceStatus = async (eventId) => {
-    console.log('eventid check', eventId)
-    try {
-      const response = await axios.get(
-        `${baseUrl}/events/attendees/${eventId}`,
-      );
-      if (response.status === 200) {
-        setAttendees(response.data);
-        // determineAttendanceStatus(response.data);
-      }
-    } catch (error) {
-      console.error('Error :', error);
-      toast.error(error.response?.data?.message || 'An error occurred.');
-    }
-  };
-
-
-
-
-
-  function handleEventClick(event) {
-
-    setSelectedEvent(event);
-    checkAttendanceStatus(event._id)
-    console.log("selected event", selectedEvent)
-    setIsEditing(true);
-    console.log("edit", isEditing)
-    setNewEvent({
-      title: event.title,
-      start: event.start,
-      end: event.end,
-      startTime: event.startTime,
-      endTime: event.endTime,
-      picture: event.picture,
-      cName: event.cName,
-      cNumber: event.cNumber,
-      cEmail: event.cEmail
-    });
-    setSelectedEventDetails(event);
-  }
-
-
-
-  const handleDeleteEvent = (e) => {
-    const eventId = selectedEvent._id;
-    console.log("id", eventId);
-    fetch(`${baseUrl}/events/${eventId}`, {
-      method: 'DELETE',
-    })
-      .then(() => {
-        // Remove the event from the events array
-        const updatedEvents = allEvents.filter(
-          (event) => event._id !== eventId
-        );
-
-        setAllEvents(updatedEvents);
-        setSelectedEvent(null);
-        setIsEditing(false);
-
-        toast.success('Event deleted successfully.');
-      })
-      .catch((error) => console.error('Error deleting event:', error));
-
-  };
-  const addToGoogleCalendar = () => {
-    console.log('handle add to google calendar')
-
-    // gapi.load('client:auth2', () => {
-    //   console.log('loaded client')
-
-    //   gapi.client.init({
-    //     apiKey: API_KEY,
-    //     clientId: CLIENT_ID,
-    //     discoveryDocs: DISCOVERY_DOC,
-    //     scope: SCOPES,
-    //   })
-
-    //   gapi.client.load('calendar', 'v3', () => console.log('bam!'))
-
-    //   gapi.auth2.getAuthInstance().signIn()
-    //   .then(() => {
-
-    //     var event = {
-    //       'summary': 'Awesome Event!',
-    //       'location': '800 Howard St., San Francisco, CA 94103',
-    //       'description': 'Really great refreshments',
-    //       'start': {
-    //         'dateTime': '2024-02-15T09:00:00-07:00',
-    //         'timeZone': 'America/Los_Angeles'
-    //       },
-    //       'end': {
-    //         'dateTime': '2020-06-28T17:00:00-07:00',
-    //         'timeZone': 'America/Los_Angeles'
-    //       },
-    //       'recurrence': [
-    //         'RRULE:FREQ=DAILY;COUNT=2'
-    //       ],
-    //       'attendees': [
-    //         {'email': 'lpage@example.com'},
-    //         {'email': 'sbrin@example.com'}
-    //       ],
-    //       'reminders': {
-    //         'useDefault': false,
-    //         'overrides': [
-    //           {'method': 'email', 'minutes': 24 * 60},
-    //           {'method': 'popup', 'minutes': 10}
-    //         ]
-    //       }
-    //     }
-
-    //     var request = gapi.client.calendar.events.insert({
-    //       'calendarId': 'primary',
-    //       'resource': event,
-    //     })
-
-    //     request.execute(event => {
-    //       console.log(event)
-    //       window.open(event.htmlLink)
-    //     })
-
-
-
-    //   })
-    // })
-  }
-
-
-  const [open, setOpen] = useState(false);
-  const handleOpenModal = (eventId) => {
-    console.log('eventid openmodal', eventId)
-    checkAttendanceStatus(eventId);
-    setOpen(true)
-  };
-  const handleCloseModal = () => setOpen(false);
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const options = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
-    return date.toLocaleDateString('en-US', options);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Here you would typically send the reminder data to your backend
+    console.log("Reminder set for:", reminderDate, reminderTime);
+    onClose();
   };
 
   return (
-    <div className="Events">
-      <h1 style={{ color: '#174873' }}>Event Calendar</h1>
-      <div ref={calendarRef}>
-        <MyVerticallyCenteredModal
-          show={modalShow}
-          isEditing={isEditing}
-          selectedEvent={selectedEvent}
-          onHide={() => {
-            setModalShow(false);
-            setSelectedEventDetails(null);
-          }}
-        />
-        <Calendar
-          localizer={localizer}
-          events={allEvents}
-          startAccessor="start"
-          endAccessor="end"
-          style={{ height: '60vh', margin: "50px" }}
-          selectable
-          onSelectEvent={handleEventClick}
-        />
-        {admin && (
-          <Button
-            className="add-event-button"
-            variant="primary"
-            onClick={() => setModalShow(true)}
-            style={{
-              borderRadius: '50%',
-              width: '60px',
-              height: '60px',
-              position: 'absolute',
-              backgroundColor: '#174873'
-            }}
-          >
-            <FaCalendarPlus />
-          </Button>
-        )}
-
-        {selectedEventDetails && (
-          <Modal
-            show={true}
-            onHide={() => setSelectedEventDetails(null)}
-            size="lg"
-          >
-            <Modal.Header style={{ backgroundColor: '#f5dad2' }} closeButton>
-              <Modal.Title>Event Details</Modal.Title>
-            </Modal.Header>
-            <Modal.Body style={{ backgroundColor: '#eaf6ff' }}>
-              <div style={{ display: 'flex' }}>
-                <div>
-                  <p><span style={{ fontWeight: '500' }}>Title:</span> {selectedEventDetails.title}</p>
-                  <p><span style={{ fontWeight: '500' }}>Start Date:</span> {formatDate(selectedEventDetails.start)}</p>
-                  <p><span style={{ fontWeight: '500' }}>End Date:</span> {formatDate(selectedEventDetails.end)}</p>
-                  <p><span style={{ fontWeight: '500' }}>Start Time:</span>  {selectedEventDetails.startTime} hrs</p>
-                  <p><span style={{ fontWeight: '500' }}>End Time:</span> {selectedEventDetails.endTime} hrs</p>
-                  <p><span style={{ fontWeight: '500' }}>Coordinator Name:</span> {selectedEventDetails.cName}</p>
-                  <p><span style={{ fontWeight: '500' }}>Coordinator Number:</span> {selectedEventDetails.cNumber}</p>
-                  <p><span style={{ fontWeight: '500' }}>Coordinator Email:</span> {selectedEventDetails.cEmail}</p>
-                  <p><span style={{ fontWeight: '500' }}>Location:</span> {selectedEventDetails.location}</p>
-                </div>
-                <img src={selectedEventDetails.picture} style={{ height: '200px', width: '300px', marginLeft: 'auto' }} />
-              </div>
-              <div style={{ display: 'flex', gap: '2vw' }}>
-                <Button variant="success" onClick={addToGoogleCalendar}>
-                  Add To Google Calendar
-                </Button>
-                {(selectedEventDetails.userId === profile._id || profile.profileLevel === 0) && <div className="event-edit-delete">
-
-                  <Button variant="primary" onClick={() => setModalShow(true)}>
-
-                    Edit Event
-                  </Button>
-                  <Button variant="danger" onClick={() => {
-                    handleDeleteEvent();
-                    setSelectedEventDetails(null)
-                  }}>
-
-                    Delete Event
-                  </Button>
-                </div>}
-                {selectedEventDetails.userId === profile._id && <div className='see-event-results' style={{ textAlign: 'right', cursor: 'pointer' }} onClick={() => handleOpenModal(selectedEventDetails._id)}>See event attendees</div>}
-              </div>
-              <MModal
-                open={open}
-                onClose={handleCloseModal}
-                aria-labelledby="modal-title"
-                aria-describedby="modal-description"
-              >
-                <Box className='poll-modal-box'>
-                  <h2 id="modal-title">Event Attendees</h2>
-                  <div className='voters-container'>
-                    <div>
-                      <h3>Will Attend</h3>
-                      <h5>Total:- {attendees?.willAttend.length}</h5>
-                      {attendees?.willAttend.map(user => (
-                        <div key={user.userId} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                          <Avatar src={user.profilePicture || pic} />
-                          <span>{user.userName}</span>
-                        </div>
-                      ))}
-                    </div>
-                    <div>
-                      <h3>Might Attend</h3>
-                      <h5>Total:- {attendees?.mightAttend.length}</h5>
-                      {attendees?.mightAttend.map(user => (
-                        <div key={user.userId} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                          <Avatar src={user.profilePicture || pic} />
-                          <span>{user.userName}</span>
-                        </div>
-                      ))}
-                    </div>
-                    <div>
-                      <h3>Will Not Attend</h3>
-                      <h5>Total:- {attendees?.willNotAttend.length}</h5>
-                      {attendees?.willNotAttend.map(user => (
-                        <div key={user.userId} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                          <Avatar src={user.profilePicture || pic} />
-                          <span>{user.userName}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </Box>
-              </MModal>
-            </Modal.Body>
-          </Modal>
-
-        )}
-        {selectedEventDetailsPopup && (
-          <div className="event-details-popup">
-            <div className="event-details-popup-content" style={{ textAlign: 'left' }}>
-              <span className="close-btn-event" onClick={() => setSelectedEventDetailsPopup(null)}>&times;</span>
-
-              <h2 align='center'>Event Details</h2>
-
-              <EventDisplay event={selectedEventDetailsPopup} />
-              {/* {(selectedEventDetailsPopup.userId === profile._id || profile.profileLevel === 0) && (
-                <div className="event-edit-delete">
-                  <Button variant="primary" onClick={() => setModalShow(true)}>
-                    Edit Event
-                  </Button>
-                  <Button variant="danger" onClick={() => {
-                    handleDeleteEvent();
-                    setSelectedEventDetails(null);
-                  }}>
-                    Delete Event
-                  </Button>
-                </div>
-              )} */}
-            </div>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+      <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-4">
+          Set Reminder for {event.title}
+        </h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label
+              htmlFor="reminderDate"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Date
+            </label>
+            <DatePicker
+              id="reminderDate"
+              selected={reminderDate}
+              onChange={(date) => setReminderDate(date)}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            />
           </div>
-        )}
-        {loading && <><l-line-spinner
-          size="40"
-          stroke="3"
-          speed="1"
-          color="black"
-        ></l-line-spinner></>}
+          <div>
+            <label
+              htmlFor="reminderTime"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Time
+            </label>
+            <input
+              type="time"
+              id="reminderTime"
+              value={reminderTime}
+              onChange={(e) => setReminderTime(e.target.value)}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            />
+          </div>
+          <div className="flex justify-end space-x-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              Set Reminder
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
 }
 
+function LoadingSpinner() {
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
+      <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-[#174873]"></div>
+    </div>
+  );
+}
 
-export default Events;
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", {
+    weekday: "short",
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+  });
+}

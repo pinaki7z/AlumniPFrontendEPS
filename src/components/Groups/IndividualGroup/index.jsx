@@ -329,7 +329,7 @@ const IndividualGroup = () => {
                             <div className="text-center">
                               <p className="font-normal text-sm font-Inter">
                                 Members
-                              </p>
+                               </p>
                               <p className="font-medium text-lg font-Inter">
                                 {groupItem.members.length}
                               </p>

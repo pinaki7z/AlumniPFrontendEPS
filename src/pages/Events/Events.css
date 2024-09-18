@@ -2,8 +2,8 @@
     text-align: center;
     /* background-image: url(../../images/pexels-tyler-lastovich-590179.jpg); */
     color: #4d63b2;
-    height: 92vh;
-    position: relative;
+    /* height: 100%; */
+    /* position: relative; */
     width: 100%;
 }
 .event-button-create{
@@ -15,12 +15,7 @@
     border-radius: 10px;
 }
 
-.add-event-button {
-    position: fixed;
-    bottom: 60px; /* Adjust this value to control the vertical position */
-    right: 60px; /* Adjust this value to control the horizontal position */
-    padding: 10px 20px; /* Add padding for better visibility */
-  }
+
 
 .event-edit-delete{
     display: flex;

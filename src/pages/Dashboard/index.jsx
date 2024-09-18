@@ -73,7 +73,7 @@ const Dashboard = ({ handleLogout }) => {
         {/* Top Bar */}
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 lg:ml-7 overflow-auto">
+        <div className=" overflow-auto">
           <Routes>
             <Route path="/groups/*" element={<Groups />} />
             {searchQuery && (
@@ -86,7 +86,7 @@ const Dashboard = ({ handleLogout }) => {
               <Route
                 path="/*"
                 element={
-                  <div className="grid grid-cols-1 md:grid-cols-6 gap-4  p-2">
+                  <div className="grid grid-cols-1 md:grid-cols-6 gap-4 lg:ml-7  p-2">
                     <div className="md:col-span-4">
                       <SocialMediaPost showCreatePost={true} />
                     </div>
