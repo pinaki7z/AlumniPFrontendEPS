@@ -9,7 +9,7 @@ import baseUrl from '../../config';
 
 export const Followers = () => {
   const title = 'Followers';
-  const icon = <HiUsers style={{ color: '#174873' }} />;
+  const icon = <HiUsers className="text-blue-700" />;
   const [members, setMembers] = useState([]);
   const [cookie, setCookie] = useCookies(['access_token']);
   const profile = useSelector((state) => state.profile);
@@ -50,27 +50,27 @@ export const Followers = () => {
   };
 
   return (
-    <div style={{ width: '60%', marginTop: '20px' }}>
+    <div className="w-full  mt-5 px-10">
       <PageTitle title={title} icon={icon} />
       {loading ? ( // Conditionally render loading message
-        <div style={{ textAlign: 'center' }}> Loading...</div>
-      ) : members!== undefined && members.length > 0 ? (
+        <div className="text-center">Loading...</div>
+      ) : members !== undefined && members.length > 0 ? (
         <>
-          <div style={{ marginTop: '15px', display: 'flex', gap: '30px', flexWrap: 'wrap' }}>
+          <div className="mt-4 flex flex-wrap gap-7">
             {members.map((member) => (
-              <Profilecard key={member._id} member={member} name='follow' />
+              <Profilecard key={member._id} member={member} name="follow" />
             ))}
           </div>
           {activePage.current < totalFollowers / LIMIT && (
-            <div style={{ textAlign: 'center', marginTop: '20px' }}>
-              <button className="load-more-button" onClick={updateFollowers}>
+            <div className="text-center mt-5">
+              <button className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600" onClick={updateFollowers}>
                 Load More
               </button>
             </div>
           )}
         </>
-      ): (
-        <div style={{textAlign: 'center'}}>No Followers</div>
+      ) : (
+        <div className="text-center">No Followers</div>
       )}
     </div>
   );

@@ -269,7 +269,7 @@ const Chat = ({ userId, togglePopup }) => {
           }
         `}
       </style>
-      <div className="flex h-[90vh] rounded-lg z-50 bg-gray-100">
+      <div className="flex h-[90vh] rounded-lg  bg-white " style={{zIndex:"999"}} >
         <div className="w-1/4 bg-white shadow rounded-lg h-[90vh] overflow-y-auto">
           <div className="p-4 overflow-hidden bg-[#004C8A]">
             <Logo className="w-32 text-white mx-auto" />

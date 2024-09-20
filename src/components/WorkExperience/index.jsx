@@ -1,16 +1,13 @@
+'use client'
+
 import React, { useState, useEffect } from 'react';
 import PageTitle from '../PageTitle';
 import { RiBriefcase4Line } from "react-icons/ri";
 import { useCookies } from 'react-cookie';
-import './workExperience.css';
 import { useSelector } from "react-redux";
 import baseUrl from '../../config';
 import { toast } from "react-toastify";
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
-import { IoMdClose,IoIosList } from "react-icons/io";
-import Form from 'react-bootstrap/Form';
-
+import { IoMdClose, IoIosList } from "react-icons/io";
 
 export const WorkExperience = () => {
     const [workExperiences, setWorkExperiences] = useState([]);
@@ -71,7 +68,6 @@ export const WorkExperience = () => {
           setForms(newForms);
         };
     
-    
         const handleCurrentWorkChange = (index) => {
           const newForms = [...forms];
           newForms[index].currentWork = !newForms[index].currentWork;
@@ -104,241 +100,242 @@ export const WorkExperience = () => {
             .then(data => {
               console.log(data);
               toast.success("Added successfully!");
-              window.location.reload();
+              // window.location.reload();
+              fetchWorkExperiences();
               props.onHide();
             })
             .catch(error => console.error('Error:', error));
         };
     
-    
-    
         return (
-          <Modal
-            {...props}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-          >
-            <Modal.Header closeButton>
-              <Modal.Title id="contained-modal-title-vcenter">
-                Add Experience
-              </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Button onClick={handleAddExperience}>Add</Button>
-              <Form>
+          <div className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 ${props.show ? '' : 'hidden'}`}>
+            <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] ">
+              <div className="flex justify-between items-center p-6 border-b">
+                <h2 className="text-2xl font-bold">Add Experience</h2>
+                <button onClick={props.onHide} className="text-gray-500 hover:text-gray-700">
+                  <IoMdClose size={24} />
+                </button>
+              </div>
+              <div className=" overflow-y-auto h-[60vh]">
+                <button onClick={handleAddExperience} className="mb-4 px-8 ml-3 bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition-colors duration-200">
+                  Add
+                </button>
                 {forms.map((form, index) => (
-                  <div key={index}>
-                    <Form.Group controlId="formBasicAddDelete">
-                      {index > 0 && (
-                        <>
-                          <Button onClick={handleAddExperience}>Add</Button>
-                          <Button variant="danger" onClick={() => handleCloseAdditionalForm(index)} style={{ float: 'right' }}>
-                            <IoMdClose />
-                          </Button>
-                        </>
-                      )}
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="formBasicTitle">
-                      <Form.Label>Title</Form.Label>
-                      <Form.Control
+                  <div key={index} className="mb-6 p-4 border rounded-lg">
+                    {index > 0 && (
+                      <div className="flex justify-between mb-4">
+                        <button onClick={handleAddExperience} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors duration-200">
+                          Add
+                        </button>
+                        <button onClick={() => handleCloseAdditionalForm(index)} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors duration-200">
+                          <IoMdClose />
+                        </button>
+                      </div>
+                    )}
+                    <div className="mb-4">
+                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={`title-${index}`}>
+                        Title
+                      </label>
+                      <input
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id={`title-${index}`}
                         type="text"
                         placeholder="Enter title"
-                        value={forms[index].title || ''}
+                        value={form.title || ''}
                         onChange={(event) => handleInputChange(event, index, 'title')}
                       />
-                    </Form.Group>
-    
-                    <Form.Group className="mb-3" controlId="formBasicCompanyName">
-                      <Form.Label>Company Name</Form.Label>
-                      <Form.Control
+                    </div>
+                    <div className="mb-4">
+                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={`companyName-${index}`}>
+                        Company Name
+                      </label>
+                      <input
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id={`companyName-${index}`}
                         type="text"
                         placeholder="Company Name"
-                        value={forms[index].companyName || ''}
+                        value={form.companyName || ''}
                         onChange={(event) => handleInputChange(event, index, 'companyName')}
                       />
-                    </Form.Group>
-    
-                    <Form.Group className="mb-3" controlId="formBasicLocation">
-                      <Form.Label>Location</Form.Label>
-                      <Form.Control
+                    </div>
+                    <div className="mb-4">
+                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={`location-${index}`}>
+                        Location
+                      </label>
+                      <input
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id={`location-${index}`}
                         type="text"
                         placeholder="Location"
-                        value={forms[index].location || ''}
+                        value={form.location || ''}
                         onChange={(event) => handleInputChange(event, index, 'location')}
                       />
-                    </Form.Group>
-    
-                    <Form.Group className="mb-3" controlId="formBasicLocationType">
-                      <Form.Label>Location Type</Form.Label>
-                      <Form.Control
-                        as="select"
-                        value={forms[index].locationType || ''}
+                    </div>
+                    <div className="mb-4">
+                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={`locationType-${index}`}>
+                        Location Type
+                      </label>
+                      <select
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id={`locationType-${index}`}
+                        value={form.locationType || ''}
                         onChange={(event) => handleInputChange(event, index, 'locationType')}
                       >
                         <option value="">Location Type</option>
                         <option value="On-site">On-site</option>
                         <option value="Hybrid">Hybrid</option>
                         <option value="Remote">Remote</option>
-                      </Form.Control>
-                    </Form.Group>
-    
-                    <Form.Group className="mb-3" controlId="formBasicCurrentWork">
-                      <Form.Check
-                        type="checkbox"
-                        label="I currently work here"
-                        checked={forms[index].currentWork || false}
-                        onChange={() => handleCurrentWorkChange(index)}
-                      />
-                    </Form.Group>
-    
-                    <Form.Group className="mb-3" controlId="formBasicStartDate">
-                      <Form.Label>Start Date</Form.Label>
-                      <div className="d-flex">
-                        <Form.Control
-                          as="select"
-                          className="me-2"
-                          value={forms[index].startMonth || ''}
+                      </select>
+                    </div>
+                    <div className="mb-4">
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          className="form-checkbox h-5 w-5 text-blue-600"
+                          checked={form.currentWork || false}
+                          onChange={() => handleCurrentWorkChange(index)}
+                        />
+                        <span className="ml-2 text-gray-700">I currently work here</span>
+                      </label>
+                    </div>
+                    <div className="mb-4">
+                      <label className="block text-gray-700 text-sm font-bold mb-2">
+                        Start Date
+                      </label>
+                      <div className="flex space-x-2">
+                        <select
+                          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          value={form.startMonth || ''}
                           onChange={(event) => handleInputChange(event, index, 'startMonth')}
                         >
                           <option value="">Month</option>
-                          <option value="January">January</option>
-                          <option value="February">February</option>
-                          <option value="March">March</option>
-                          <option value="April">April</option>
-                          <option value="May">May</option>
-                          <option value="June">June</option>
-                          <option value="July">July</option>
-                          <option value="August">August</option>
-                          <option value="September">September</option>
-                          <option value="October">October</option>
-                          <option value="November">November</option>
-                          <option value="December">December</option>
-                        </Form.Control>
-                        <Form.Control
-                          as="select"
-                          value={forms[index].startYear || ''}
+                          {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map((month) => (
+                            <option key={month} value={month}>{month}</option>
+                          ))}
+                        </select>
+                        <select
+                          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          value={form.startYear || ''}
                           onChange={(event) => handleInputChange(event, index, 'startYear')}
                         >
                           <option value="">Year</option>
                           {generateYears().map((year) => (
-                            <option key={year} value={year}>
-                              {year}
-                            </option>
+                            <option key={year} value={year}>{year}</option>
                           ))}
-                        </Form.Control>
+                        </select>
                       </div>
-                    </Form.Group>
-    
-                    <Form.Group className="mb-3" controlId="formBasicEndDate">
-                      <Form.Label>End Date</Form.Label>
-                      <div className="d-flex">
-                        <Form.Control
-                          as="select"
-                          className="me-2"
-                          value={forms[index].endMonth || ''}
+                    </div>
+                    <div className="mb-4">
+                      <label className="block text-gray-700 text-sm font-bold mb-2">
+                        End Date
+                      </label>
+                      <div className="flex space-x-2">
+                        <select
+                          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          value={form.endMonth || ''}
                           onChange={(event) => handleInputChange(event, index, 'endMonth')}
-                          disabled={forms[index].currentWork}
+                          disabled={form.currentWork}
                         >
                           <option value="">Month</option>
-                          <option value="January">January</option>
-                          <option value="February">February</option>
-                          <option value="March">March</option>
-                          <option value="April">April</option>
-                          <option value="May">May</option>
-                          <option value="June">June</option>
-                          <option value="July">July</option>
-                          <option value="August">August</option>
-                          <option value="September">September</option>
-                          <option value="October">October</option>
-                          <option value="November">November</option>
-                          <option value="December">December</option>
-                        </Form.Control>
-                        <Form.Control
-                          as="select"
-                          value={forms[index].endYear || ''}
+                          {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map((month) => (
+                            <option key={month} value={month}>{month}</option>
+                          ))}
+                        </select>
+                        <select
+                          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          value={form.endYear || ''}
                           onChange={(event) => handleInputChange(event, index, 'endYear')}
-                          disabled={forms[index].currentWork}
+                          disabled={form.currentWork}
                         >
                           <option value="">Year</option>
                           {generateYears().map((year) => (
-                            <option key={year} value={year}>
-                              {year}
-                            </option>
+                            <option key={year} value={year}>{year}</option>
                           ))}
-                        </Form.Control>
+                        </select>
                       </div>
-                    </Form.Group>
-    
-                    <Form.Group className="mb-3" controlId="formBasicIndustry">
-                      <Form.Label>Industry</Form.Label>
-                      <Form.Control
+                    </div>
+                    <div className="mb-4">
+                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={`industry-${index}`}>
+                        Industry
+                      </label>
+                      <input
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id={`industry-${index}`}
                         type="text"
                         placeholder="Industry"
-                        value={forms[index].industry || ''}
+                        value={form.industry || ''}
                         onChange={(event) => handleInputChange(event, index, 'industry')}
                       />
-                    </Form.Group>
-    
-                    <Form.Group className="mb-3" controlId="formBasicDescription">
-                      <Form.Label>Description</Form.Label>
-                      <Form.Control
-                        as="textarea"
+                    </div>
+                    <div className="mb-4">
+                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={`description-${index}`}>
+                        Description
+                      </label>
+                      <textarea
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id={`description-${index}`}
                         rows={3}
-                        value={forms[index].description || ''}
+                        value={form.description || ''}
                         onChange={(event) => handleInputChange(event, index, 'description')}
                       />
-                    </Form.Group>
-    
-                    <Form.Group className="mb-3" controlId="formBasicProfileHeadline">
-                      <Form.Label>Profile Headline</Form.Label>
-                      <Form.Control
+                    </div>
+                    <div className="mb-4">
+                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={`profileHeadline-${index}`}>
+                        Profile Headline
+                      </label>
+                      <input
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id={`profileHeadline-${index}`}
                         type="text"
                         placeholder="Profile Headline"
-                        value={forms[index].profileHeadline || ''}
+                        value={form.profileHeadline || ''}
                         onChange={(event) => handleInputChange(event, index, 'profileHeadline')}
                       />
-                    </Form.Group>
+                    </div>
                   </div>
                 ))}
-              </Form>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button onClick={handleSave}>Save</Button>
-              <Button onClick={props.onHide}>Close</Button>
-            </Modal.Footer>
-          </Modal>
+              </div>
+              <div className="flex justify-end p-6 border-t">
+                <button onClick={handleSave} className="bg-green-500 text-white px-4 py-2 rounded mr-2 hover:bg-green-600 transition-colors duration-200">
+                  Save
+                </button>
+                <button onClick={props.onHide} className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400 transition-colors duration-200">
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
         );
       }
 
     return (
-        <div style={{ width: '100%', marginTop: '15px', padding: '5% 5%' }}>
+        <div className="w-full mt-4 p-[5%]">
             <PageTitle title='Work Experience' icon={icon} />
-            <div style={{paddingTop: '20px'}}>
-            <button
+            <div className="pt-5">
+              <button
                 type="button"
-                style={{ backgroundColor: 'white', display: 'flex', alignItems: 'center', gap: '7px', border: '2px solid #F8A700', color: '#004C8A', borderRadius: '5px',padding: '10px' }}
+                className="flex items-center gap-2 bg-white border-2 border-yellow-500 text-blue-700 rounded-md px-4 py-2 hover:bg-yellow-50 transition-colors duration-200"
                 onClick={() => setModalShow(true)}
               >
                 <IoIosList/>
-                <p style={{ marginBottom: '0px' }}>Add Work Experience</p>
+                <span>Add Work Experience</span>
               </button>
-                <MyVerticallyCenteredModal
-                    show={modalShow}
-                    onHide={() => setModalShow(false)}
-                />
+              <MyVerticallyCenteredModal
+                show={modalShow}
+                onHide={() => setModalShow(false)}
+              />
             </div>
-            <div style={{ marginTop: '15px' }}>
-                {loading && 'Loading...'}
+            <div className="mt-4">
+                {loading && <p className="text-gray-600">Loading...</p>}
                 {workExperiences.map((experience, index) => (
-                    <div className="work-experience-card" key={index}>
-                        <div className="work-experience-title">{experience.title}</div>
-                        <div className="work-experience-company">{experience.companyName}</div>
-                        <div className="work-experience-date">{`${experience.startMonth} ${experience.startYear} - ${experience.endMonth} ${experience.endYear || ''}`}</div>
-                        <div className="work-experience-location">{experience.location} - {experience.locationType}</div>
+                    <div key={index} className="bg-white shadow-md rounded-lg p-4 mb-4">
+                        <h3 className="text-xl font-semibold text-gray-800">{experience.title}</h3>
+                        <p className="text-lg text-gray-600">{experience.companyName}</p>
+                        <p className="text-sm text-gray-500">{`${experience.startMonth} ${experience.startYear} - ${experience.endMonth} ${experience.endYear || ''}`}</p>
+                        <p className="text-sm text-gray-500">{`${experience.location} - ${experience.locationType}`}</p>
                     </div>
                 ))}
-                {(workExperiences.length === 0 && loading === false) && 'No work experience'}
+                {(workExperiences.length === 0 && !loading) && <p className="text-gray-600">No work experience</p>}
             </div>
         </div>
     );

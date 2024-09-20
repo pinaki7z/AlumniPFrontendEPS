@@ -396,7 +396,7 @@ const Chat = () => {
   };
   return (
     <div className="flex h-screen bg-gray-100">
-      <div className="w-1/4 bg-gray-800 text-white shadow-lg overflow-y-auto">
+      <div className="w-full bg-gray-800 text-white shadow-lg overflow-y-auto">
         <div className="p-4 bg-gray-900 text-2xl font-bold">Contacts</div>
         <div className="space-y-2 p-2">
           {Object.keys(onlinePeopleExclOurUser).map((userId) => (
@@ -461,7 +461,9 @@ const Chat = () => {
               </button>
             </div>
           </div>
-          <div className="flex-1 overflow-y-auto p-6 bg-gray-50">
+          <div className="flex-1 overflow-y-auto
+          
+          p-6 bg-gray-50">
             {messagesWithoutDupes.map((message) => (
               <div
                 key={message._id}
@@ -540,7 +542,7 @@ const Chat = () => {
       {showPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-2xl w-11/12 h-5/6 max-w-4xl">
-            <div className="p-6 border-b border-gray-200 flex justify-between items-center">
+            <div className=" border-b border-gray-200 flex justify-between items-center">
               <h2 className="text-2xl font-bold text-gray-800">Chat Details</h2>
               <button
                 onClick={togglePopup}
@@ -549,7 +551,7 @@ const Chat = () => {
                 <IoIosContract className="text-3xl" />
               </button>
             </div>
-            <div className="p-6 h-full overflow-y-auto">
+            <div className=" h-full w-full  ">
               <ChatM userId={selectedUserId} />
             </div>
           </div>
