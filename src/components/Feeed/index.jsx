@@ -39,9 +39,10 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
     const container = scrollContainerRef.current;
 
     const handleScroll = () => {
-      console.log('scrolling')
+      // console.log('scrolling', container)
       if (container) {
         const { scrollTop, clientHeight, scrollHeight } = container;
+        console.log('checking for false', scrollTop +clientHeight , scrollHeight - 10 )
         if (
           scrollTop + clientHeight >= scrollHeight - 10 &&
           !loading &&
@@ -167,6 +168,47 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
     setLoading(false);
   };
 
+  const getPostsFromPage1 = async (page = 1) => {
+    console.log('getting posts from page 1');
+    setLoading(true);
+    isFetchingRef.current = false;
+    console.log("Getting posts/news from page 1");
+  
+    try {
+      if (userId) {
+        const response = await axios.get(
+          `${baseUrl}/${entityType}/userPosts/${userId}?page=${page}&size=${LIMIT}`
+        );
+        const postsData = response.data.records;
+        setPosts(postsData);  // Replace the current posts
+        setTotalPosts(response.data.total);
+        lastFetchedPageRef.current = page;
+      } else if (groupID) {
+        const response = await axios.get(
+          `${baseUrl}/groups/groups/${groupID}?page=${page}&size=${LIMIT}`
+        );
+        const postsData = response.data.records;
+        setPosts(postsData);  // Replace the current posts
+        setTotalPosts(response.data.total);
+        lastFetchedPageRef.current = page;
+      } else {
+        const response = await axios.get(
+          `${baseUrl}/${entityType}?page=${page}&size=${LIMIT}`
+        );
+        const postsData = response.data.records;
+        setPosts(postsData);  // Replace the current posts
+        setTotalPosts(response.data.total);
+        lastFetchedPageRef.current = page;
+      }
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    }
+  
+    isFetchingRef.current = true;
+    setLoading(false);
+  };
+  
+
 
 
   return (
@@ -177,6 +219,8 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
           username={username}
           onNewPost={handleNewPost}
           entityType={entityType}
+          getPosts={getPostsFromPage1}
+
         />
       )}
       {showCreateButton &&

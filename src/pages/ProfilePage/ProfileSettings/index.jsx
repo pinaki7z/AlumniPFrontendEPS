@@ -16,6 +16,7 @@ import { updateProfile } from "../../../store/profileSlice";
 import { IoMdAdd } from "react-icons/io";
 import baseUrl from "../../../config";
 import { padding } from "@mui/system";
+import axios from "axios";
 
 export const ProfileSettings = () => {
   const navigate = useNavigate();
@@ -65,34 +66,84 @@ export const ProfileSettings = () => {
   const handleProfileImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData({ ...formData, profilePicture: reader.result });
-      };
-      reader.readAsDataURL(file);
+      const formData = new FormData();
+    formData.append('image', file);
+
+    axios.post(`${baseUrl}/uploadImage/image`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+      .then(res => {
+        setFormData({ ...formData, profilePicture: res.data });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+   
     }
   };
-
   const handleCoverImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData({ ...formData, coverPicture: reader.result });
-      };
-      reader.readAsDataURL(file);
+      const formData = new FormData();
+    formData.append('image', file);
+
+    axios.post(`${baseUrl}/uploadImage/image`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+      .then(res => {
+        setFormData({ ...formData, coverPicture: res.data });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+   
     }
   };
   const handleUploadID = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData({ ...formData, ID: reader.result });
-      };
-      reader.readAsDataURL(file);
+      const formData = new FormData();
+    formData.append('image', file);
+
+    axios.post(`${baseUrl}/uploadImage/image`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+      .then(res => {
+        setFormData({ ...formData, ID: res.data });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+   
     }
   };
+
+  // const handleCoverImageChange = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       setFormData({ ...formData, coverPicture: reader.result });
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
+  // const handleUploadID = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       setFormData({ ...formData, ID: reader.result });
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

@@ -859,7 +859,7 @@ const SideWidgets = () => {
             No Latest Activities
           </p>
         ) : (
-          notifications.map((notification) => (
+          notifications.slice(0, 4).map((notification) => (
             <div
             className="border-t-2 py-3"
               key={notification._id}

@@ -20,11 +20,14 @@ const CreatePost1 = ({
   closeButton,
   close,
   postId,
+  getPosts
 }) => {
   const { _id } = useParams();
+  const page = 1;
   const [isExpanded, setExpanded] = useState(false);
   const [input, setInput] = useState("");
   const [picturePath, setPicturePath] = useState([]);
+  const [videoPath, setVideoPath] = useState({});
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [posts, setPosts] = useState([]);
@@ -87,6 +90,52 @@ const CreatePost1 = ({
     simulateUpload();
   };
 
+  const handleImageChange = async (e) => {
+    const files = e.target.files;
+    if (!files.length) return;
+
+    const formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      formData.append("images", files[i]);
+    }
+
+    try {
+      // Post the images to the server
+      const response = await axios.post(`${baseUrl}/uploadImage/image`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      // Update gallery with uploaded image URLs
+      setPicturePath(response.data);
+    } catch (error) {
+      console.error("Error uploading files", error);
+    }
+  };
+  const handleVideoChange = (e) => {
+    const file = e.target.files[0];
+    console.log("file", file);
+
+    // Create a FormData object
+    const formData = new FormData();
+    formData.append('video', file); // 'video' should match the field name expected by the server
+
+    // Send the FormData via Axios
+    axios.post(`${baseUrl}/uploadImage/video`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+      .then(res => {
+        setVideoPath(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+
   const simulateUpload = () => {
     let progress = 0;
     const interval = setInterval(() => {
@@ -113,6 +162,38 @@ const CreatePost1 = ({
     }
   };
 
+
+  const newHandleSubmit = async (event) => {
+    event.preventDefault();
+
+    const payload = {
+      userId: profile._id,
+      description: input,
+      department: profile.department,
+      profilePicture: profile.profilePicture,
+    };
+
+    if (_id) payload.groupID = _id;
+    if (picturePath) payload.picturePath = picturePath;
+    if (videoPath) payload.videoPath = videoPath;
+
+    console.log("payload", payload);
+
+    axios.post(
+      `${baseUrl}/${entityType}/create`,
+      payload
+    ).then((res) => {
+      setImgUrl("");
+      setSelectedFile(null);
+      setPicturePath([]);
+      setVideoPath({});
+      setInput("")
+      getPosts(1);
+    }).catch((err) => {
+      console.log(err);
+    });
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData();
@@ -121,99 +202,118 @@ const CreatePost1 = ({
     formData.append("department", profile.department);
     formData.append("profilePicture", profile.profilePicture);
     if (_id) formData.append("groupID", _id);
-
-    if (selectedFile) {
-      console.log("selected file is present", selectedFile);
-      if (selectedFile.type.startsWith("image/")) {
-        console.log("picture", picturePath);
-        const reader = new window.FileReader();
-        reader.onload = function (event) {
-          const dataURL = event.target.result;
-
-          const formDataObject = {
-            picturePath: picturePath[0],
-          };
-
-          for (let pair of formData.entries()) {
-            const key = pair[0];
-            const value = pair[1];
-
-            formDataObject[key] = value;
-            console.log("FORMDATAOBJECT:", formDataObject);
-          }
-          uploadImage(formDataObject);
-        };
-        reader.readAsDataURL(selectedFile);
-      } else {
-        console.log("videoPath is present");
-        formData.append("videoPath", selectedFile);
-        const formDataObject = {};
-
-        for (let pair of formData.entries()) {
-          const key = pair[0];
-          const value = pair[1];
-
-          formDataObject[key] = value;
-        }
-
-        const currentDate = new Date();
-        const folderName = currentDate.toISOString().split("T")[0];
-        console.log("folder name:", folderName);
-
-        uploadData(formDataObject, folderName);
-      }
-    } else if (selectedFiles.length > 0) {
-      console.log("selected files are present", selectedFiles);
-      const formDataObject = {
-        picturePath: picturePath,
-      };
-
-      for (let pair of formData.entries()) {
-        const key = pair[0];
-        const value = pair[1];
-        formDataObject[key] = value;
-      }
-      console.log("FORMDATAOBJECT:", formDataObject);
-      uploadImage(formDataObject);
-    } else {
-      console.log("elseee");
-      const formDataObject = {};
-
-      for (let pair of formData.entries()) {
-        const key = pair[0];
-        const value = pair[1];
-
-        formDataObject[key] = value;
-        console.log("FORMDATAOBJECT:", formDataObject);
-      }
-
-      try {
-        if (close) {
-          console.log("EDITING POST");
-          const response = await axios.put(
-            `${baseUrl}/${entityType}/${postId}`,
-            formDataObject
-          );
-          const newPost = await response.data;
-          //onNewPost(newPost);
-          setInput("");
-          setImgUrl("");
-          window.location.reload();
-        } else {
-          const response = await axios.post(
-            `${baseUrl}/${entityType}/create`,
-            formDataObject
-          );
-          const newPost = await response.data;
-          onNewPost(newPost);
-          setInput("");
-          setImgUrl("");
-          window.location.reload();
-        }
-      } catch (error) {
-        console.error("Error posting:", error);
-      }
+    if (picturePath) {
+      formData.append("picturePath", picturePath);
     }
+    if (videoPath) {
+      formData.append("videoPath", videoPath);
+    }
+    // if (selectedFile) {
+    //   console.log("selected file is present", selectedFile);
+    //   if (selectedFile.type.startsWith("image/")) {
+    //     console.log("picture", picturePath);
+    //     const reader = new window.FileReader();
+    //     reader.onload = function (event) {
+    //       const dataURL = event.target.result;
+
+    //       const formDataObject = {
+    //         picturePath: picturePath[0],
+    //       };
+
+    //       for (let pair of formData.entries()) {
+    //         const key = pair[0];
+    //         const value = pair[1];
+
+    //         formDataObject[key] = value;
+    //         console.log("FORMDATAOBJECT:", formDataObject);
+    //       }
+    //       uploadImage(formDataObject);
+    //     };
+    //     reader.readAsDataURL(selectedFile);
+    //   } else {
+    //     console.log("videoPath is present");
+    //     formData.append("videoPath", selectedFile);
+    //     const formDataObject = {};
+
+    //     for (let pair of formData.entries()) {
+    //       const key = pair[0];
+    //       const value = pair[1];
+
+    //       formDataObject[key] = value;
+    //     }
+
+    //     const currentDate = new Date();
+    //     const folderName = currentDate.toISOString().split("T")[0];
+    //     console.log("folder name:", folderName);
+
+    //     uploadData(formDataObject, folderName);
+    //   }
+    // } else if (selectedFiles.length > 0) {
+    //   console.log("selected files are present", selectedFiles);
+    //   const formDataObject = {
+    //     picturePath: picturePath,
+    //   };
+
+    //   for (let pair of formData.entries()) {
+    //     const key = pair[0];
+    //     const value = pair[1];
+    //     formDataObject[key] = value;
+    //   }
+    //   console.log("FORMDATAOBJECT:", formDataObject);
+    //   uploadImage(formDataObject);
+    // } else {
+    //   console.log("elseee");
+    //   const formDataObject = {};
+
+    //   for (let pair of formData.entries()) {
+    //     const key = pair[0];
+    //     const value = pair[1];
+
+    //     formDataObject[key] = value;
+    //     console.log("FORMDATAOBJECT:", formDataObject);
+    //   }
+
+    //   try {
+    //     if (close) {
+    //       console.log("EDITING POST");
+    //       const response = await axios.put(
+    //         `${baseUrl}/${entityType}/${postId}`,
+    //         formDataObject
+    //       );
+    //       const newPost = await response.data;
+    //       //onNewPost(newPost);
+    //       setInput("");
+    //       setImgUrl("");
+    //       window.location.reload();
+    //     } else {
+    //       const response = await axios.post(
+    //         `${baseUrl}/${entityType}/create`,
+    //         formDataObject
+    //       );
+    //       const newPost = await response.data;
+    //       onNewPost(newPost);
+    //       setInput("");
+    //       setImgUrl("");
+    //       window.location.reload();
+    //     }
+    //   } catch (error) {
+    //     console.error("Error posting:", error);
+    //   }
+    // }
+    // console.log("formdata", formData)
+    // axios.post(
+    //   `${baseUrl}/${entityType}/create`,
+    //   formData
+    // ).then((res)=>{
+    //   setImgUrl("");
+    //   setSelectedFile(null);
+    //   setPicturePath([])
+    //   setVideoPath({})
+    //   getPosts()
+
+    // }).catch((err)=>{
+    //   console.log(err)
+    // })
   };
 
   const uploadData = async (formDataObject, folderName) => {
@@ -317,9 +417,8 @@ const CreatePost1 = ({
 
   return (
     <div
-      className={`social-media-post border w-full p-3 rounded shadow-sm ${
-        isExpanded ? "expanded" : ""
-      }`}
+      className={`social-media-post border w-full p-3 rounded shadow-sm ${isExpanded ? "expanded" : ""
+        }`}
     >
       <div
         className={`overlay ${isExpanded ? "expanded" : ""}`}
@@ -360,19 +459,13 @@ const CreatePost1 = ({
           <div className="mt-2 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
             {picturePath.map((path, index) => (
               <div key={index} className="relative">
-                {path.startsWith("data:image") ? (
-                  <img
-                    src={path}
-                    alt="Preview"
-                    className="w-full h-32 object-cover rounded"
-                  />
-                ) : (
-                  <video
-                    src={path}
-                    className="w-full h-32 object-cover rounded"
-                    controls
-                  />
-                )}
+
+                <img
+                  src={path}
+                  alt="Preview"
+                  className="w-full h-32 object-cover rounded"
+                />
+
                 <button
                   onClick={() => removeMedia(index)}
                   className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 w-6 h-6 flex items-center justify-center"
@@ -381,8 +474,33 @@ const CreatePost1 = ({
                 </button>
               </div>
             ))}
+
+
           </div>
+
+
         )}
+
+        {videoPath?.videoPath &&
+          <div className="w-50 ">
+
+            <video
+              src={videoPath?.videoPath}
+              className="h-40  object-cover rounded"
+              controls
+            />
+            <div className="flex justify-center bg-red">
+              <button
+                onClick={() => setVideoPath({})}
+                className=" text-white rounded-full p-1 w-full  flex items-center justify-end"
+              >
+                Remove
+              </button>
+            </div>
+
+
+          </div>
+        }
         {uploadProgress > 0 && (
           <div className="mt-2 w-full">
             <div className="bg-gray-200 rounded-full h-2.5 w-full">
@@ -397,9 +515,8 @@ const CreatePost1 = ({
           </div>
         )}
         <div
-          className={`mt-2 flex flex-col gap-3 lg:ml-20 sm:flex-row justify-between items-center ${
-            isExpanded ? "expanded" : ""
-          }`}
+          className={`mt-2 flex flex-col gap-3 lg:ml-20 sm:flex-row justify-between items-center ${isExpanded ? "expanded" : ""
+            }`}
         >
           <div className="flex gap-4 w-full  sm:mb-0">
             <label
@@ -423,7 +540,7 @@ const CreatePost1 = ({
                 type="file"
                 accept="image/*"
                 style={{ display: "none" }}
-                onChange={handleFileInputChange}
+                onChange={handleImageChange}
                 multiple
               />
             </label>
@@ -467,14 +584,14 @@ const CreatePost1 = ({
                 type="file"
                 accept="video/*"
                 style={{ display: "none" }}
-                onChange={handleFileInputChange}
+                onChange={handleVideoChange}
               />
             </label>
           </div>
           <div className="w-full   lg:w-[150px] ">
             <button
               className=" h-10  "
-              onClick={handleSubmit}
+              onClick={newHandleSubmit}
               style={{
                 color: "#ffffff",
                 float: "right",
