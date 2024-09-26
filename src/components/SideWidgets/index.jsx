@@ -567,6 +567,7 @@ const SideWidgets = () => {
   return (
     <div className="">
       <div
+      // style={{ float: 'right' }}
       >
    {(profile.profileLevel === 0 || profile.profileLevel === 1) &&     <OverlayTrigger
           trigger="click"
@@ -621,7 +622,6 @@ const SideWidgets = () => {
             </Popover>
           }
         >
-          <div>
           {(profile.profileLevel === 0 || profile.profileLevel === 1) && (
             <button
               onClick={() => setShowPopover(!showPopover)}
@@ -630,13 +630,7 @@ const SideWidgets = () => {
               Create
             </button>
           )}
-<<<<<<< Updated upstream
         </OverlayTrigger>}
-=======
-          </div>
-          
-        </OverlayTrigger>
->>>>>>> Stashed changes
       </div>
       <PollModal
         show={showPollModal}
@@ -682,7 +676,7 @@ const SideWidgets = () => {
               {profile.firstName}
             </p>
           </Link>
-          <p className="text-center border px-1 bg-[#5e5d56] rounded text-sm  ">
+          <p className="text-center border px-1 bg-[#F8A700] rounded text-sm  ">
             @{profile.firstName}
           </p>
         </div>
@@ -779,7 +773,7 @@ const SideWidgets = () => {
                   )
                 }
                 style={{
-                  backgroundColor: "#5e5d56",
+                  backgroundColor: "#F8A700",
                   color: "white",
                   borderRadius: "32px",
                   border: "none",

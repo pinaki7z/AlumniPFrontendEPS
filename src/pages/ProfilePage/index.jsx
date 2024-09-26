@@ -278,28 +278,10 @@ const ProfilePage = () => {
                 </button>
               </Link>
             </div>
-<<<<<<< Updated upstream
 
             {/* Loading Spinner */}
             {loading && (
               <div className="flex justify-center mt-4">
-=======
-            <div className="message-follow" style={{ display: 'flex', justifyContent: 'space-around', paddingTop: '20px' }}>
-              <input type="file" name="coverPicture" id="coverPicture" onChange={(event) => handleFileChange(event, 'coverPicture')} style={{ display: 'none' }} />
-              <button
-                type="button"
-                style={{ backgroundColor: 'white', display: 'flex', alignItems: 'center', gap: '7px', border: '2px solid #5e5d56', color: '#004C8A' }}
-                onClick={() => document.getElementById('coverPicture').click()}
-              >
-                <img src={edit} alt="edit" />
-                <p style={{ marginBottom: '0px' }}>Edit Cover Picture </p>
-              </button>
-              <Link to='/profile/profile-settings' style={{ textDecoration: 'none', color: 'black' }}>
-                <button style={{ backgroundColor: 'white', border: '2px solid #5e5d56', color: '#004C8A' }}>Edit Profile</button></Link>
-            </div>
-            <div style={{ textAlign: 'center' }}>
-              {loading ? 
->>>>>>> Stashed changes
                 <l-line-spinner
                   size="30"
                   stroke="3"
@@ -337,7 +319,6 @@ const ProfilePage = () => {
               />
             </div>
           </div>
-<<<<<<< Updated upstream
 
           {/* Lower Section */}
           <div className="bg-[#FEF7E7] pt-14 pb-8 rounded-b-lg">
@@ -373,30 +354,6 @@ const ProfilePage = () => {
                       <p className="font-medium text-gray-800 text-lg">
                         {profile.groupNames.length}
                       </p>
-=======
-          <div className="lower-div" style={{
-            backgroundColor: '#d3d3d3',
-            width: '100%',
-            minHeight: '25vh',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            borderRadius: '0px 0px 12px 12px'
-          }}>
-            {/* <div className="message-follow" style={{ display: 'flex', justifyContent: 'space-around', paddingTop: '20px' }}>
-              <button>Message</button>
-              <button>Follow</button>
-            </div> */}
-            <div style={{ textAlign: 'center', display: 'flex', justifyContent: 'center' }}>
-              <div style={{ width: '40%', paddingTop: '100px' }}>
-                <p style={{ fontWeight: '700', color: '#3A3A3A', fontSize: '24px', fontFamily: 'Inter' }}>{member.firstName} {member.lastName} {profile.validated === true ? <HiMiniCheckBadge style={{ color: '#51a8f5' }} /> : null}</p>
-                <p style={{ fontWeight: '300', color: '#000000', fontSize: '14px', fontFamily: 'Inter' }}>{member.profileLevel === 1 ? 'ADMIN' : member.profileLevel === 2 ? 'ALUMNI' : member.profileLevel === 3 ? 'STUDENT' : 'SUPERADMIN'}</p>
-                <p style={{ fontWeight: '400', color: '#3A3A3A', fontSize: '16px', fontFamily: 'Inter' }}>Passionate soul, chasing dreams, inspiring others, embracing life's adventures joyfully.</p>
-                <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-                  <div style={{ cursor: 'pointer' }}>
-                    <Link to={`/groups/${profile._id}/joined-groups`} style={{ textDecoration: 'none', color: 'black' }}>
-                      <p>Groups</p>
-                      <p style={{ fontWeight: '500', color: '#3A3A3A', fontSize: '18px', fontFamily: 'Inter' }}>{profile.groupNames.length}</p>
->>>>>>> Stashed changes
                     </Link>
 
                     {/* Followers */}
@@ -589,7 +546,6 @@ const ProfilePage = () => {
                 <img src={about} alt="About Me" className="w-6 h-6" />
                 <p className="font-semibold text-xl">About Me</p>
               </div>
-<<<<<<< Updated upstream
               <p className="bg-[#FEF7E7] rounded-b-lg p-4 font-medium text-base text-gray-600">
                 {member.aboutMe
                   ? member.aboutMe
@@ -607,32 +563,6 @@ const ProfilePage = () => {
                     className="w-6 h-6"
                   />
                   <p className="font-semibold text-xl text-white">Work Experience</p>
-=======
-              <p style={{ backgroundColor: '#d3d3d3', borderRadius: '0px 0px 12px 12px', padding: '10px 16px 10px 16px', fontFamily: 'Inter', fontWeight: '500', fontSize: '16px', color: '#636364' }}>{member.aboutMe ? member.aboutMe : 'User has not updated his Bio'}</p>
-            </div>
-            {/* <div>
-              <div style={{ backgroundColor: '#004C8A', color: '#F8F8FF', borderRadius: '12px 12px 0px 0px', padding: '12px 16px 12px 16px', display: 'flex', alignItems: 'center', gap: '15px' }}>
-                <img src={work} alt="" />
-                <p style={{ fontFamily: 'Inter', fontWeight: '600', fontSize: '20px', marginBottom: '0px' }}>Currently Working As</p>
-              </div>
-              <div style={{ backgroundColor: '#d3d3d3' }}>
-                <p style={{ backgroundColor: '#d3d3d3', borderRadius: '0px 0px 12px 12px', padding: '10px 16px 10px 16px', fontFamily: 'Inter', fontWeight: '500', fontSize: '16px', color: '#636364', marginBottom: '0px' }}>{currentWork && currentWork.title ? currentWork.title : 'User has not updated his current work title'}</p>
-                <div style={{ padding: '16px' }}>
-                  <p style={{ color: '#004C8A', fontWeight: '500', fontSize: '18px' }}>{currentWork && currentWork.companyName ? currentWork.companyName : 'User has not updated his current work place'}</p>
-                  <div style={{ display: 'flex', gap: '10px' }}>
-                    {currentWork && (currentWork.startMonth && currentWork.startYear && currentWork.endMonth)
-                      ? <img src={time} alt="" /> : ''}
-                    <p style={{ marginBottom: '0px' }}>
-                      {currentWork && (currentWork.startMonth && currentWork.startYear && currentWork.endMonth)
-                        ? `${currentWork.startMonth} ${currentWork.startYear} - ${currentWork.endMonth}`
-                        : ''}
-                    </p>
-                  </div>
-                  <div style={{ display: 'flex', gap: '16px', paddingLeft: '3px' }}>
-                    {currentWork && (currentWork.location && currentWork.locationType) ? <img src={location} alt="" /> : ''}
-                    <p style={{ marginBottom: '0px' }}>{currentWork && (currentWork.location && currentWork.locationType) ? `${currentWork.location} - ${currentWork.locationType}` : ''}</p>
-                  </div>
->>>>>>> Stashed changes
                 </div>
                 <img src={arrowRight} alt="Arrow Right" className="w-4 h-4" />
               </div>

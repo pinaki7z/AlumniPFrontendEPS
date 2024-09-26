@@ -64,7 +64,6 @@ const Profile = () => {
               className=" rounded-full border-4 border-white"
             />
           </div>
-<<<<<<< Updated upstream
 
           {/* Lower section with member details */}
           <div className="bg-gray-50 p-6 rounded-b-lg">
@@ -98,41 +97,6 @@ const Profile = () => {
                 <div className="text-center">
                   <p className="text-sm lg:text-base text-gray-500">Following</p>
                   <p className="font-semibold text-lg lg:text-xl text-gray-800">0</p>
-=======
-          <div style={{ position: 'absolute', top: '10vh', left: '50%', transform: 'translateX(-50%) translateY(50%)' }}>
-            <img src={member.profilePicture} alt="profile-picture" style={{ width: '200px', height: '200px', borderRadius: '50%', border: '5px solid white' }} />
-          </div>
-          <div className="lower-div" style={{
-            backgroundColor: '#d3d3d3',
-            width: '100%',
-            minHeight: '25vh',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            borderRadius: '0px 0px 12px 12px'
-          }}>
-            <div className="message-follow" style={{ display: 'flex', justifyContent: 'space-around', paddingTop: '20px' }}>
-              <button>Message</button>
-              <button>Follow</button>
-            </div>
-            <div style={{ textAlign: 'center', display: 'flex', justifyContent: 'center' }}>
-              <div style={{ width: '40%', paddingTop: '20px' }}>
-                <p style={{ fontWeight: '700', color: '#3A3A3A', fontSize: '24px', fontFamily: 'Inter' }}>{member.firstName} {member.lastName}</p>
-                <p style={{ fontWeight: '300', color: '#000000', fontSize: '14px', fontFamily: 'Inter' }}>{member.profileLevel === 1 ? 'ADMIN' : member.profileLevel === 2 ? 'ALUMNI' : member.profileLevel === 3 ? 'STUDENT' : 'SUPERADMIN'}</p>
-                <p style={{ fontWeight: '400', color: '#3A3A3A', fontSize: '16px', fontFamily: 'Inter' }}>Passionate soul, chasing dreams, inspiring others, embracing life's adventures joyfully.</p>
-                <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-                  <div>
-                    <p>Groups</p>
-                    <p style={{ fontWeight: '500', color: '#3A3A3A', fontSize: '18px', fontFamily: 'Inter' }}>0</p>
-                  </div>
-                  <div>
-                    <p>Followers</p>
-                    <p style={{ fontWeight: '500', color: '#3A3A3A', fontSize: '18px', fontFamily: 'Inter' }}>0</p>
-                  </div>
-                  <div>
-                    <p>Following</p>
-                    <p style={{ fontWeight: '500', color: '#3A3A3A', fontSize: '18px', fontFamily: 'Inter' }}>0</p>
-                  </div>
->>>>>>> Stashed changes
                 </div>
               </div>
 
@@ -147,7 +111,6 @@ const Profile = () => {
             </div>
           </div>
         </div>
-<<<<<<< Updated upstream
       ) : (
         <div className="flex justify-center items-center h-[90vh]">
           <div className="spinner-border animate-spin w-8 h-8 border-4 rounded-full border-blue-500"></div>
@@ -165,17 +128,6 @@ const Profile = () => {
                 showDeleteButton={true}
                 userId={member._id}
               />
-=======
-        <div style={{ display: 'flex', gap: '2%' }}>
-          <div style={{ width: '70%' }}><Feeed entityType='posts' showCreatePost={false} showDeleteButton={true} userId={member._id} /></div>
-          <div style={{ width: '28%', paddingTop: '37px' }}>
-            <div>
-              <div style={{ backgroundColor: '#004C8A', color: '#F8F8FF', borderRadius: '12px 12px 0px 0px', padding: '12px 16px 12px 16px', display: 'flex', alignItems: 'center', gap: '15px' }}>
-                <img src={about} alt="" />
-                <p style={{ fontFamily: 'Inter', fontWeight: '600', fontSize: '20px', marginBottom: '0px' }}>About {member.firstName}</p>
-              </div>
-              <p style={{ backgroundColor: '#d3d3d3', borderRadius: '0px 0px 12px 12px', padding: '10px 16px 10px 16px', fontFamily: 'Inter', fontWeight: '500', fontSize: '16px', color: '#636364' }}>{member.aboutMe ? member.aboutMe : 'User has not updated his Bio'}</p>
->>>>>>> Stashed changes
             </div>
 
             {/* About & Work Section */}
@@ -190,7 +142,6 @@ const Profile = () => {
                   {member.aboutMe || "User has not updated their bio"}
                 </p>
               </div>
-<<<<<<< Updated upstream
 
               {/* Work Section */}
               <div className="bg-white rounded-lg shadow-md ">
@@ -205,19 +156,6 @@ const Profile = () => {
                   <div className="mt-4 p-2">
                     <p className="text-sm font-medium text-blue-600">
                       {currentWork.companyName}
-=======
-              <div style={{ backgroundColor: '#d3d3d3' }}>
-                <p style={{ backgroundColor: '#d3d3d3', borderRadius: '0px 0px 12px 12px', padding: '10px 16px 10px 16px', fontFamily: 'Inter', fontWeight: '500', fontSize: '16px', color: '#636364', marginBottom: '0px' }}>{currentWork && currentWork.title ? currentWork.title : 'User has not updated his current work title'}</p>
-                <div style={{ padding: '16px' }}>
-                  <p style={{ color: '#004C8A', fontWeight: '500', fontSize: '18px' }}>{currentWork && currentWork.companyName ? currentWork.companyName : 'User has not updated his current work place'}</p>
-                  <div style={{ display: 'flex', gap: '10px' }}>
-                    {currentWork && (currentWork.startMonth && currentWork.startYear && currentWork.endMonth)
-                        ? <img src={time} alt="" />: ''}
-                    <p style={{ marginBottom: '0px' }}>
-                      {currentWork && (currentWork.startMonth && currentWork.startYear && currentWork.endMonth)
-                        ? `${currentWork.startMonth} ${currentWork.startYear} - ${currentWork.endMonth}`
-                        : ''}
->>>>>>> Stashed changes
                     </p>
                     {currentWork.startMonth && currentWork.startYear && (
                       <div className="flex items-center space-x-2 mt-2 text-sm">
