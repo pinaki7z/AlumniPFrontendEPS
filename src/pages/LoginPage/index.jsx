@@ -214,7 +214,11 @@ const LoginPage = ({ handleLogin }) => {
             <div className="action-buttons">
               <button className="button" type='submit' style={{
                 color: '#F8F8FF',
+<<<<<<< Updated upstream
                 background: '#F8A700'
+=======
+                background: '#5e5d56' 
+>>>>>>> Stashed changes
               }}>
                 <div className="button1" style={{ color: '#F8F8FF' }}>{loading? 'Logging in...' : 'Login'}</div>
               </button>

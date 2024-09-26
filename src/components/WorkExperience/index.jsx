@@ -314,7 +314,11 @@ export const WorkExperience = () => {
             <div className="pt-5">
               <button
                 type="button"
+<<<<<<< Updated upstream
                 className="flex items-center gap-2 bg-white border-2 border-yellow-500 text-blue-700 rounded-md px-4 py-2 hover:bg-yellow-50 transition-colors duration-200"
+=======
+                style={{ backgroundColor: 'white', display: 'flex', alignItems: 'center', gap: '7px', border: '2px solid #5e5d56', color: '#004C8A', borderRadius: '5px',padding: '10px' }}
+>>>>>>> Stashed changes
                 onClick={() => setModalShow(true)}
               >
                 <IoIosList/>

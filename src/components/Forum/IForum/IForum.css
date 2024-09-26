@@ -41,7 +41,7 @@
   
   .forum-post {
     display: flex;
-    background-color: #FEF7E7;
+    background-color: #d3d3d3;
     border-radius: 12px;
     padding: 20px;
     position: relative;
@@ -140,7 +140,7 @@
   }
   
   .modal-forum {
-    background: #FEF7E7;
+    background: #d3d3d3;
     padding: 20px;
     border-radius: 10px;
     width: 30%;

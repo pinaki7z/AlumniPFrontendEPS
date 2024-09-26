@@ -30,6 +30,7 @@ import { WorkExperience } from "../../components/WorkExperience";
 import { SearchedResults } from "../../components/SearchedResults";
 import ArchivePage from "../Archive";
 import DonSponRequest from "../../components/DonSponRequest";
+import { CreateInternship } from "../Jobs/CreateInternship";
 
 const Dashboard = ({ handleLogout }) => {
   const location = useLocation();
@@ -67,7 +68,7 @@ const Dashboard = ({ handleLogout }) => {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden ">
-        <div className="flex-shrink-0 bg-[#FEF7E7]">
+        <div className="flex-shrink-0 bg-[#d3d3d3]">
           <TopBar handleLogout={handleLogout} />
         </div>
         {/* Top Bar */}
@@ -123,6 +124,10 @@ const Dashboard = ({ handleLogout }) => {
             <Route
               path="/internships/:_id/:title"
               element={<IndividualJobPost />}
+            />
+            <Route
+              path="/internships/create"
+              element={<CreateInternship />}
             />
             <Route path="/forums/*" element={<Forum />} />
             <Route path="/forums/create" element={<CreateForum />} />

@@ -41,6 +41,7 @@ const Jobs = () => {
             const response = await axios.get(`${baseUrl}/jobs`);
 
             const filteredJobs = response.data.filter(job => !job.archive && job.approved);
+            console.log('filtered jobs',response.data);
             const filteredArchivedJobs = response.data.filter(job => job.archive && job.approved && job.userId === profile._id);
             const filteredMyJobs = response.data.filter(job => job.userId === profile._id && !job.archive && job.approved);
             setMyJobs(filteredMyJobs);
@@ -52,7 +53,8 @@ const Jobs = () => {
         }
     };
 
-    console.log('my jobs', myJobs)
+    console.log('jobs', jobs);
+   
 
 
     useEffect(() => {

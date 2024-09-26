@@ -21,6 +21,7 @@ import Sponsorships from '../../pages/Sponsorships';
 import { useLocation } from 'react-router-dom';
 import { Archive } from '../../pages/Jobs/Archive';
 import baseUrl from '../../config';
+import { Link } from 'react-router-dom';
 
 
 
@@ -618,9 +619,11 @@ const IntJobs = (props) => {
                             </div>
                             {(profile.profileLevel === 0 || profile.profileLevel === 1) && (
                                 <div style={{paddingTop: '15px'}}>
-                                    <Button variant="danger" onClick={() => setModalShow(true)} style={{backgroundColor: '#004C8A',padding: '10px', width: '13%'}}>
+                                    {/* <Button variant="danger" onClick={() => setModalShow(true)} style={{backgroundColor: '#004C8A',padding: '10px', width: '13%'}}> */}
+                                    <Link to="/internships/create" style={{ textDecoration: 'none', color: 'inherit' }}>
                                         Create 
-                                    </Button>
+                                    {/* </Button> */}
+                                    </Link>
                                 </div>
                             )}
                         </div>

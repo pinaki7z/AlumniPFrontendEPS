@@ -19,6 +19,10 @@ import { Link } from 'react-router-dom';
 import { CiLocationArrow1 } from "react-icons/ci";
 import { RiHomeSmileLine } from "react-icons/ri";
 import baseUrl from "../../config";
+import time from "../../images/timeIconNew.svg";
+import categoryIcon from "../../images/jobs.svg";
+import salaryIcon from "../../images/salary.svg";
+import locationIcon from "../../images/locationIconNew.svg";
 
 lineSpinner.register()
 
@@ -466,9 +470,9 @@ const IndividualJobPost = () => {
 
     return (
         <div key={jobs._id}
-        //  style={{ width: '55%', display: 'flex', justifyContent: 'center' }}
-        className="mx-2"
-         >
+            //  style={{ width: '55%', display: 'flex', justifyContent: 'center' }}
+            className="mx-10"
+        >
             {loading ? (<div>Loading..</div>) :
                 (
                     <div className="ijp-card-container" style={{ backgroundColor: '#f9f9f9' }}>
@@ -481,125 +485,107 @@ const IndividualJobPost = () => {
                                 borderRadius: '50%',
                                 marginRight: '10px'
                             }} /> */}
-                            <div 
-                            // className="ijp-title"
-                            className="mt-4"
-                            >
-                                <p className="font-bold text-2xl md:text-3xl text-center ">{jobs.title}</p>
-                            </div>
-                            {/* <div className="ijp-user-details">
+                            <div style={{ display: 'flex', width: '100%', gap: '25px'}}  className="pt-10">
+                                <div style={{ width: '70%' }}>
+                                    <div
+                                        // className="ijp-title"
+                                       
+                                    >
+                                        <p className="font-bold text-2xl md:text-3xl" style={{fontSize: '32px', fontFamily: 'Inter', fontWeight: '600'}}>{jobs.title}</p>
+                                    </div>
+                                    {/* <div className="ijp-user-details">
 
                                 <p>{profile.firstName} </p>
 
                             </div> */}
-                            <div 
-                            // className="ijp-location-bar"
-                            className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4 mb-4"
-                            >
-                                <div className="ijp-location">
-                                    <RiHomeSmileLine />
-                                    <p>{jobs.company}</p>
-                                </div>
-                                <div className="ijp-location">
-                                    <FaLocationDot />
-                                    <p>{jobs.location}</p>
-                                </div>
-                                {jobs.employmentType && (
-                                    <div className="ijp-jobType">
-                                        <FcBriefcase />
-                                        <p>{jobs.employmentType}</p>
+                                    <div
+                                        // className="ijp-location-bar"
+                                        className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4 mb-4"
+                                    >
+                                        <div className="ijp-location">
+                                            <p style={{fontSize: '20px', fontFamily: 'Inter', fontWeight: '600',marginLeft: '0px'}}>{jobs.company}</p>
+                                        </div>
                                     </div>
-                                )}
+                                    <div className="ijp-candidates-button">
+                                        {jobs.userId === profile._id ? (
+                                            <>
+                                                {viewCandidatesButton}
 
-                                {/* <div className="ijp-category">
-                                    <FaTags />
-                                    <p>{jobs.category}</p>
-                                </div> */}
-                                {jobs.locationType && <div className="ijp-jobType">
-                                    <CiLocationArrow1 />
-                                    <p style={{ marginBottom: '0px' }}>{Object.keys(jobs.locationType).find(key => jobs.locationType[key])}</p>
-
-                                </div>}
-                            </div>
-                            <div className="ijp-candidates-button">
-                                {jobs.userId === profile._id ? (
-                                    <>
-                                        {viewCandidatesButton}
-
-                                    </>
-                                ) : (
-                                    isApplied ? (
-                                        <>
-                                            <button style={{ backgroundColor: '#a3e3ff' }}>Applied</button>
-                                            {/* <span style={{fontSize: '15px', color: 'blueviolet', cursor: 'default'}}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{profile.appliedJobs[0].status? profile.appliedJobs[0].status: null}</span> */}
-                                        </>
-                                    ) : profile.profileLevel === 0 || profile.profileLevel === 1 ? (
-                                        <>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <button onClick={() => setModalShow(true)} style={{ backgroundColor: '#174873', padding: '7px 20px' }}>Apply</button>
-                                            <button style={{ backgroundColor: '#ab021b', marginLeft: '10px', padding: '7px 20px' }} onClick={() => handleStarred(jobs._id)}>{starLoading ? 'Loading...' : starButtonText}</button>
-                                            <MyVerticallyCenteredModal
-                                                show={modalShow}
-                                                onHide={() => setModalShow(false)}
-                                            />
-                                        </>
-                                    )
-                                )}
-                            </div>
-
-                            <CandidatesModal />
-
-                            <div 
-                            // className="ijp-desc-salary"
-                            className="border-2 border-[1px solid #ccc] p-4 rounded-lg w-75 bg-[#f0f2f5] mt-4"
-                            >
-                                <div className="ijp-user-details">
-                                    {jobs.salaryMin !== null || jobs.salaryMax !== null ? (
-                                        <>
-                                            <div className="ijp-minimum">
-                                                <p>Minimum</p>
-                                                <p>{jobs.salaryMin + jobs.currency}</p>
-                                            </div>
-                                            <div className="ijp-maximum">
-                                                <p>Maximum</p>
-                                                <p>{jobs.salaryMax + jobs.currency}</p>
-                                            </div>
-                                        </>
-                                    ) : (
-                                        <p style={{ fontSize: '15px', fontWeight: '600' }}>Unpaid</p>
-                                    )}
-                                </div>
-                                <div className="ijp-description">
-                                    <p style={{ fontWeight: '500' }}>JOB DESCRIPTION:-</p>
-                                    {jobs.attachments.map((attachment, index) => {
-                                        if (attachment.endsWith('.pdf')) {
-                                            return (
-                                                <a
-                                                    key={index}
-                                                    href={`${baseUrl}/uploads/${attachment}`}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    style={{ display: 'block', marginBottom: '10px' }}
-                                                >
-                                                    {attachment}
-                                                </a>
-                                            );
-                                        }
-                                        return null;
-                                    })}
-                                    {jobs.description && <p style={{ fontWeight: '500' }}>SKILLS REQUIRED:-</p>}
-                                    <p >{jobs.description}</p>
-                                </div>
-                                <div className="ijp-images">
-                                    <p style={{ fontWeight: '600' }}>OTHER DETAILS:-</p>
-                                    <div className="image-grid">
-                                        {renderImages()}
+                                            </>
+                                        ) : (
+                                            isApplied ? (
+                                                <>
+                                                    <button style={{ backgroundColor: '#a3e3ff' }}>Applied</button>
+                                                    {/* <span style={{fontSize: '15px', color: 'blueviolet', cursor: 'default'}}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{profile.appliedJobs[0].status? profile.appliedJobs[0].status: null}</span> */}
+                                                </>
+                                            ) : profile.profileLevel === 0 || profile.profileLevel === 1 ? (
+                                                <>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <button onClick={() => setModalShow(true)} style={{ backgroundColor: '#174873', padding: '7px 20px' }}>Apply</button>
+                                                    <button style={{ backgroundColor: '#ab021b', marginLeft: '10px', padding: '7px 20px' }} onClick={() => handleStarred(jobs._id)}>{starLoading ? 'Loading...' : starButtonText}</button>
+                                                    <MyVerticallyCenteredModal
+                                                        show={modalShow}
+                                                        onHide={() => setModalShow(false)}
+                                                    />
+                                                </>
+                                            )
+                                        )}
                                     </div>
 
-                                </div>
-                                {/* <div className="ijp-questions" style={{ paddingTop: '20px' }}>
+                                    <CandidatesModal />
+
+                                    <div
+                                        // className="ijp-desc-salary"
+                                        className="rounded-lg w-75 mt-4"
+                                    >
+                                        {/* <div className="ijp-user-details">
+                                            {jobs.salaryMin !== null || jobs.salaryMax !== null ? (
+                                                <>
+                                                    <div className="ijp-minimum">
+                                                        <p>Minimum</p>
+                                                        <p>{jobs.salaryMin + jobs.currency}</p>
+                                                    </div>
+                                                    <div className="ijp-maximum">
+                                                        <p>Maximum</p>
+                                                        <p>{jobs.salaryMax + jobs.currency}</p>
+                                                    </div>
+                                                </>
+                                            ) : (
+                                                <p style={{ fontSize: '15px', fontWeight: '600' }}>Unpaid</p>
+                                            )}
+                                        </div> */}
+                                        <div className="ijp-description">
+                                            <p style={{fontSize: '20px', fontFamily: 'Inter', fontWeight: '600'}}>JOB DESCRIPTION:-</p>
+                                            {jobs.attachments.map((attachment, index) => {
+                                                if (attachment.endsWith('.pdf')) {
+                                                    return (
+                                                        <a
+                                                            key={index}
+                                                            href={`${baseUrl}/uploads/${attachment}`}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            style={{ display: 'block', marginBottom: '10px' }}
+                                                        >
+                                                            {attachment}
+                                                        </a>
+                                                    );
+                                                }
+                                                return null;
+                                            })}
+                                            {jobs.description && <p style={{ fontWeight: '500' }}>SKILLS REQUIRED:-</p>}
+                                            <p style={{fontSize: '16px', fontFamily: 'Inter', fontWeight: '400'}}>{jobs.description}</p>
+                                        </div>
+
+                                        <div className="ijp-images">
+                                            <p style={{fontSize: '20px', fontFamily: 'Inter', fontWeight: '600'}}>OTHER DETAILS:-</p>
+                                            <div className="image-grid">
+                                                {renderImages()}
+                                            </div>
+
+                                        </div>
+                                        {/* <div className="ijp-questions" style={{ paddingTop: '20px' }}>
                                     {jobs.questions.length !== 0 && <p style={{ fontWeight: '600' }}>QUESTIONS:</p>}
                                     {jobs.questions.map((question, index) => (
                                         <div key={index}>
@@ -607,8 +593,64 @@ const IndividualJobPost = () => {
                                         </div>
                                     ))}
                                 </div> */}
+                                    </div>
+
+                                </div>
+                                <div style={{ width: '30%'}}>
+                                    <div style={{border: '1px solid', borderRadius: '12px' }}>
+                                        <div style={{padding: '10px 0px 10px 25px',borderBottom: '1px solid', fontWeight: '700', fontSize: '24px',backgroundColor: '#004C8A', color: '#F8F8FF',borderRadius: '12px 12px 0px 0px'}}>Job overview</div>
+                                        <div style={{padding: '25px', backgroundColor: '#d3d3d3'}}>
+                                            <div style={{display: 'flex',gap: '15px'}}>
+                                                <div>
+                                                    <img src={time} alt="" srcset="" style={{paddingTop: '5px'}}/>
+                                                </div>
+                                                <div>
+                                                    <p style={{fontWeight: '600', fontSize: '20px'}}>Date Posted</p>
+                                                    <p>22 April 2024</p>
+                                                </div>
+                                            </div>
+                                            <div style={{display: 'flex',gap: '15px'}}> 
+                                                <div>
+                                                <img src={time} alt="" srcset="" style={{paddingTop: '5px'}}/>
+                                                </div>
+                                                <div>
+                                                <p style={{fontWeight: '600', fontSize: '20px'}}>Apply By</p>
+                                                <p>22 April 2024</p>
+                                                </div>
+                                            </div>
+                                            <div style={{display: 'flex',gap: '15px'}}>
+                                                <div>
+                                                <img src={locationIcon} alt="" srcset="" style={{paddingTop: '5px'}}/>
+                                                </div>
+                                                <div>
+                                                <p style={{fontWeight: '600', fontSize: '20px'}}>Location</p>
+                                                <p>{jobs.location}</p>
+                                                </div>
+                                            </div>
+                                            <div style={{display: 'flex',gap: '15px'}}>
+                                                <div>
+                                                <img src={categoryIcon} alt="" srcset="" style={{paddingTop: '5px'}}/>
+                                                </div>
+                                                <div>
+                                                <p style={{fontWeight: '600', fontSize: '20px'}}>Category</p>
+                                                <p>{jobs.category}</p>
+                                                </div>
+                                            </div>
+                                            <div style={{display: 'flex',gap: '15px'}}>
+                                                <div>
+                                                <img src={salaryIcon} alt="" srcset="" style={{paddingTop: '5px'}}/>
+                                                </div>
+                                                <div>
+                                                <p style={{fontWeight: '600', fontSize: '20px'}}>Salary</p>
+                                                <p>{jobs.salaryMin} - {jobs.salaryMax} {jobs.duration}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
                     </div>
                 )}
             <ImagesModal />

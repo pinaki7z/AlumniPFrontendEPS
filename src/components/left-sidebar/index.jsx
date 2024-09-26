@@ -33,7 +33,7 @@ export default function LeftSidebar() {
                 to={item.to}
                 className={({ isActive }) =>
                   `flex items-center gap-5 py-2.5 px-10 text-lg ${
-                    isActive ? 'bg-[#F8A700] text-white' : 'text-[#F8F8FF]'
+                    isActive ? 'bg-[#5e5d56] text-white' : 'text-[#F8F8FF]'
                   }`
                 }
               >

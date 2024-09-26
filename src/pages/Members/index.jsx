@@ -161,12 +161,30 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
       <Routes>
         <Route path="/" element={
           <>
+<<<<<<< Updated upstream
             <div className="flex flex-wrap gap-10 py-4">
              
               {loading ?null: <Link to={`/members/create`} style={{ textDecoration: 'none', color: 'black' }}>
                 <button
                   className='relative lg:w-64 w-[330px]'
                   style={{ border: '2px dotted #F8A700', borderRadius: '8px', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+=======
+      
+            <div
+              // className="pro"
+              // style={{
+              //   marginTop: '1em',
+              //   display: 'flex',
+              //   flexWrap: 'wrap',
+              //   paddingBottom: '20px',
+              // }}
+              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4"
+            >
+              <Link to={`/members/create`} style={{ textDecoration: 'none', color: 'black' }}>
+                <div 
+                className='border-2 border-[2px dotted #5e5d56] rounded-3xl min-h-[200px] h-100 w-100 flex items-center justify-center'
+                // style={{ border: '2px dotted #5e5d56', borderRadius: '8px', width: '17vw', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+>>>>>>> Stashed changes
                 >
                   <img src={createMember} alt="" className='lg:w-20 py-5 text-center w-10' />
                 </button>

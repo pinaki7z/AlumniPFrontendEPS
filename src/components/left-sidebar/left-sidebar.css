@@ -30,7 +30,7 @@
     font-size: smaller;
 }
 .sideBar li:hover {
-    background-color: #F8A700; 
+    background-color: #5e5d56; 
     color: #F8F8FF;
   }
   
@@ -39,7 +39,7 @@
   }
 
   .dashboard-icon {
-    color: #F8A700;
+    color: #5e5d56;
   }
 
   .sideBar li:hover .dashboard-icon {
