@@ -103,8 +103,10 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
         }
       });
       if (response.status === 200) {
-        toast.success("Alumni Deleted");
-        window.location.reload();
+        toast.dismiss();
+        toast.success("Success");
+        // window.location.reload();
+        getMembers();
       } else {
         console.error('Failed to delete user');
       }

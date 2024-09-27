@@ -4,6 +4,7 @@ import picture from "../../images/profilepic.jpg";
 import { HiUsers } from "react-icons/hi";
 import { IoIosReorder } from "react-icons/io";
 import { MdLocationOn } from "react-icons/md";
+import Swal from 'sweetalert2';
 import { BiUserPlus } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -159,6 +160,30 @@ const Profilecard = ({
 
   const isOwner = member._id === owner;
 
+  const onDeleteChange = ()=>{
+    Swal.fire({
+      title: member?.accountDeleted === true ? 'This account will be restored' :'This account will be deactivated',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+           handleDelete()
+          
+        } catch (error) {
+          console.error('Error deleting alumni:', error);
+          toast.dismiss();
+          toast.error('An error occurred while deleting');
+        }
+      }
+    });
+  }
+  
+
   return (
     <>
       <div className="border text-card-foreground py-4 sm:py-6 px-2 sm:px-4 bg-background shadow-md rounded-lg overflow-hidden relative w-full sm:w-96 md:w-80 lg:w-64">
@@ -194,14 +219,14 @@ const Profilecard = ({
               <>
                 {member.accountDeleted === true ? (
                   <MdOutlineRestore
-                    onClick={handleDelete}
+                    onClick={onDeleteChange}
                     className="absolute top-2 right-2 text-gray-500 cursor-pointer"
                     style={{ width: "25px", height: "25px" }}
                   />
                 ) : (
                   <img
                     src={delButton}
-                    onClick={handleDelete}
+                    onClick={onDeleteChange}
                     className="absolute top-2 right-2 bg-white p-1 cursor-pointer"
                     style={{ width: "25px", height: "25px" }}
                   />
