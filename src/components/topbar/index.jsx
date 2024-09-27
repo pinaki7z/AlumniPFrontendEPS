@@ -58,24 +58,24 @@ const TopBar = ({ handleLogout }) => {
     }
   }, [settings]);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        !notificationsOptionsRef.current.contains(event.target) &&
-        !profileOptionsRef.current.contains(event.target) &&
-        !event.target.closest(".notifications-card")
-      ) {
-        setShowNotifications(false);
-        setShowProfileOptions(false);
-      }
-    };
+  // useEffect(() => {
+  //   const handleClickOutside = (event) => {
+  //     if (
+  //       !notificationsOptionsRef.current.contains(event.target) &&
+  //       !profileOptionsRef.current.contains(event.target) &&
+  //       !event.target.closest(".notifications-card")
+  //     ) {
+  //       setShowNotifications(false);
+  //       setShowProfileOptions(false);
+  //     }
+  //   };
 
-    document.addEventListener("click", handleClickOutside);
+  //   document.addEventListener("click", handleClickOutside);
 
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, []);
+  //   return () => {
+  //     document.removeEventListener("click", handleClickOutside);
+  //   };
+  // }, []);
 
   const onHideModal = (modalVisibility) => {
     setShowModal(modalVisibility);
@@ -128,7 +128,7 @@ const TopBar = ({ handleLogout }) => {
       <div className=" lg:h-20 h-[60px] lg:px-10  w-full  flex justify-center items-center  ">
         <div className="topBar flex justify-between  gap-4   ">
           <div
-            className="search lg:w-full w-[300px] ml-[46px] lg:ml-0   "
+            className="search lg:w-[80%] w-[300px] ml-[46px] lg:ml-0   "
             // style={{ display: 'flex', width: '67%' }}
           >
             <form
@@ -158,7 +158,7 @@ const TopBar = ({ handleLogout }) => {
                     right: "10px",
                     top: "50%",
                     transform: "translateY(-50%)",
-                    backgroundColor: "#d3d3d3",
+                    backgroundColor: "#eeeeee",
                     border: "none",
                     padding: "5px",
                     color: "white",
@@ -194,7 +194,7 @@ const TopBar = ({ handleLogout }) => {
                 setShowMessages(!showMessages);
               }}
             />
-            {showMessages && (
+            {/* {showMessages && (
               <div className="messages-card">No New Messages</div>
             )}{" "}
             <div ref={notificationsOptionsRef}>
@@ -211,7 +211,7 @@ const TopBar = ({ handleLogout }) => {
               <div className="notifications-card shadow  rounded mt-3 mr-3  ">
                 <Notifications />
               </div>
-            )}
+            )} */}
           </div>
           <div className="profile-list">
             <div

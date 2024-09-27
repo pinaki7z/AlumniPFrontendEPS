@@ -522,7 +522,7 @@ const CreatePost1 = ({
             <label
               className="flex-1 sm:flex-none sm:w-[140px]"
               style={{
-                border: "1px solid #5e5d56",
+                border: "1px solid #F8A700",
                 color: "black",
                 padding: "5px 10px",
                 cursor: "pointer",
@@ -556,7 +556,7 @@ const CreatePost1 = ({
                 gap: "5px",
                 fontSize: "15px",
                 borderRadius: "3em",
-                border: "1px solid #5e5d56",
+                border: "1px solid #F8A700",
               }}
               onClick={() => setShowPollModal(true)}
             >
@@ -566,7 +566,7 @@ const CreatePost1 = ({
             <label
               className="flex-1 sm:flex-none sm:w-[140px]"
               style={{
-                border: "1px solid #5e5d56",
+                border: "1px solid #F8A700",
                 color: "black",
                 padding: "5px 10px",
                 cursor: "pointer",
@@ -595,7 +595,7 @@ const CreatePost1 = ({
               style={{
                 color: "#ffffff",
                 float: "right",
-                backgroundColor: "#5e5d56",
+                backgroundColor: "#F8A700",
                 borderColor: "#174873",
                 fontSize: "20px",
                 padding: "5px 10px",

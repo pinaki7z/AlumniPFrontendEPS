@@ -139,19 +139,20 @@ const JobPost = ({ userId, id, jobTitle, title, titleS, description, salaryMin, 
                         return (
                             <img
                                 key={index}
-                                src={`${baseUrl}/uploads/${attachment}`}
-                                alt=""
+                                src={attachment}  // Use the full URL directly
+                                alt={`attachment-${index}`}  // Provide a descriptive alt text
                                 className="src"
                             />
                         );
                     }
                     return null;
                 })}
+
             </div>
             <div style={{ padding: '16px', width: '70%' }}>
                 <div style={{ border: '1px', backgroundColor: "white", width: '100%' }}>
                     <div className="donation-card-title" style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                        <p onClick={handleClick} style={{ cursor: 'pointer', fontFamily: 'Inter', fontSize: '24px',fontWeight: '600' }}>{jobTitle}</p>
+                        <p onClick={handleClick} style={{ cursor: 'pointer', fontFamily: 'Inter', fontSize: '24px', fontWeight: '600' }}>{jobTitle}</p>
                         {appliedCandidates && appliedCandidates.map(candidate => {
                             if (candidate.userId === profile._id) {
                                 return (
@@ -202,24 +203,23 @@ const JobPost = ({ userId, id, jobTitle, title, titleS, description, salaryMin, 
                     </div>
                 </div>
                 <div className="user-details">
-                    <p style={{ cursor: 'pointer', fontFamily: 'Inter', fontSize: '20px',fontWeight: '600',marginLeft: '0px' }}>{company}</p>
+                    <p style={{ cursor: 'pointer', fontFamily: 'Inter', fontSize: '20px', fontWeight: '600', marginLeft: '0px' }}>{company}</p>
                 </div>
-                <div style={{display: 'flex', justifyContent: 'space-between',marginTop: '15px'}}>
-                    
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '15px' }}>
                     {locationType && <div className="user-details">
                         <img src={location} />
-                        <p style={{ cursor: 'pointer', fontFamily: 'Inter', fontSize: '16px',fontWeight: '500' }}>{Object.keys(locationType).find(key => locationType[key])}</p>
+                        <p style={{ cursor: 'pointer', fontFamily: 'Inter', fontSize: '16px', fontWeight: '500' }}>{Object.keys(locationType).find(key => locationType[key])}</p>
                     </div>}
 
                     <div className="user-details">
                         <img src={categoryV} />
-                        <p style={{ cursor: 'pointer', fontFamily: 'Inter', fontSize: '16px',fontWeight: '500' }}>{category}</p>
+                        <p style={{ cursor: 'pointer', fontFamily: 'Inter', fontSize: '16px', fontWeight: '500' }}>{category}</p>
                     </div>
                     <div className="user-details">
-                    <img src={amount} />
-                        {(salaryMin === null && salaryMax === null) ? <p style={{ cursor: 'pointer', fontFamily: 'Inter', fontSize: '16px',fontWeight: '500' }}>Unpaid</p> : (
+                        <img src={amount} />
+                        {(salaryMin === null && salaryMax === null) ? <p style={{ cursor: 'pointer', fontFamily: 'Inter', fontSize: '16px', fontWeight: '500' }}>Unpaid</p> : (
                             <>
-                                <p style={{ cursor: 'pointer', fontFamily: 'Inter', fontSize: '16px',fontWeight: '500' }}>{salaryMin} <span style={{ marginLeft: '5px' }}>-</span> <span style={{ marginLeft: '5px',cursor: 'pointer', fontFamily: 'Inter', fontSize: '16px',fontWeight: '500' }}>{salaryMax}</span></p>
+                                <p style={{ cursor: 'pointer', fontFamily: 'Inter', fontSize: '16px', fontWeight: '500' }}>{salaryMin} <span style={{ marginLeft: '5px' }}>-</span> <span style={{ marginLeft: '5px', cursor: 'pointer', fontFamily: 'Inter', fontSize: '16px', fontWeight: '500' }}>{salaryMax}</span></p>
                             </>
                         )}
                     </div>

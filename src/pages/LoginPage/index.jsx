@@ -76,7 +76,7 @@ const LoginPage = ({ handleLogin }) => {
       if (!response.ok) {
         const errorData = await response.json();
         console.error("Login failed", errorData);
-        toast.error(errorData.message || "Login failed");
+        toast.error(errorData|| "Login failed");
         return;
       }
 
@@ -214,7 +214,7 @@ const LoginPage = ({ handleLogin }) => {
             <div className="action-buttons">
               <button className="button" type='submit' style={{
                 color: '#F8F8FF',
-                background: '#5e5d56' 
+                background: '#F8A700' 
               }}>
                 <div className="button1" style={{ color: '#F8F8FF' }}>{loading? 'Logging in...' : 'Login'}</div>
               </button>

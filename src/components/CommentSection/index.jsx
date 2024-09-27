@@ -116,7 +116,7 @@ const CommentSection = ({ comments, entityId, entityType, onCommentSubmit, onDel
                     placeholder="Reply to this comment"
                     value={reply}
                     onChange={(e) => setReply(e.target.value)}
-                    style={{ width: '100%', border: 'none', borderBottom: '1px solid #5e5d56', paddingTop: '25px' }}
+                    style={{ width: '100%', border: 'none', borderBottom: '1px solid #F8A700', paddingTop: '25px' }}
                   />
                   <button onClick={() => handleReplySubmit(comment._id)} style={{ color: '#F8F8FF', backgroundColor: '#004C8A', padding: '8px 20px 8px 20px', borderRadius: '8px', float: 'right', marginTop: '10px', marginLeft: '20px', position: 'relative', zIndex: '1' }}>Submit Reply</button>
                 </div>
@@ -163,7 +163,7 @@ const CommentSection = ({ comments, entityId, entityType, onCommentSubmit, onDel
           className="comment-input"
           placeholder="Add a comment"
           value={content}
-          onChange={(e) => setContent(e.target.value)} style={{ width: '100%', border: 'none', borderBottom: '1px solid #5e5d56', paddingTop: '25px' }}
+          onChange={(e) => setContent(e.target.value)} style={{ width: '100%', border: 'none', borderBottom: '1px solid #F8A700', paddingTop: '25px' }}
         />
         <div style={{ display: 'flex', justifyContent: 'end', textAlign: 'center', paddingTop: '15px' }}>
           <button onClick={handleCommentSubmit} style={{ color: '#F8F8FF', backgroundColor: '#004C8A', padding: '8px 20px 8px 20px', borderRadius: '8px' }}>Comment</button>

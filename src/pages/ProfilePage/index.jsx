@@ -321,7 +321,7 @@ const ProfilePage = () => {
           </div>
 
           {/* Lower Section */}
-          <div className="bg-[#FEF7E7] pt-14 pb-8 rounded-b-lg">
+          <div className="bg-[#eeeeee] pt-14 pb-8 rounded-b-lg">
             <div className="flex justify-center px-4">
               <div className="w-full max-w-4xl">
                 <div className="text-center">

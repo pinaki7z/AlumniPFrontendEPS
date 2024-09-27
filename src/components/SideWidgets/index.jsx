@@ -814,7 +814,7 @@ const SideWidgets = () => {
           )}
         </div>
       </div>
-      <div className="online">
+      {/* <div className="online">
         <p
           style={{ marginBottom: "0rem", marginTop: "0rem", fontSize: "20px" }}
         >
@@ -824,7 +824,7 @@ const SideWidgets = () => {
           <img src={Groups} alt="group-icon" />
           <p style={{ marginBottom: "0rem", marginTop: "0rem" }}>1</p>
         </div>
-      </div>
+      </div> */}
       <div className="sideWidget2-post-card pb-4">
         <div className="sideWidget2-post-header">
           <p
@@ -898,7 +898,7 @@ const SideWidgets = () => {
           ))
         )}
       </div>
-      <div className="invite">
+      {/* <div className="invite">
         <div>
           <p style={{ marginBottom: "0rem" }}>Invite Friends</p>
         </div>
@@ -935,7 +935,7 @@ const SideWidgets = () => {
             />
           </button>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

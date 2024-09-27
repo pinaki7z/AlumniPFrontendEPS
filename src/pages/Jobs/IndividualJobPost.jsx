@@ -405,7 +405,7 @@ const IndividualJobPost = () => {
             } else if (attachment.endsWith('.jpg') || attachment.endsWith('.jpeg') || attachment.endsWith('.png')) {
                 return (
                     <div key={index} className="image-link">
-                        <button style={{ border: 'none', borderBottom: 'solid 1px' }} onClick={() => handleImageClick(`${baseUrl}/uploads/${attachment}`)}>
+                        <button style={{ border: 'none', borderBottom: 'solid 1px' }} onClick={() => handleImageClick(`attachment`)}>
                             {attachment}
                         </button>
                     </div>
@@ -563,7 +563,7 @@ const IndividualJobPost = () => {
                                                     return (
                                                         <a
                                                             key={index}
-                                                            href={`${baseUrl}/uploads/${attachment}`}
+                                                            href={`${attachment}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
                                                             style={{ display: 'block', marginBottom: '10px' }}
@@ -599,7 +599,7 @@ const IndividualJobPost = () => {
                                 <div style={{ width: '30%'}}>
                                     <div style={{border: '1px solid', borderRadius: '12px' }}>
                                         <div style={{padding: '10px 0px 10px 25px',borderBottom: '1px solid', fontWeight: '700', fontSize: '24px',backgroundColor: '#004C8A', color: '#F8F8FF',borderRadius: '12px 12px 0px 0px'}}>Job overview</div>
-                                        <div style={{padding: '25px', backgroundColor: '#d3d3d3'}}>
+                                        <div style={{padding: '25px', backgroundColor: '#eeeeee'}}>
                                             <div style={{display: 'flex',gap: '15px'}}>
                                                 <div>
                                                     <img src={time} alt="" srcset="" style={{paddingTop: '5px'}}/>

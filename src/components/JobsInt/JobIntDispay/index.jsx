@@ -12,14 +12,14 @@ import profilePic from '../../../images/profilepic.jpg';
 import baseUrl from '../../../config';
 
 import './individualJobPost.css';
-const JobIntDisplay = ({ picture, jobId, jobTitle, location, salaryMin, salaryMax, currency, jobType, category, description }) => {
+const JobIntDisplay = ({ picture, jobId, jobTitle, location, userName,profilePicture,salaryMin, salaryMax, currency, jobType, category,locationType, description }) => {
     // const { _id,title } = useParams();
     const [cookie] = useCookies(['access_token']);
     const [jobs, setJobs] = useState([]);
     const [loading, setLoading] = useState(false);
     const [showShareOptions, setShowShareOptions] = useState(false);
     const title = 'Jobs'
-    console.log('titleijb', title)
+    console.log('titleijb', locationType)
 
     // const toggleShareOptions = () => {
     //     setShowShareOptions(!showShareOptions);
@@ -58,7 +58,7 @@ const JobIntDisplay = ({ picture, jobId, jobTitle, location, salaryMin, salaryMa
                                 </div>
                                 <div className="ijp-jobType">
                                     <FcBriefcase />
-                                    <p>{title === 'Jobs' ? jobType : title === 'Internships' ? jobs.internshipType : ''}</p>
+                                    <p>{Object.keys(locationType).find(key => locationType[key])}</p>
                                 </div>
                                 <div className="ijp-category">
                                     <FaTags />

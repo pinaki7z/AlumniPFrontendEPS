@@ -28,7 +28,7 @@ const Chathead = () => {
         <p style={{margin:'0px',fontWeight:'bold',fontSize:'20px',color:'#C0C0C0'}}>Chat</p>
                 </div>
                   <div>
-                    <button onClick={openPopup} style={{backgroundColor:'#D3D3D3',marginRight:'10px',borderRadius:'50px',padding:'1px 5px',border:'none'}}><HiUsers style={{fontSize:'20px'}}/></button>
+                    <button onClick={openPopup} style={{backgroundColor:'#eeeeee',marginRight:'10px',borderRadius:'50px',padding:'1px 5px',border:'none'}}><HiUsers style={{fontSize:'20px'}}/></button>
                       {isPopupOpen && (
                         <div className="popup-overlay">
                             <div className="popup-content">
@@ -63,7 +63,7 @@ const Chathead = () => {
                          </div>
                       )}
                     <button className='popup-button' onBlur={() => closepopuptext()}
-                      onClick={() => openpopuptext()} style={{backgroundColor:'#D3D3D3',borderRadius:'50px',padding:'1px 5px',border:'none'}}><RiSettings3Fill style={{fontSize:'20px'}}/>
+                      onClick={() => openpopuptext()} style={{backgroundColor:'#eeeeee',borderRadius:'50px',padding:'1px 5px',border:'none'}}><RiSettings3Fill style={{fontSize:'20px'}}/>
                     </button>
                     {isPopuptext && (
                       <div className='popup' style={{backgroundColor:'#DCDCDC',padding:'20px',borderRadius:'10px',position:'absolute',zIndex: '1'}}>

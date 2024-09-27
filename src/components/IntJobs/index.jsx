@@ -390,7 +390,7 @@ const IntJobs = (props) => {
                                 </Form.Group>
                             </Col>
                         </Row>
-                        <Form.Group controlId="job-internship">
+                        {/* <Form.Group controlId="job-internship">
                             <Form.Check
                                 type='checkbox'
                                 id='job-checkbox'
@@ -408,8 +408,8 @@ const IntJobs = (props) => {
                                 onChange={handleCheckboxChange}
                             />
                             {formError && <div className="text-danger">{formError}</div>}
-                        </Form.Group>
-                        <Form.Group controlId="employmentType">
+                        </Form.Group> */}
+                        {/* <Form.Group controlId="employmentType">
                             <Form.Label>Employment Type</Form.Label>
                             <DropdownButton
                                 id="createEmployment-type-dropdown"
@@ -432,7 +432,7 @@ const IntJobs = (props) => {
                                     <Dropdown.Item eventKey="Contract">Contract</Dropdown.Item>
                                 </div>
                             </DropdownButton>
-                        </Form.Group>
+                        </Form.Group> */}
                         {(formData.type === 'Internship' || formData.employmentType === 'Volunteer') && (
                             <Form.Group controlId="internship-type">
                                 <Form.Check

@@ -13,6 +13,24 @@ import EventDisplay from './EventDisplay';
 import { useParams } from 'react-router-dom';
 import PollDisplay from './PollDisplay';
 import baseUrl from '../../config';
+import {
+  ThumbUpRounded,
+  ChatBubbleOutlineRounded,
+  NearMeRounded,
+  DeleteRounded,
+  MoreVert,
+} from "@mui/icons-material";
+import {
+  Avatar,
+  TextField,
+  IconButton,
+  Typography,
+  Menu,
+  MenuItem,
+  Modal,
+  Box,
+  Button,
+} from "@mui/material";
 dotPulse.register();
 
 
@@ -25,6 +43,9 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
   const [loading, setLoading] = useState(false);
   const scrollContainerRef = useRef(null);
   const [totalPosts, setTotalPosts] = useState(0);
+  const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
+  const [displayCreatePost, setDisplayCreatePost] = useState(false);
+  const [menuAnchor, setMenuAnchor] = useState(null);
   const activePageRef = useRef(1);
   const isFetchingRef = useRef(false);
   let lastFetchedPageRef = useRef(0);
@@ -42,7 +63,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
       // console.log('scrolling', container)
       if (container) {
         const { scrollTop, clientHeight, scrollHeight } = container;
-        console.log('checking for false', scrollTop +clientHeight , scrollHeight - 10 )
+        console.log('checking for false', scrollTop + clientHeight, scrollHeight - 10)
         if (
           scrollTop + clientHeight >= scrollHeight - 10 &&
           !loading &&
@@ -129,6 +150,17 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
     }
   };
 
+  const formatCreatedAt = (timestamp) => {
+    const options = { hour: "numeric", minute: "numeric", hour12: true };
+    const timeString = new Date(timestamp).toLocaleTimeString(
+      undefined,
+      options
+    );
+    const dateString = new Date(timestamp).toLocaleDateString();
+
+    return `${dateString} ${timeString}`;
+  };
+
   const getPosts = async (page) => {
     console.log('getting posts')
     setLoading(true);
@@ -173,7 +205,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
     setLoading(true);
     isFetchingRef.current = false;
     console.log("Getting posts/news from page 1");
-  
+
     try {
       if (userId) {
         const response = await axios.get(
@@ -203,12 +235,21 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
-  
+
     isFetchingRef.current = true;
     setLoading(false);
   };
-  
 
+  const handleEditPost = () => {
+    console.log("Edit post");
+    setMenuAnchor(null);
+    setDisplayCreatePost(true);
+  };
+
+  const handleArchivePost = () => {
+    setMenuAnchor(null);
+    setIsArchiveModalOpen(true);
+  };
 
 
   return (
@@ -237,7 +278,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
                 <Post
                   userId={post.userId}
                   postId={post._id}
-                  username={`${post.firstName} ${post.lastName}`}
+                  username={post.userName}
                   text={post.description}
                   image={post.picturePath}
                   profilePicture={post.profilePicture}
@@ -262,12 +303,59 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
           } else if (post.type === 'Internship' && (post.groupID === _id)) {
             return (
               <div key={post._id} className="post-box  p-2 lg:p-4 " style={{ width: '100%' }}>
+                <div className=" flex mb-2 justify-between items-center  ">
+                  {post.profilePicture ? (
+                    <img
+                      src={post.profilePicture}
+                      style={{ width: "50px", height: "50px", borderRadius: "50%" }}
+                    />
+                  ) : null}
+                  <div className="info">
+                    <h4>{post.userName}</h4>
+                    <span
+                      style={{
+                        fontSize: "14px",
+                        fontWeight: "500",
+                        color: "#004C8A",
+                      }}
+                    >
+                      {formatCreatedAt(post.createdAt)}
+                    </span>
+                  </div>
+                  {(profile.profileLevel === 0 || userId === profile._id) && (
+                    <>
+                      <IconButton
+                        onClick={(e) => setMenuAnchor(e.currentTarget)}
+                        className="more-button"
+                        style={{ marginLeft: "auto", color: "black" }}
+                      >
+                        <MoreVert />
+                      </IconButton>
+                      <Menu
+                        anchorEl={menuAnchor}
+                        open={Boolean(menuAnchor)}
+                        onClose={() => setMenuAnchor(null)}
+                      >
+                        <MenuItem onClick={handleEditPost}>Edit</MenuItem>
+                        <MenuItem onClick={handleArchivePost}>
+                          {/* {archived ? "Unarchive" : "Archive"} */}
+                        </MenuItem>
+                        <MenuItem onClick={() => handleDeletePost(userId)}>
+                          Delete
+                        </MenuItem>
+                      </Menu>
+                    </>
+                  )}
+                </div>
                 <JobIntDisplay
                   jobId={post._id}
                   picture={post.coverImage}
                   jobTitle={post.jobTitle}
                   location={post.location}
+                  locationType={post.locationType}
                   salaryMin={post.salaryMin}
+                  userName={post.userName}
+                  profilePicture={post.profilePicture}
                   salaryMax={post.salaryMax}
                   currency={post.currency}
                   jobType={post.jobType}

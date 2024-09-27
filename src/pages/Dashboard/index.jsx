@@ -68,7 +68,7 @@ const Dashboard = ({ handleLogout }) => {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden ">
-        <div className="flex-shrink-0 bg-[#d3d3d3]">
+        <div className="flex-shrink-0 bg-[#eeeeee]">
           <TopBar handleLogout={handleLogout} />
         </div>
         {/* Top Bar */}
