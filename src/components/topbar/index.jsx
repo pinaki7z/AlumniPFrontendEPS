@@ -250,12 +250,12 @@ const TopBar = ({ handleLogout }) => {
                 >
                   <li>Profile</li>
                 </a>
-                <a
+                {/* <a
                   href="/settings"
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <li>Settings</li>
-                </a>
+                </a> */}
                 <li onClick={logout} style={{ cursor: "pointer" }}>
                   <p>Log out</p>
                 </li>

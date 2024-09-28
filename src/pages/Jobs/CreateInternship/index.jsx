@@ -4,10 +4,16 @@ import { useState, useEffect } from 'react';
 import baseUrl from '../../../config.js';
 import { toast } from 'react-toastify';
 import axios from "axios";
+import { lineSpinner } from 'ldrs'
+
+lineSpinner.register()
+
+
 
 export const CreateInternship = () => {
   const profile = useSelector((state) => state.profile);
   const [loading, setLoading] = useState(false);
+  const [picLoading, setPicLoading] = useState(false);
   const [internshipFormData, setInternshipFormData] = useState({
     userId: profile._id,
     title: '',
@@ -18,7 +24,7 @@ export const CreateInternship = () => {
     duration: 'per hour',
     company: profile.workingAt,
     //employmentType: 'Full-time',
-    coverImage: null, 
+    coverImage: null,
     category: 'Other',
     type: 'Internship',
     description: '',
@@ -69,6 +75,7 @@ export const CreateInternship = () => {
   };
 
   const handleCoverImageChange = (e) => {
+    setPicLoading(true);
     const file = e.target.files[0];
     if (file) {
       const formData = new FormData();
@@ -80,6 +87,7 @@ export const CreateInternship = () => {
       })
         .then(res => {
           setInternshipFormData({ ...internshipFormData, coverImage: res.data });
+          setPicLoading(false);
         })
         .catch(err => {
           console.log(err);
@@ -89,14 +97,14 @@ export const CreateInternship = () => {
   const handleImageChange = (e) => {
     const files = e.target.files;
     if (files && files.length > 0) {
-     
+
       const data = new FormData();
-  
+
       // Append each file to the FormData object with the key 'images[]'
       Array.from(files).forEach((file) => {
         data.append('images', file);  // Use 'images' as the key for all files
       });
-  
+
       // Send the FormData to the API
       axios.post(`${baseUrl}/uploadImage/image`, data, {
         headers: {
@@ -115,30 +123,30 @@ export const CreateInternship = () => {
         });
     }
   };
-  
-  
+
+
 
   const handlePublish = async (e) => {
     e.preventDefault();
     console.log('formData', internshipFormData);
     setLoading(true);
-  
+
     try {
       // Prepare a plain JavaScript object based on internshipFormData
       const formDataToSend = { ...internshipFormData };
-  
+
       // No need for any special handling of attachments, just include them as they are (array of URLs)
       formDataToSend.attachments = internshipFormData.attachments;
-  
+
       // For locationType, we need to flatten the nested object structure
       for (const locationKey in internshipFormData.locationType) {
         formDataToSend[`locationType[${locationKey}]`] = internshipFormData.locationType[locationKey];
       }
-  
+
       // Convert the entire formData object to a JSON string
       const requestBody = JSON.stringify(formDataToSend);
-      console.log('request body',requestBody)
-  
+      console.log('request body', requestBody)
+
       // Make the request with the JSON body
       const response = await fetch(`${baseUrl}/jobs/create`, {
         method: 'POST',
@@ -147,11 +155,11 @@ export const CreateInternship = () => {
         },
         body: requestBody,
       });
-  
+
       if (response.ok) {
         console.log('Data saved successfully');
-        const successMessage = internshipFormData.type === 'Internship' 
-          ? 'The internship post is being validated by the admin' 
+        const successMessage = internshipFormData.type === 'Internship'
+          ? 'The internship post is being validated by the admin'
           : 'The job post is being validated by the admin';
         toast.success(successMessage);
       } else {
@@ -161,10 +169,15 @@ export const CreateInternship = () => {
     } catch (error) {
       console.error('Error:', error);
     }
-  
+
     setLoading(false);
   };
-  
+
+  const removeMedia = (e) => {
+    e.preventDefault();
+    setInternshipFormData({ ...internshipFormData, coverImage: null });
+  };
+
   return (
     <div style={{ padding: '5% 5%' }}>
       Create An Internship
@@ -289,22 +302,55 @@ export const CreateInternship = () => {
                   </div>
                 </div>
 
+
+
                 <div class="col-span-full">
                   <label for="coverImage" class="block text-sm font-medium leading-6 text-gray-900">Add Cover Image</label>
-                  <div class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+                  <div class="mt-2 flex flex-col justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
                     <div class="text-center">
                       <svg class="mx-auto h-12 w-12 text-gray-300" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                         <path fill-rule="evenodd" d="M1.5 6a2.25 2.25 0 012.25-2.25h16.5A2.25 2.25 0 0122.5 6v12a2.25 2.25 0 01-2.25 2.25H3.75A2.25 2.25 0 011.5 18V6zM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0021 18v-1.94l-2.69-2.689a1.5 1.5 0 00-2.12 0l-.88.879.97.97a.75.75 0 11-1.06 1.06l-5.16-5.159a1.5 1.5 0 00-2.12 0L3 16.061zm10.125-7.81a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0z" clip-rule="evenodd" />
                       </svg>
-                      <div class="mt-4 flex text-sm leading-6 text-gray-600">
+                      <div class="mt-4 flex justify-center text-sm leading-6 text-gray-600 text-center">
+
                         <label for="coverImage" class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
                           <span>Upload a file</span>
-                          <input id="coverImage" name="coverImage" type="file" class="sr-only" onChange={handleCoverImageChange} accept=".jpg, .jpeg, .png, .pdf"/>
+                          <input id="coverImage" name="coverImage" type="file" class="sr-only" onChange={handleCoverImageChange} accept=".jpg, .jpeg, .png, .pdf" />
                         </label>
                         <p class="pl-1">or drag and drop</p>
                       </div>
                       <p class="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
                     </div>
+                    {picLoading ? <div class="text-center pt-5"><l-line-spinner
+                      size="20"
+                      stroke="3"
+                      speed="1"
+                      color="black"
+                    ></l-line-spinner></div> : null}
+                    {internshipFormData.coverImage && (
+                      <div className="mt-2 grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 gap-2">
+
+                        <div className="relative">
+                          <img
+                            src={internshipFormData.coverImage}
+                            alt="Preview"
+                            className="w-full h-32 object-cover rounded"
+                          />
+
+                          <button
+                            onClick={(e) => removeMedia(e)}
+                            className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 w-6 h-6 flex items-center justify-center"
+                          >
+                            X
+                          </button>
+                        </div>
+
+
+
+                      </div>
+
+
+                    )}
                   </div>
                 </div>
 
@@ -318,11 +364,12 @@ export const CreateInternship = () => {
                       <div class="mt-4 flex text-sm leading-6 text-gray-600">
                         <label for="attachments" class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
                           <span>Upload a file</span>
-                          <input id="attachments" name="attachments" type="file" class="sr-only" onChange={handleImageChange} multiple accept=".jpg, .jpeg, .png, .pdf"/>
+                          <input id="attachments" name="attachments" type="file" class="sr-only" onChange={handleImageChange} multiple accept=".jpg, .jpeg, .png, .pdf" />
                         </label>
                         <p class="pl-1">or drag and drop</p>
                       </div>
                       <p class="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
+                      
                     </div>
                   </div>
                 </div>
@@ -332,7 +379,7 @@ export const CreateInternship = () => {
                   {/* <p class="mt-1 text-sm leading-6 text-gray-600">These are delivered via SMS to your mobile phone.</p> */}
                   <div class="mt-6 space-y-6">
                     <div class="flex items-center gap-x-3">
-                      <input id="onSite" name="onSite" type="radio"  checked={internshipFormData?.locationType?.onSite} onChange={() => handleLocationTypeChange('onSite')} class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600" />
+                      <input id="onSite" name="onSite" type="radio" checked={internshipFormData?.locationType?.onSite} onChange={() => handleLocationTypeChange('onSite')} class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600" />
                       <label for="onSite" class="block text-sm font-medium leading-6 text-gray-900">On-Site</label>
                     </div>
                     <div class="flex items-center gap-x-3">

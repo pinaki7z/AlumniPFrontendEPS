@@ -684,6 +684,11 @@
     gap: var(--gap-33xl);
     max-width: 100%;
   }
+
+  /* .eps-logo{
+    position: relative;
+    
+  } */
   /* @media screen and (max-width: 975px) {
     .welcome-back {
       font-size: var(--font-size-7xl);

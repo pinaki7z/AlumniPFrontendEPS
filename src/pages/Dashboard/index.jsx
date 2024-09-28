@@ -142,7 +142,7 @@ const Dashboard = ({ handleLogout }) => {
               path="/profile/profile-settings"
               element={<ProfileSettings />}
             />
-            <Route path="/archive/*" element={<ArchivePage />} />
+            {profile.profileLevel === 0 || profile.profileLevel ===1 ? <Route path="/archive/*" element={<ArchivePage />} /> : null}
             <Route
               path="/news/*"
               element={
