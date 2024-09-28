@@ -129,6 +129,7 @@
     overflow: hidden;
     background-image: url(../../images/arial-view2.jpg);
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     /* padding: 32px var(--padding-xl) 69px; */
     box-sizing: border-box;
