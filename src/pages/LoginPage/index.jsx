@@ -132,7 +132,7 @@ const LoginPage = ({ handleLogin }) => {
         <div className="welcome-message">
           <div className="welcome-message-child" />
           <h1 className="rediscover-reconnect-reignite">
-            REDISCOVER RECONNECT REIGNITE
+            Connect With Your Alma Mater
           </h1>
           <h1 className="your-alumni-journey">
             Your Alumni Journey Starts Here!
