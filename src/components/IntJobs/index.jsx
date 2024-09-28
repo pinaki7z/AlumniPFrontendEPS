@@ -77,496 +77,496 @@ const IntJobs = (props) => {
         updatedSearchQuery.category = selectedOption;
       }
     }
-
+    
     props.setSearchQuery(updatedSearchQuery);
     console.log("search", props.setSearchQuery);
   };
 
-  function CustomToggle({ children, eventKey }) {
-    const decoratedOnClick = useAccordionButton(eventKey, () =>
-      console.log("totally custom!")
-    );
-    return (
-      <button
-        type="button"
-        style={{ backgroundColor: "pink" }}
-        onClick={decoratedOnClick}
-      >
-        {children}
-      </button>
-    );
-  }
+  // function CustomToggle({ children, eventKey }) {
+  //   const decoratedOnClick = useAccordionButton(eventKey, () =>
+  //     console.log("totally custom!")
+  //   );
+  //   return (
+  //     <button
+  //       type="button"
+  //       style={{ backgroundColor: "pink" }}
+  //       onClick={decoratedOnClick}
+  //     >
+  //       {children}
+  //     </button>
+  //   );
+  // }
 
-  const handleRangeChange = (event) => {
-    setRangeValue(event.target.value);
-  };
+  // const handleRangeChange = (event) => {
+  //   setRangeValue(event.target.value);
+  // };
 
-  function MyVerticallyCenteredModal(props) {
-    const [formData, setFormData] = useState({
-      userId: profile._id,
-      title: "",
-      location: "",
-      salaryMin: "",
-      salaryMax: "",
-      currency: "INR",
-      duration: "per hour",
-      company: profile.workingAt,
-      employmentType: "Full-time",
-      category: "Other",
-      type: "",
-      description: "",
-      attachments: [],
-      locationType: {
-        onSite: false,
-        remote: false,
-        hybrid: false,
-      },
-    });
-    const [loading, setLoading] = useState(false);
-    const [isJobChecked, setIsJobChecked] = useState(false);
-    const [isInternshipChecked, setIsInternshipChecked] = useState(false);
-    const [formError, setFormError] = useState("");
-    const [isPaid, setIsPaid] = useState(false);
-    const [isUnpaid, setIsUnpaid] = useState(false);
-    const handleInputChange = (e) => {
-      const { name, value } = e.target;
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        [name]: value,
-      }));
-    };
+  // function MyVerticallyCenteredModal(props) {
+  //   const [formData, setFormData] = useState({
+  //     userId: profile._id,
+  //     title: "",
+  //     location: "",
+  //     salaryMin: "",
+  //     salaryMax: "",
+  //     currency: "INR",
+  //     duration: "per hour",
+  //     company: profile.workingAt,
+  //     employmentType: "Full-time",
+  //     category: "Other",
+  //     type: "",
+  //     description: "",
+  //     attachments: [],
+  //     locationType: {
+  //       onSite: false,
+  //       remote: false,
+  //       hybrid: false,
+  //     },
+  //   });
+  //   const [loading, setLoading] = useState(false);
+  //   const [isJobChecked, setIsJobChecked] = useState(false);
+  //   const [isInternshipChecked, setIsInternshipChecked] = useState(false);
+  //   const [formError, setFormError] = useState("");
+  //   const [isPaid, setIsPaid] = useState(false);
+  //   const [isUnpaid, setIsUnpaid] = useState(false);
+  //   const handleInputChange = (e) => {
+  //     const { name, value } = e.target;
+  //     setFormData((prevFormData) => ({
+  //       ...prevFormData,
+  //       [name]: value,
+  //     }));
+  //   };
 
-    const handleCoverImageChange = (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const coverImageData = reader.result;
-          setFormData((prevFormData) => ({
-            ...prevFormData,
-            coverImage: coverImageData,
-          }));
-        };
-        reader.readAsDataURL(file);
-      }
-    };
+  //   const handleCoverImageChange = (e) => {
+  //     const file = e.target.files[0];
+  //     if (file) {
+  //       const reader = new FileReader();
+  //       reader.onloadend = () => {
+  //         const coverImageData = reader.result;
+  //         setFormData((prevFormData) => ({
+  //           ...prevFormData,
+  //           coverImage: coverImageData,
+  //         }));
+  //       };
+  //       reader.readAsDataURL(file);
+  //     }
+  //   };
 
-    const handleImageChange = (e) => {
-      const files = e.target.files;
-      if (files) {
-        const filesArray = Array.from(files);
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          attachments: filesArray,
-        }));
-      }
-    };
+  //   const handleImageChange = (e) => {
+  //     const files = e.target.files;
+  //     if (files) {
+  //       const filesArray = Array.from(files);
+  //       setFormData((prevFormData) => ({
+  //         ...prevFormData,
+  //         attachments: filesArray,
+  //       }));
+  //     }
+  //   };
 
-    const handlePublish = async () => {
-      if (!formData.type) {
-        setFormError("Please select either Job or Internship.");
-        return;
-      }
-      setLoading(true);
+  //   const handlePublish = async () => {
+  //     if (!formData.type) {
+  //       setFormError("Please select either Job or Internship.");
+  //       return;
+  //     }
+  //     setLoading(true);
 
-      try {
-        const formDataToSend = new FormData();
+  //     try {
+  //       const formDataToSend = new FormData();
 
-        for (const key in formData) {
-          if (key === "attachments") {
-            formData.attachments.forEach((file) => {
-              formDataToSend.append("attachments", file);
-            });
-          } else if (key === "locationType") {
-            for (const locationKey in formData.locationType) {
-              formDataToSend.append(
-                `locationType[${locationKey}]`,
-                formData.locationType[locationKey]
-              );
-            }
-          } else {
-            formDataToSend.append(key, formData[key]);
-          }
-        }
-        console.log("job formdata", formData);
-        const response = await fetch(`${baseUrl}/jobs/create`, {
-          method: "POST",
-          body: formDataToSend,
-        });
-        if (response.ok) {
-          console.log("Data saved successfully");
-          const successMessage =
-            formData.type === "Internship"
-              ? "The internship post is being validated by the admin"
-              : "The job post is being validated by the admin";
-          toast.success(successMessage);
-          props.onHide();
-        } else {
-          const errorData = await response.json();
-          console.error("Failed to save data", errorData);
-        }
-      } catch (error) {
-        console.error("Error:", error);
-      }
-      setLoading(false);
-    };
-    const handleCheckboxChange = (e) => {
-      const { name, checked } = e.target;
-      if (name === "isJob" && checked) {
-        setIsUnpaid(false);
-        setIsJobChecked(true);
-        setIsInternshipChecked(false);
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          type: "Job",
-        }));
-      } else if (name === "isInternship" && checked) {
-        setIsInternshipChecked(true);
-        setIsJobChecked(false);
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          type: "Internship",
-          employmentType: "Internship",
-        }));
-      }
-      setFormError("");
-    };
+  //       for (const key in formData) {
+  //         if (key === "attachments") {
+  //           formData.attachments.forEach((file) => {
+  //             formDataToSend.append("attachments", file);
+  //           });
+  //         } else if (key === "locationType") {
+  //           for (const locationKey in formData.locationType) {
+  //             formDataToSend.append(
+  //               `locationType[${locationKey}]`,
+  //               formData.locationType[locationKey]
+  //             );
+  //           }
+  //         } else {
+  //           formDataToSend.append(key, formData[key]);
+  //         }
+  //       }
+  //       console.log("job formdata", formData);
+  //       const response = await fetch(`${baseUrl}/jobs/create`, {
+  //         method: "POST",
+  //         body: formDataToSend,
+  //       });
+  //       if (response.ok) {
+  //         console.log("Data saved successfully");
+  //         const successMessage =
+  //           formData.type === "Internship"
+  //             ? "The internship post is being validated by the admin"
+  //             : "The job post is being validated by the admin";
+  //         toast.success(successMessage);
+  //         props.onHide();
+  //       } else {
+  //         const errorData = await response.json();
+  //         console.error("Failed to save data", errorData);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //     }
+  //     setLoading(false);
+  //   };
+  //   const handleCheckboxChange = (e) => {
+  //     const { name, checked } = e.target;
+  //     if (name === "isJob" && checked) {
+  //       setIsUnpaid(false);
+  //       setIsJobChecked(true);
+  //       setIsInternshipChecked(false);
+  //       setFormData((prevFormData) => ({
+  //         ...prevFormData,
+  //         type: "Job",
+  //       }));
+  //     } else if (name === "isInternship" && checked) {
+  //       setIsInternshipChecked(true);
+  //       setIsJobChecked(false);
+  //       setFormData((prevFormData) => ({
+  //         ...prevFormData,
+  //         type: "Internship",
+  //         employmentType: "Internship",
+  //       }));
+  //     }
+  //     setFormError("");
+  //   };
 
-    const handlePaidUnpaid = (e) => {
-      const { name, checked } = e.target;
-      if (name === "isPaid") {
-        setIsPaid(checked);
-        setIsUnpaid(false);
-      } else if (name === "isUnpaid") {
-        setIsUnpaid(checked);
-        setIsPaid(false);
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          salaryMin: "",
-          salaryMax: "",
-        }));
-      }
-    };
+  //   const handlePaidUnpaid = (e) => {
+  //     const { name, checked } = e.target;
+  //     if (name === "isPaid") {
+  //       setIsPaid(checked);
+  //       setIsUnpaid(false);
+  //     } else if (name === "isUnpaid") {
+  //       setIsUnpaid(checked);
+  //       setIsPaid(false);
+  //       setFormData((prevFormData) => ({
+  //         ...prevFormData,
+  //         salaryMin: "",
+  //         salaryMax: "",
+  //       }));
+  //     }
+  //   };
 
-    const handleLocationTypeChange = (type) => {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        locationType: {
-          onSite: type === "onSite",
-          remote: type === "remote",
-          hybrid: type === "hybrid",
-        },
-      }));
-    };
+  //   const handleLocationTypeChange = (type) => {
+  //     setFormData((prevFormData) => ({
+  //       ...prevFormData,
+  //       locationType: {
+  //         onSite: type === "onSite",
+  //         remote: type === "remote",
+  //         hybrid: type === "hybrid",
+  //       },
+  //     }));
+  //   };
 
-    return (
-      <Modal
-        {...props}
-        size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
-            Create an Internship post
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form encType="multipart/form-data">
-            <Row>
-              <Col>
-                <Form.Group as={Col}>
-                  <Form.Label htmlFor="job">Title</Form.Label>
-                  <Form.Control
-                    id="job"
-                    type="text"
-                    placeholder="Enter job/internship title"
-                    name="title"
-                    value={formData.title}
-                    onChange={handleInputChange}
-                  />
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group as={Col} controlId="location">
-                  <Form.Label>Location</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter location"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleInputChange}
-                    disabled={formData.locationType.remote}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Form.Group as={Col}>
-              <Form.Label htmlFor="company">Company Name</Form.Label>
-              <Form.Control
-                id="company"
-                type="text"
-                placeholder="Enter company name"
-                name="company"
-                value={formData.company}
-                disabled
-              />
-            </Form.Group>
-            <Row>
-              <Col>
-                <Form.Group controlId="salaryRange">
-                  <Form.Label>Salary Range</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Minimum"
-                    name="salaryMin"
-                    className="mb-2"
-                    value={formData.salaryMin}
-                    onChange={handleInputChange}
-                    disabled={isUnpaid}
-                  />
-                  To
-                  <Form.Control
-                    type="text"
-                    placeholder="Maximum"
-                    name="salaryMax"
-                    className="mt-2"
-                    value={formData.salaryMax}
-                    onChange={handleInputChange}
-                    disabled={isUnpaid}
-                  />
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group controlId="currency">
-                  <Form.Label>Currency</Form.Label>
-                  <DropdownButton
-                    id="createJob-currency-dropdown"
-                    title={formData.currency}
-                    style={{ marginTop: "0px" }}
-                    onSelect={(eventKey) => {
-                      setFormData((prevFormData) => ({
-                        ...prevFormData,
-                        currency: eventKey,
-                      }));
-                    }}
-                  >
-                    <div className="scrollable-dropdown">
-                      <Dropdown.Item eventKey="INR">INR</Dropdown.Item>
-                      <Dropdown.Item eventKey="USD">USD</Dropdown.Item>
-                      <Dropdown.Item eventKey="JPY">JPY</Dropdown.Item>
-                      <Dropdown.Item eventKey="EUR">EUR</Dropdown.Item>
-                      <Dropdown.Item eventKey="GBP">GBP</Dropdown.Item>
-                    </div>
-                  </DropdownButton>
-                </Form.Group>
-                <Form.Group controlId="wages">
-                  <Form.Label style={{ marginBottom: "0px" }}>Wages</Form.Label>
-                  <DropdownButton
-                    id="createJob-timings-dropdown"
-                    title={formData.duration}
-                    style={{ marginTop: "0px" }}
-                    onSelect={(eventKey) => {
-                      setFormData((prevFormData) => ({
-                        ...prevFormData,
-                        duration: eventKey,
-                      }));
-                    }}
-                  >
-                    <div className="scrollable-dropdown">
-                      <Dropdown.Item eventKey="per hour">
-                        per hour
-                      </Dropdown.Item>
-                      <Dropdown.Item eventKey="per week">
-                        per week
-                      </Dropdown.Item>
-                      <Dropdown.Item eventKey="per month">
-                        per month
-                      </Dropdown.Item>
-                      <Dropdown.Item eventKey="per year">
-                        per year
-                      </Dropdown.Item>
-                    </div>
-                  </DropdownButton>
-                </Form.Group>
-              </Col>
-            </Row>
-            <Form.Group controlId="job-internship">
-              <Form.Check
-                type="checkbox"
-                id="job-checkbox"
-                label="Job"
-                name="isJob"
-                checked={formData.type === "Job"}
-                onChange={handleCheckboxChange}
-              />
-              <Form.Check
-                type="checkbox"
-                id="internship-checkbox"
-                label="Internship"
-                name="isInternship"
-                checked={formData.type === "Internship"}
-                onChange={handleCheckboxChange}
-              />
-              {formError && <div className="text-danger">{formError}</div>}
-            </Form.Group>
-            <Form.Group controlId="employmentType">
-              <Form.Label>Employment Type</Form.Label>
-              <DropdownButton
-                id="createEmployment-type-dropdown"
-                title={formData.employmentType}
-                disabled={!isJobChecked}
-                onSelect={(eventKey) => {
-                  if (eventKey !== "Volunteer") {
-                    setIsUnpaid(false);
-                  }
-                  setFormData((prevFormData) => ({
-                    ...prevFormData,
-                    employmentType: eventKey,
-                  }));
-                }}
-              >
-                <div className="scrollable-dropdown">
-                  <Dropdown.Item eventKey="Full-time">Full-time</Dropdown.Item>
-                  <Dropdown.Item eventKey="Part-time">Part-time</Dropdown.Item>
-                  <Dropdown.Item eventKey="Volunteer">Volunteer</Dropdown.Item>
-                  <Dropdown.Item eventKey="Contract">Contract</Dropdown.Item>
-                </div>
-              </DropdownButton>
-            </Form.Group>
-            {(formData.type === "Internship" ||
-              formData.employmentType === "Volunteer") && (
-              <Form.Group controlId="internship-type">
-                <Form.Check
-                  type="checkbox"
-                  id="paid-checkbox"
-                  label="Paid"
-                  name="isPaid"
-                  checked={isPaid}
-                  onChange={handlePaidUnpaid}
-                />
-                <Form.Check
-                  type="checkbox"
-                  id="unpaid-checkbox"
-                  label="Unpaid"
-                  name="isUnpaid"
-                  checked={isUnpaid}
-                  onChange={handlePaidUnpaid}
-                />
-              </Form.Group>
-            )}
-            <Form.Group controlId="category">
-              <Form.Label>Category</Form.Label>
-              <DropdownButton
-                id="createJob-categories-dropdown"
-                title={formData.category}
-                onSelect={(eventKey) => {
-                  setFormData((prevFormData) => ({
-                    ...prevFormData,
-                    category: eventKey,
-                  }));
-                }}
-              >
-                <div className="scrollable-dropdown">
-                  <Dropdown.Item eventKey="Other">Other</Dropdown.Item>
-                  <Dropdown.Item eventKey="Admin & Office">
-                    Admin & Office
-                  </Dropdown.Item>
-                  <Dropdown.Item eventKey="Art & Design">
-                    Art & Design
-                  </Dropdown.Item>
-                  {/* Other category items */}
-                </div>
-              </DropdownButton>
-            </Form.Group>
-            <Form.Group controlId="locationType">
-              <Form.Label>Location Type</Form.Label>
-              <div>
-                <Form.Check
-                  type="checkbox"
-                  id="onSite-checkbox"
-                  label="On-site"
-                  checked={formData.locationType.onSite}
-                  onChange={() => handleLocationTypeChange("onSite")}
-                />
-                <Form.Check
-                  type="checkbox"
-                  id="remote-checkbox"
-                  label="Remote"
-                  checked={formData.locationType.remote}
-                  onChange={() => handleLocationTypeChange("remote")}
-                />
-                <Form.Check
-                  type="checkbox"
-                  id="hybrid-checkbox"
-                  label="Hybrid"
-                  checked={formData.locationType.hybrid}
-                  onChange={() => handleLocationTypeChange("hybrid")}
-                />
-              </div>
-            </Form.Group>
-            <Accordion defaultActiveKey="0">
-              <Card>
-                <Card.Header>
-                  <CustomToggle eventKey="1" style={{ padding: "10px" }}>
-                    Add a question
-                  </CustomToggle>
-                </Card.Header>
-                <Accordion.Collapse eventKey="1">
-                  <Card.Body>
-                    <Form.Control
-                      as="textarea"
-                      rows={3}
-                      placeholder="Enter question"
-                      name="questions"
-                      value={formData.questions}
-                      onChange={handleInputChange}
-                    />
-                  </Card.Body>
-                </Accordion.Collapse>
-              </Card>
-            </Accordion>
-            <Form.Group controlId="description">
-              <Form.Label>Description</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                placeholder={`Enter ${formData.type.toLowerCase()} description`}
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-              />
-            </Form.Group>
-            <Form.Group controlId="coverImage">
-              <Form.Label>Add cover image</Form.Label>
-              <input
-                className="form-control"
-                type="file"
-                onChange={handleCoverImageChange}
-                accept=".jpg, .jpeg, .png, .pdf"
-              />
-            </Form.Group>
-            <Form.Group controlId="attachments">
-              <Form.Label>Add attachments</Form.Label>
-              <input
-                className="form-control"
-                type="file"
-                onChange={handleImageChange}
-                multiple
-                accept=".jpg, .jpeg, .png, .pdf"
-              />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button onClick={props.onHide}>Close</Button>
-          <Button onClick={handlePublish}>
-            {loading ? "Publishing..." : "Publish"}
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    );
-  }
+  //   return (
+  //     <Modal
+  //       {...props}
+  //       size="lg"
+  //       aria-labelledby="contained-modal-title-vcenter"
+  //       centered
+  //     >
+  //       <Modal.Header closeButton>
+  //         <Modal.Title id="contained-modal-title-vcenter">
+  //           Create an Internship post
+  //         </Modal.Title>
+  //       </Modal.Header>
+  //       <Modal.Body>
+  //         <Form encType="multipart/form-data">
+  //           <Row>
+  //             <Col>
+  //               <Form.Group as={Col}>
+  //                 <Form.Label htmlFor="job">Title</Form.Label>
+  //                 <Form.Control
+  //                   id="job"
+  //                   type="text"
+  //                   placeholder="Enter job/internship title"
+  //                   name="title"
+  //                   value={formData.title}
+  //                   onChange={handleInputChange}
+  //                 />
+  //               </Form.Group>
+  //             </Col>
+  //             <Col>
+  //               <Form.Group as={Col} controlId="location">
+  //                 <Form.Label>Location</Form.Label>
+  //                 <Form.Control
+  //                   type="text"
+  //                   placeholder="Enter location"
+  //                   name="location"
+  //                   value={formData.location}
+  //                   onChange={handleInputChange}
+  //                   disabled={formData.locationType.remote}
+  //                 />
+  //               </Form.Group>
+  //             </Col>
+  //           </Row>
+  //           <Form.Group as={Col}>
+  //             <Form.Label htmlFor="company">Company Name</Form.Label>
+  //             <Form.Control
+  //               id="company"
+  //               type="text"
+  //               placeholder="Enter company name"
+  //               name="company"
+  //               value={formData.company}
+  //               disabled
+  //             />
+  //           </Form.Group>
+  //           <Row>
+  //             <Col>
+  //               <Form.Group controlId="salaryRange">
+  //                 <Form.Label>Salary Range</Form.Label>
+  //                 <Form.Control
+  //                   type="text"
+  //                   placeholder="Minimum"
+  //                   name="salaryMin"
+  //                   className="mb-2"
+  //                   value={formData.salaryMin}
+  //                   onChange={handleInputChange}
+  //                   disabled={isUnpaid}
+  //                 />
+  //                 To
+  //                 <Form.Control
+  //                   type="text"
+  //                   placeholder="Maximum"
+  //                   name="salaryMax"
+  //                   className="mt-2"
+  //                   value={formData.salaryMax}
+  //                   onChange={handleInputChange}
+  //                   disabled={isUnpaid}
+  //                 />
+  //               </Form.Group>
+  //             </Col>
+  //             <Col>
+  //               <Form.Group controlId="currency">
+  //                 <Form.Label>Currency</Form.Label>
+  //                 <DropdownButton
+  //                   id="createJob-currency-dropdown"
+  //                   title={formData.currency}
+  //                   style={{ marginTop: "0px" }}
+  //                   onSelect={(eventKey) => {
+  //                     setFormData((prevFormData) => ({
+  //                       ...prevFormData,
+  //                       currency: eventKey,
+  //                     }));
+  //                   }}
+  //                 >
+  //                   <div className="scrollable-dropdown">
+  //                     <Dropdown.Item eventKey="INR">INR</Dropdown.Item>
+  //                     <Dropdown.Item eventKey="USD">USD</Dropdown.Item>
+  //                     <Dropdown.Item eventKey="JPY">JPY</Dropdown.Item>
+  //                     <Dropdown.Item eventKey="EUR">EUR</Dropdown.Item>
+  //                     <Dropdown.Item eventKey="GBP">GBP</Dropdown.Item>
+  //                   </div>
+  //                 </DropdownButton>
+  //               </Form.Group>
+  //               <Form.Group controlId="wages">
+  //                 <Form.Label style={{ marginBottom: "0px" }}>Wages</Form.Label>
+  //                 <DropdownButton
+  //                   id="createJob-timings-dropdown"
+  //                   title={formData.duration}
+  //                   style={{ marginTop: "0px" }}
+  //                   onSelect={(eventKey) => {
+  //                     setFormData((prevFormData) => ({
+  //                       ...prevFormData,
+  //                       duration: eventKey,
+  //                     }));
+  //                   }}
+  //                 >
+  //                   <div className="scrollable-dropdown">
+  //                     <Dropdown.Item eventKey="per hour">
+  //                       per hour
+  //                     </Dropdown.Item>
+  //                     <Dropdown.Item eventKey="per week">
+  //                       per week
+  //                     </Dropdown.Item>
+  //                     <Dropdown.Item eventKey="per month">
+  //                       per month
+  //                     </Dropdown.Item>
+  //                     <Dropdown.Item eventKey="per year">
+  //                       per year
+  //                     </Dropdown.Item>
+  //                   </div>
+  //                 </DropdownButton>
+  //               </Form.Group>
+  //             </Col>
+  //           </Row>
+  //           <Form.Group controlId="job-internship">
+  //             <Form.Check
+  //               type="checkbox"
+  //               id="job-checkbox"
+  //               label="Job"
+  //               name="isJob"
+  //               checked={formData.type === "Job"}
+  //               onChange={handleCheckboxChange}
+  //             />
+  //             <Form.Check
+  //               type="checkbox"
+  //               id="internship-checkbox"
+  //               label="Internship"
+  //               name="isInternship"
+  //               checked={formData.type === "Internship"}
+  //               onChange={handleCheckboxChange}
+  //             />
+  //             {formError && <div className="text-danger">{formError}</div>}
+  //           </Form.Group>
+  //           <Form.Group controlId="employmentType">
+  //             <Form.Label>Employment Type</Form.Label>
+  //             <DropdownButton
+  //               id="createEmployment-type-dropdown"
+  //               title={formData.employmentType}
+  //               disabled={!isJobChecked}
+  //               onSelect={(eventKey) => {
+  //                 if (eventKey !== "Volunteer") {
+  //                   setIsUnpaid(false);
+  //                 }
+  //                 setFormData((prevFormData) => ({
+  //                   ...prevFormData,
+  //                   employmentType: eventKey,
+  //                 }));
+  //               }}
+  //             >
+  //               <div className="scrollable-dropdown">
+  //                 <Dropdown.Item eventKey="Full-time">Full-time</Dropdown.Item>
+  //                 <Dropdown.Item eventKey="Part-time">Part-time</Dropdown.Item>
+  //                 <Dropdown.Item eventKey="Volunteer">Volunteer</Dropdown.Item>
+  //                 <Dropdown.Item eventKey="Contract">Contract</Dropdown.Item>
+  //               </div>
+  //             </DropdownButton>
+  //           </Form.Group>
+  //           {(formData.type === "Internship" ||
+  //             formData.employmentType === "Volunteer") && (
+  //             <Form.Group controlId="internship-type">
+  //               <Form.Check
+  //                 type="checkbox"
+  //                 id="paid-checkbox"
+  //                 label="Paid"
+  //                 name="isPaid"
+  //                 checked={isPaid}
+  //                 onChange={handlePaidUnpaid}
+  //               />
+  //               <Form.Check
+  //                 type="checkbox"
+  //                 id="unpaid-checkbox"
+  //                 label="Unpaid"
+  //                 name="isUnpaid"
+  //                 checked={isUnpaid}
+  //                 onChange={handlePaidUnpaid}
+  //               />
+  //             </Form.Group>
+  //           )}
+  //           <Form.Group controlId="category">
+  //             <Form.Label>Category</Form.Label>
+  //             <DropdownButton
+  //               id="createJob-categories-dropdown"
+  //               title={formData.category}
+  //               onSelect={(eventKey) => {
+  //                 setFormData((prevFormData) => ({
+  //                   ...prevFormData,
+  //                   category: eventKey,
+  //                 }));
+  //               }}
+  //             >
+  //               <div className="scrollable-dropdown">
+  //                 <Dropdown.Item eventKey="Other">Other</Dropdown.Item>
+  //                 <Dropdown.Item eventKey="Admin & Office">
+  //                   Admin & Office
+  //                 </Dropdown.Item>
+  //                 <Dropdown.Item eventKey="Art & Design">
+  //                   Art & Design
+  //                 </Dropdown.Item>
+  //                 {/* Other category items */}
+  //               </div>
+  //             </DropdownButton>
+  //           </Form.Group>
+  //           <Form.Group controlId="locationType">
+  //             <Form.Label>Location Type</Form.Label>
+  //             <div>
+  //               <Form.Check
+  //                 type="checkbox"
+  //                 id="onSite-checkbox"
+  //                 label="On-site"
+  //                 checked={formData.locationType.onSite}
+  //                 onChange={() => handleLocationTypeChange("onSite")}
+  //               />
+  //               <Form.Check
+  //                 type="checkbox"
+  //                 id="remote-checkbox"
+  //                 label="Remote"
+  //                 checked={formData.locationType.remote}
+  //                 onChange={() => handleLocationTypeChange("remote")}
+  //               />
+  //               <Form.Check
+  //                 type="checkbox"
+  //                 id="hybrid-checkbox"
+  //                 label="Hybrid"
+  //                 checked={formData.locationType.hybrid}
+  //                 onChange={() => handleLocationTypeChange("hybrid")}
+  //               />
+  //             </div>
+  //           </Form.Group>
+  //           <Accordion defaultActiveKey="0">
+  //             <Card>
+  //               <Card.Header>
+  //                 <CustomToggle eventKey="1" style={{ padding: "10px" }}>
+  //                   Add a question
+  //                 </CustomToggle>
+  //               </Card.Header>
+  //               <Accordion.Collapse eventKey="1">
+  //                 <Card.Body>
+  //                   <Form.Control
+  //                     as="textarea"
+  //                     rows={3}
+  //                     placeholder="Enter question"
+  //                     name="questions"
+  //                     value={formData.questions}
+  //                     onChange={handleInputChange}
+  //                   />
+  //                 </Card.Body>
+  //               </Accordion.Collapse>
+  //             </Card>
+  //           </Accordion>
+  //           <Form.Group controlId="description">
+  //             <Form.Label>Description</Form.Label>
+  //             <Form.Control
+  //               as="textarea"
+  //               rows={3}
+  //               placeholder={`Enter ${formData.type.toLowerCase()} description`}
+  //               name="description"
+  //               value={formData.description}
+  //               onChange={handleInputChange}
+  //             />
+  //           </Form.Group>
+  //           <Form.Group controlId="coverImage">
+  //             <Form.Label>Add cover image</Form.Label>
+  //             <input
+  //               className="form-control"
+  //               type="file"
+  //               onChange={handleCoverImageChange}
+  //               accept=".jpg, .jpeg, .png, .pdf"
+  //             />
+  //           </Form.Group>
+  //           <Form.Group controlId="attachments">
+  //             <Form.Label>Add attachments</Form.Label>
+  //             <input
+  //               className="form-control"
+  //               type="file"
+  //               onChange={handleImageChange}
+  //               multiple
+  //               accept=".jpg, .jpeg, .png, .pdf"
+  //             />
+  //           </Form.Group>
+  //         </Form>
+  //       </Modal.Body>
+  //       <Modal.Footer>
+  //         <Button onClick={props.onHide}>Close</Button>
+  //         <Button onClick={handlePublish}>
+  //           {loading ? "Publishing..." : "Publish"}
+  //         </Button>
+  //       </Modal.Footer>
+  //     </Modal>
+  //   );
+  // }
 
   const generateTitle = () => {
     let title = props.title;

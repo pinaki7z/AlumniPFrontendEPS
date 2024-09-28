@@ -322,6 +322,7 @@ function Post({
       ) : (
         <>
           <div className=" flex mb-2 justify-between items-center  ">
+            <div className="flex ">
             {profilePicture ? (
               <img
                 src={profilePicture}
@@ -341,6 +342,7 @@ function Post({
               >
                 {formatCreatedAt(timestamp)}
               </span>
+            </div>
             </div>
             {(admin || userId === profile._id) && (
               <>

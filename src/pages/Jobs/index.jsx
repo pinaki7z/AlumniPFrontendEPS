@@ -87,18 +87,18 @@ const Jobs = () => {
   const filteredJobs = jobs.filter((job) => {
     const { title, employmentType, category } = searchQuery;
     console.log("search query inside the filtered jobs", searchQuery);
-    const lowerCaseJobTitle = title ? title.toLowerCase() : "";
-    const lowerCaseJobType = employmentType ? employmentType.toLowerCase() : "";
-    const lowerCaseCategory = category ? category.toLowerCase() : "";
+    const lowerCaseJobTitle = title ? title?.toLowerCase() : "";
+    const lowerCaseJobType = employmentType ? employmentType?.toLowerCase() : "";
+    const lowerCaseCategory = category ? category?.toLowerCase() : "";
 
     const jobTitleMatch = lowerCaseJobTitle
-      ? job.title.toLowerCase().includes(lowerCaseJobTitle)
+      ? job?.title?.toLowerCase().includes(lowerCaseJobTitle)
       : true;
     const jobTypeMatch = lowerCaseJobType
-      ? job.employmentType.toLowerCase().includes(lowerCaseJobType)
+      ? job?.employmentType?.toLowerCase().includes(lowerCaseJobType)
       : true;
     const categoryMatch = lowerCaseCategory
-      ? job.category.toLowerCase().includes(lowerCaseCategory)
+      ? job?.category?.toLowerCase().includes(lowerCaseCategory)
       : true;
 
     return jobTitleMatch && jobTypeMatch && categoryMatch;
@@ -157,8 +157,8 @@ const Jobs = () => {
     }
   };
 
-  console.log("filtered jobs and internships", filteredJobs);
-  console.log("jobs and internships", jobs);
+  // console.log("filtered jobs and internships", filteredJobs);
+  // console.log("jobs and internships", jobs);
 
   return (
     <>

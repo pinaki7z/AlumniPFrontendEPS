@@ -304,6 +304,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
             return (
               <div key={post._id} className="post-box  p-2 lg:p-4 " style={{ width: '100%' }}>
                 <div className=" flex mb-2 justify-between items-center  ">
+                  <div className='flex '>
                   {post.profilePicture ? (
                     <img
                       src={post.profilePicture}
@@ -321,6 +322,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
                     >
                       {formatCreatedAt(post.createdAt)}
                     </span>
+                  </div>
                   </div>
                   {(profile.profileLevel === 0 || userId === profile._id) && (
                     <>
