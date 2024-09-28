@@ -22,7 +22,7 @@ const LoginPage = ({ handleLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [cookie, setCookie] = useCookies(["token"]);
-  const navigateTo = useNavigate();
+  // const navigateTo = useNavigate();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const profile = useSelector((state) => state.profile);
@@ -119,28 +119,36 @@ const LoginPage = ({ handleLogin }) => {
       setLoading(false);
     }
   };
+// bg #004C8A
+// 552 width
 
+// 147 width
+// 200
+
+// blue width 578px
   return (
-    <div className="landing-page-1 ">
-      <div className="main-container" style={{marginBottom: '20px'}}>
+    <div className="landing-page-1  md:h-[100vh] p-[20px]">
+      {/* <div className="main-container" style={{marginBottom: '20px'}}>
         <div className="content-area">
           <img src={eps} alt="" width='90px' height='120px' />
         </div>
-      </div>
+      </div> */}
       <main className="login-panel">
-        <div className="login-panel-child" />
-        <div className="welcome-message">
-          <div className="welcome-message-child" />
+        {/* <div className="login-panel-child" /> */}
+        <div className="bg-[#004C8A] flex flex-col  items-center rounded-[24px] md:w-[578px]">
+          <img src="logo123.png" alt="" width='147px' height='200px' className="md:mb-[50px] md:mt-[130px]" />
+          <div className="p-8">
           <h1 className="rediscover-reconnect-reignite">
             Connect With Your Alma Mater
           </h1>
           <h1 className="your-alumni-journey">
             Your Alumni Journey Starts Here!
           </h1>
+          </div>
         </div>
         <div className="login-fields">
           <form className="credentials-input" onSubmit={handleSubmit}>
-            <h1 className="welcome-back" style={{color: '#36454F'}}>Welcome Back!</h1>
+            <h1 className=" text-3xl md:text-4xl mt-[23px]" style={{color: '#36454F'}}>Welcome Back!</h1>
             <div className="university-affiliation">
               <div className="bhu-alumni-association-container">
                 <b className="bhu">
@@ -207,7 +215,7 @@ const LoginPage = ({ handleLogin }) => {
                     </div>
                     <div className="remember-this-device1" style={{ color: '#008080' }}>Remember this device</div>
                   </div>
-                  <div className="forgot-password">Forgot Password?</div>
+                  <div onClick={()=>navigate('/forgot-password')} className="cursor-pointer underline whitespace-nowrap text-sm text-blue-400 hover:text-blue-600 active:text-blue-900 select-none">Forgot Password?</div>
                 </div>
               </div>
             </div>

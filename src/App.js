@@ -24,6 +24,7 @@ import { GiConsoleController } from "react-icons/gi";
 import { useSelector } from "react-redux";
 import Events from "./pages/Events";
 import './tailwind.css';
+import ForgotPasswordPage from "./pages/ForgetPassword/ForgotPasswordPage";
 
 function App() {
   const [cookies, removeCookie] = useCookies(["token"]);
@@ -73,6 +74,10 @@ function App() {
               path="/register"
               element={<RegisterPage handleLogin={handleLogin} />}
             />
+             <Route
+            path="/forgot-password"
+            element={<ForgotPasswordPage />}
+          />
             {console.log("logged in", isLoggedIn)}
             {!isLoggedIn ? (
               <Route
