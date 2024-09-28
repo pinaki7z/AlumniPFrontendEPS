@@ -127,10 +127,9 @@ const Profilecard = ({
     setLoading(true);
     try {
       const response = await axios.put(
-        `${baseUrl}/${
-          isGroupURL
-            ? `groups/members/${groupId}`
-            : isForumURL
+        `${baseUrl}/${isGroupURL
+          ? `groups/members/${groupId}`
+          : isForumURL
             ? `forums/members/${groupId}`
             : ""
         }`,
@@ -160,9 +159,9 @@ const Profilecard = ({
 
   const isOwner = member._id === owner;
 
-  const onDeleteChange = ()=>{
+  const onDeleteChange = () => {
     Swal.fire({
-      title: member?.accountDeleted === true ? 'This account will be restored' :'This account will be deactivated',
+      title: member?.accountDeleted === true ? 'This account will be restored' : 'This account will be deactivated',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -172,8 +171,8 @@ const Profilecard = ({
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-           handleDelete()
-          
+          handleDelete()
+
         } catch (error) {
           console.error('Error deleting alumni:', error);
           toast.dismiss();
@@ -182,7 +181,7 @@ const Profilecard = ({
       }
     });
   }
-  
+
 
   return (
     <>
@@ -250,26 +249,31 @@ const Profilecard = ({
               {member.profileLevel === 1
                 ? "ADMIN"
                 : member.profileLevel === 2
-                ? "ALUMNI"
-                : member.profileLevel === 3
-                ? "STUDENT"
-                : "SUPER ADMIN"}
+                  ? "ALUMNI"
+                  : member.profileLevel === 3
+                    ? "STUDENT"
+                    : "SUPER ADMIN"}
             </h3>
           </div>
           <p className="text-muted-foreground">{member.department}</p>
           <div className="flex justify-center mb-2 gap-4 mt-2">
-            <div>
-              <p className="text-gray-600 font-medium text-sm">Followers</p>
-              <p className="text-black font-medium text-lg">0</p>
-            </div>
-            <div>
-              <p className="text-gray-600 font-medium text-sm">Following</p>
-              <p className="text-black font-medium text-lg">0</p>
-            </div>
+            {member?.class && (
+              <div>
+                <p className="text-gray-600 font-medium text-sm">Class</p>
+                <p className="text-black font-medium text-lg">{member?.class}</p>
+              </div>
+            )}
+            {member?.graduatingYear && (
+              <div>
+                <p className="text-gray-600 font-medium text-sm">Graduated Year</p>
+                <p className="text-black font-medium text-lg">{member?.graduatingYear}</p>
+              </div>
+            )}
           </div>
+
         </Link>
         <br />
-        {loading ? (
+        {/* {loading ? (
           <div className="text-center mt-4">
             <l-orbit size="35" speed="1.5" color="black"></l-orbit>
           </div>
@@ -287,7 +291,17 @@ const Profilecard = ({
               {isFollowing ? "Following" : "Follow"}
             </button>
           )
+        )} */}
+        {(profile.profileLevel === 0 || profile.profileLevel === 1) && (
+          <button
+            // onClick={handleFollowToggle}
+            className={`absolute left-0 bottom-0 w-full h-12 font-semibold text-lg bg-[#004C8A] text-white hover:bg-[#F8A700]`}
+            style={{ borderRadius: "0 0 8px 8px" }}
+          >
+            Message
+          </button>
         )}
+
       </div>
     </>
   );

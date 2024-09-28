@@ -20,7 +20,9 @@ const CreatePost1 = ({
   closeButton,
   close,
   postId,
-  getPosts
+  getPosts,
+  loadingPost,
+  setLoadingPost
 }) => {
   const { _id } = useParams();
   const page = 1;
@@ -37,6 +39,7 @@ const CreatePost1 = ({
   const profile = useSelector((state) => state.profile);
   const [showPollModal, setShowPollModal] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [loading,setLoading] = useState(false);
 
   const onHideModal = (modalVisibility) => {
     setShowModal(modalVisibility);
@@ -163,36 +166,41 @@ const CreatePost1 = ({
   };
 
 
-  const newHandleSubmit = async (event) => {
-    event.preventDefault();
 
-    const payload = {
-      userId: profile._id,
-      description: input,
-      department: profile.department,
-      profilePicture: profile.profilePicture,
-    };
+const newHandleSubmit = async (event) => {
+  console.log('postingggggg');
+  
+  event.preventDefault();
+  setLoadingPost(true);
+  console.log('loading t/f', loading);
 
-    if (_id) payload.groupID = _id;
-    if (picturePath) payload.picturePath = picturePath;
-    if (videoPath) payload.videoPath = videoPath;
-
-    console.log("payload", payload);
-
-    axios.post(
-      `${baseUrl}/${entityType}/create`,
-      payload
-    ).then((res) => {
-      setImgUrl("");
-      setSelectedFile(null);
-      setPicturePath([]);
-      setVideoPath({});
-      setInput("")
-      getPosts(1);
-    }).catch((err) => {
-      console.log(err);
-    });
+  const payload = {
+    userId: profile._id,
+    description: input,
+    department: profile.department,
+    profilePicture: profile.profilePicture,
   };
+
+  if (_id) payload.groupID = _id;
+  if (picturePath) payload.picturePath = picturePath;
+  if (videoPath) payload.videoPath = videoPath;
+
+  console.log("payload", payload);
+
+  try {
+    await axios.post(`${baseUrl}/${entityType}/create`, payload);
+    setImgUrl("");
+    setSelectedFile(null);
+    setPicturePath([]);
+    setVideoPath({});
+    setInput("");
+    getPosts(1);
+  } catch (err) {
+    console.log(err);
+    setLoadingPost(false);
+  } 
+};
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -603,7 +611,7 @@ const CreatePost1 = ({
                 width: "100%",
               }}
             >
-              Post
+              {loadingPost ? 'Posting...' : 'Post'}
             </button>
           </div>
         </div>

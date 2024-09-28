@@ -646,7 +646,7 @@ const SideWidgets = () => {
           //setSelectedEventDetails(null);
         }}
       />
-      <div className="sideWidget-post-card mt-4">
+      {/* <div className="sideWidget-post-card mt-4">
         <div
           className=""
           style={{
@@ -713,7 +713,7 @@ const SideWidgets = () => {
             </li>
           </ul>
         </div>
-      </div>
+      </div> */}
 
       <div className="sideWidget2-post-card shadow ">
         <div className="sideWidget2-post-header ">

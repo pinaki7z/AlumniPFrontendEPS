@@ -392,7 +392,7 @@ const ProfilePage = () => {
               entityType="posts"
               showCreatePost={false}
               showDeleteButton={true}
-              userId={member._id}
+              userId={profile._id}
             />
           </div>
 

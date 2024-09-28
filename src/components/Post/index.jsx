@@ -60,6 +60,7 @@ function Post({
   showDeleteButton,
   groupID,
   archived,
+  profileLevel
 }) {
   console.log("video pathh", video);
 
@@ -116,10 +117,9 @@ function Post({
   const profile = useSelector((state) => state.profile);
   const loggedInUserId = profile._id;
   const [isReactionsModalOpen, setIsReactionsModalOpen] = useState(false);
-  let admin;
-  if (profile.profileLevel === 0) {
-    admin = true;
-  }
+ 
+  console.log('profile level 1', username)
+ 
 
   console.log("groupIds in feed", _id, groupID);
 
@@ -344,7 +344,8 @@ function Post({
               </span>
             </div>
             </div>
-            {(admin || userId === profile._id) && (
+            {console.log('profile level', profile.profileLevel)}
+            {(profileLevel === 0 || userId === profile._id) && (
               <>
                 <IconButton
                   onClick={(e) => setMenuAnchor(e.currentTarget)}

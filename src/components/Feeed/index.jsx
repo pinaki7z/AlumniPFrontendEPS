@@ -41,6 +41,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
   const [posts, setPosts] = useState([]);
   const profile = useSelector((state) => state.profile);
   const [loading, setLoading] = useState(false);
+  const [loadingPost, setLoadingPost] = useState(false);
   const scrollContainerRef = useRef(null);
   const [totalPosts, setTotalPosts] = useState(0);
   const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
@@ -52,6 +53,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
   console.log("Entity type1", entityType)
   const [jobs, setJobs] = useState([]);
   const { _id } = useParams();
+  console.log('user id for profile',userId)
 
 
   const LIMIT = 4;
@@ -168,6 +170,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
     console.log("Getting posts/news")
     try {
       if (userId) {
+        console.log('fetching user posts')
         const response = await axios.get(
           `${baseUrl}/${entityType}/userPosts/${userId}?page=${page}&size=${LIMIT}`
         );
@@ -234,6 +237,8 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
       }
     } catch (error) {
       console.error("Error fetching posts:", error);
+    } finally{
+      setLoadingPost(false);
     }
 
     isFetchingRef.current = true;
@@ -261,7 +266,8 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
           onNewPost={handleNewPost}
           entityType={entityType}
           getPosts={getPostsFromPage1}
-
+          loadingPost={loadingPost}
+          setLoadingPost={setLoadingPost}
         />
       )}
       {showCreateButton &&
@@ -294,6 +300,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
                   handleLikes={handleLikes}
                   onDeletePost={() => handleDeletePost(post._id)}
                   groupID={post.groupID}
+                  profileLevel={profile.profileLevel}
                 />
                 {/* {console.log("entityType", entityType)} */}
                 {/* {(entityType === 'posts' || entityType === 'forums') && (profile.profileLevel === 0 || profile.profileLevel === 1) &&(<CommentSection entityId={post._id} entityType="posts" onCommentSubmit={refreshComments}

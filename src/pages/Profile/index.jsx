@@ -60,7 +60,7 @@ const Profile = () => {
             <Avatar
               src={member.profilePicture || picture}
               alt="profile"
-              sx={{width:"140px", height:"140px"}}
+              sx={{ width: "140px", height: "140px" }}
               className=" rounded-full border-4 border-white"
             />
           </div>
@@ -75,10 +75,10 @@ const Profile = () => {
                 {member.profileLevel === 1
                   ? "ADMIN"
                   : member.profileLevel === 2
-                  ? "ALUMNI"
-                  : member.profileLevel === 3
-                  ? "STUDENT"
-                  : "SUPERADMIN"}
+                    ? "ALUMNI"
+                    : member.profileLevel === 3
+                      ? "STUDENT"
+                      : "SUPERADMIN"}
               </p>
               <p className="mt-2 text-sm lg:text-base text-gray-700">
                 Passionate soul, chasing dreams, inspiring others, embracing
@@ -88,25 +88,28 @@ const Profile = () => {
               <div className="flex justify-center mt-4 space-x-6">
                 <div className="text-center">
                   <p className="text-sm lg:text-base text-gray-500">Groups</p>
-                  <p className="font-semibold text-lg lg:text-xl text-gray-800">0</p>
+                  <p className="font-semibold text-lg lg:text-xl text-gray-800">
+                    {member?.groupNames?.length ?? '0'}
+                  </p>
+
                 </div>
-                <div className="text-center">
+                {/* <div className="text-center">
                   <p className="text-sm lg:text-base text-gray-500">Followers</p>
                   <p className="font-semibold text-lg lg:text-xl text-gray-800">0</p>
                 </div>
                 <div className="text-center">
                   <p className="text-sm lg:text-base text-gray-500">Following</p>
                   <p className="font-semibold text-lg lg:text-xl text-gray-800">0</p>
-                </div>
+                </div> */}
               </div>
 
               <div className="flex justify-around mt-6">
                 <button className="px-4 py-2 bg-[#004C8A] text-white rounded font-medium hover:bg-[#1e5887]">
                   Message
                 </button>
-                <button className="px-4 py-2 bg-[#004C8A] text-white rounded font-medium hover:bg-[#1e5887]">
+                {/* <button className="px-4 py-2 bg-[#004C8A] text-white rounded font-medium hover:bg-[#1e5887]">
                   Follow
-                </button>
+                </button> */}
               </div>
             </div>
           </div>
