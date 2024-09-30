@@ -25,6 +25,7 @@ import { useSelector } from "react-redux";
 import Events from "./pages/Events";
 import './tailwind.css';
 import ForgotPasswordPage from "./pages/ForgetPassword/ForgotPasswordPage";
+import PasswordReset from "./pages/ForgetPassword/PasswordReset";
 
 function App() {
   const [cookies, removeCookie] = useCookies(["token"]);
@@ -78,6 +79,7 @@ function App() {
             path="/forgot-password"
             element={<ForgotPasswordPage />}
           />
+          <Route path="/reset-password/:userId/:token" element={<PasswordReset />} />
             {console.log("logged in", isLoggedIn)}
             {!isLoggedIn ? (
               <Route
