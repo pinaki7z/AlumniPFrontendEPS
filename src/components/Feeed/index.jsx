@@ -359,7 +359,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
                 <JobIntDisplay
                   jobId={post._id}
                   picture={post.coverImage}
-                  jobTitle={post.jobTitle}
+                  jobTitle={post.title}
                   location={post.location}
                   locationType={post.locationType}
                   salaryMin={post.salaryMin}
@@ -368,6 +368,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
                   salaryMax={post.salaryMax}
                   currency={post.currency}
                   jobType={post.jobType}
+                  userId={post.userId}
                   category={post.category}
                   description={post.description}
                 />

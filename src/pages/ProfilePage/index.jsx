@@ -56,6 +56,7 @@ const ProfilePage = () => {
   const navigateTo = useNavigate();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({});
 
   const getMembers = async () => {
     console.log("inside this function");
@@ -174,29 +175,47 @@ const ProfilePage = () => {
     console.log("file type in handleFileChange", fileType, event);
     const file = event.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setSelectedFile(reader.result);
-        handleSubmit(reader.result, fileType);
-      };
-      reader.readAsDataURL(file);
+      const formData = new FormData();
+    formData.append('image', file);
+
+    axios.post(`${baseUrl}/uploadImage/singleImage`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+      .then(res => {
+        setFormData({ ...formData, coverPicture: res.data });
+        handleSubmit();
+      })
+      .catch(err => {
+        console.log(err);
+      });
+   
     }
+
+    // const file = event.target.files[0];
+    // if (file) {
+    //   const reader = new FileReader();
+    //   reader.onloadend = () => {
+    //     setSelectedFile(reader.result);
+    //     handleSubmit(reader.result, fileType);
+    //   };
+    //   reader.readAsDataURL(file);
+    // }
   };
 
-  const handleSubmit = async (fileData, fileType) => {
+  const handleSubmit = async () => {
     setLoading(true);
-    if (!fileData) {
-      alert("Please select an image to upload.");
-      setLoading(false);
-      return;
-    }
+    // if (!fileData) {
+    //   alert("Please select an image to upload.");
+    //   setLoading(false);
+    //   return;
+    // }
 
     try {
       const response = await axios.put(
         `${baseUrl}/alumni/${profile._id}`,
-        {
-          [fileType]: fileData,
-        },
+        formData,
         {
           headers: {
             "Content-Type": "application/json",
@@ -210,15 +229,7 @@ const ProfilePage = () => {
         console.log("response data", responseData);
         dispatch(updateProfile(responseData));
         setLoading(false);
-        toast.success(
-          `${
-            fileType === "profilePicture"
-              ? "Profile Picture"
-              : fileType === "coverPicture"
-              ? "Cover Picture"
-              : "Image"
-          } updated successfully.`
-        );
+        toast.success("Updated");
       } else {
         alert("Failed to update cover picture.");
         setLoading(false);

@@ -69,7 +69,7 @@ export const ProfileSettings = () => {
       const formData = new FormData();
     formData.append('image', file);
 
-    axios.post(`${baseUrl}/uploadImage/image`, formData, {
+    axios.post(`${baseUrl}/uploadImage/singleImage`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -89,7 +89,7 @@ export const ProfileSettings = () => {
       const formData = new FormData();
     formData.append('image', file);
 
-    axios.post(`${baseUrl}/uploadImage/image`, formData, {
+    axios.post(`${baseUrl}/uploadImage/singleImage`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
