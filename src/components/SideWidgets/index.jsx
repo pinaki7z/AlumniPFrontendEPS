@@ -74,11 +74,11 @@ const SideWidgets = () => {
       if (membersData) {
         console.log("membersData", membersData);
         setMembers(membersData);
-        //setMembersLoading(false);
+        setMembersLoading(false);
       }
     } catch (error) {
       console.error("Error fetching members:", error);
-      //setMembersLoading(false);
+      setMembersLoading(false);
     }
   };
   useEffect(() => {
