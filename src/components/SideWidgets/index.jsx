@@ -52,6 +52,7 @@ const SideWidgets = () => {
   const [showModal, setShowModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [membersLoading, setMembersLoading] = useState(false);
   const [isloading, setIsLoading] = useState({});
   const [load, setLoad] = useState(false);
   const [showPollModal, setShowPollModal] = useState(false);
@@ -66,15 +67,18 @@ const SideWidgets = () => {
   };
 
   const getMembers = async () => {
-    console.log('inside this function')
+    console.log('inside this function');
+    setMembersLoading(true);
     try {
       const membersData = await fetchMembers(); // Call the function from Redux
       if (membersData) {
         console.log("membersData", membersData);
         setMembers(membersData);
+        //setMembersLoading(false);
       }
     } catch (error) {
       console.error("Error fetching members:", error);
+      //setMembersLoading(false);
     }
   };
   useEffect(() => {
@@ -555,8 +559,8 @@ const SideWidgets = () => {
             {loading
               ? "Adding Event..."
               : props.isEditing
-              ? "Edit Event"
-              : "Add Event"}
+                ? "Edit Event"
+                : "Add Event"}
           </Button>
           <Button onClick={props.onHide}>Close</Button>
         </Modal.Footer>
@@ -569,7 +573,7 @@ const SideWidgets = () => {
       <div
       // style={{ float: 'right' }}
       >
-   {(profile.profileLevel === 0 || profile.profileLevel === 1) &&     <OverlayTrigger
+        {(profile.profileLevel === 0 || profile.profileLevel === 1) && <OverlayTrigger
           trigger="click"
           key="bottom"
           show={showPopover}
@@ -731,88 +735,72 @@ const SideWidgets = () => {
           </button>
         </div>
         <div className="" style={{ display: "flex", flexDirection: "column" }}>
-          {displayedMembers.map((member, index) => (
-            <div
-            className="border-t-2"
-              key={member._id}
-              style={{
-                display: "flex",
-                gap: "10px",
-                alignItems: "center",
-                padding: "10px",
-                // border: "1px solid #e9e9e9",
-                // borderRadius: "10px",
-                width: "100%",
-              }}
-            >
-              {member.profilePicture ? (
-                <Avatar
-                  src={member.profilePicture}
-                  alt="Profile"
-                  sx={{ width: 46, height: 46 }}
-                  style={{ borderRadius: "50%" }}
-                />
-              ) : (
-                <Avatar
-                  src={profilepic}
-                  alt="Profile"
-                  sx={{ width: 46, height: 46 }}
-                  style={{ borderRadius: "50%" }}
-                />
-              )}
-              <p style={{ marginBottom: "0rem", fontWeight: "500" }}>
-                {member.firstName}
-              </p>
-              <button
-              className="h-8 flex justify-center items-center"
-                onClick={() =>
-                  handleFollowToggle(
-                    member._id,
-                    member.firstName,
-                    member.lastName
-                  )
-                }
-                style={{
-                  backgroundColor: "#F8A700",
-                  color: "white",
-                  borderRadius: "32px",
-                  border: "none",
-                  marginLeft: "auto",
-                  color: "#F8F8FF",
-                  padding: "8px 32px",
-                  pointer: "cursor",
-                }}
-              >
-                {isloading[member._id] ? (
-                  <l-line-spinner
-                    size="20"
-                    stroke="3"
-                    speed="1"
-                    color="rgb(19, 97, 117)"
-                  ></l-line-spinner>
-                ) : (
-                  <>Follow</>
-                )}
-              </button>
-            </div>
-          ))}
-          {peopleYouMayKnow.length > displayedMembers.length && (
-            <p
-              onClick={() => setCurrentPage(currentPage + 1)}
-              style={{
-                color: "#004C8A",
-                borderRadius: "10px",
-                borderColor: "white",
-                padding: "10px",
-                marginTop: "10px",
-                cursor: "pointer",
-                fontWeight: "500",
-              }}
-            >
-              See More
+          {/* Show loading text when members are still being loaded */}
+          {membersLoading ? (
+            <p style={{ fontSize: "16px", fontWeight: "bold", textAlign: "center", marginTop: "20px"}} className="pb-5">
+              <l-line-spinner
+              size="20"
+              stroke="3"
+              speed="1"
+              color="rgb(19, 97, 117)"
+            ></l-line-spinner>
             </p>
+          ) : (
+            <>
+              {/* Display the members once they are loaded */}
+              {displayedMembers.map((member, index) => (
+                <div
+                  className="border-t-2"
+                  key={member._id}
+                  style={{
+                    display: "flex",
+                    gap: "10px",
+                    alignItems: "center",
+                    padding: "10px",
+                    width: "100%",
+                  }}
+                >
+                  {member.profilePicture ? (
+                    <Avatar
+                      src={member.profilePicture}
+                      alt="Profile"
+                      sx={{ width: 46, height: 46 }}
+                      style={{ borderRadius: "50%" }}
+                    />
+                  ) : (
+                    <Avatar
+                      src={profilepic}
+                      alt="Profile"
+                      sx={{ width: 46, height: 46 }}
+                      style={{ borderRadius: "50%" }}
+                    />
+                  )}
+                  <p style={{ marginBottom: "0rem", fontWeight: "500" }}>
+                    {member.firstName}
+                  </p>
+                </div>
+              ))}
+              {/* Show "See More" if there are more members to load */}
+              {peopleYouMayKnow.length > displayedMembers.length && (
+                <p
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                  style={{
+                    color: "#004C8A",
+                    borderRadius: "10px",
+                    borderColor: "white",
+                    padding: "10px",
+                    marginTop: "10px",
+                    cursor: "pointer",
+                    fontWeight: "500",
+                  }}
+                >
+                  See More
+                </p>
+              )}
+            </>
           )}
         </div>
+
       </div>
       {/* <div className="online">
         <p
@@ -861,7 +849,7 @@ const SideWidgets = () => {
         ) : (
           notifications.slice(0, 4).map((notification) => (
             <div
-            className="border-t-2 py-3"
+              className="border-t-2 py-3"
               key={notification._id}
               style={{
                 display: "flex",

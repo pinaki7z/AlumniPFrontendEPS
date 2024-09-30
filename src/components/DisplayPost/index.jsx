@@ -266,55 +266,59 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
             </div>
           </>
         )}
-
         <div className="p-2 md:p-4 flex justify-end">
-          {group.groupType === "Public" &&
-            !group.members.some((member) => member.userId === profile._id) ? (
-            <button
-              onClick={() => handleAddMember(group._id)}
-              className="py-1 md:py-2 px-4 md:px-6 bg-blue-600 text-white text-xs md:text-sm font-semibold rounded-md hover:bg-blue-500 transition"
-            >
-              Join
-            </button>
-          ) : (
-            group.groupType === "Private" &&
-            !group.members.some((member) => member.userId === profile._id) && (
-              <button
-                className="py-1 md:py-2 px-4 md:px-6 bg-blue-600 text-white text-xs md:text-sm font-semibold rounded-md hover:bg-blue-500 transition"
-                onClick={() => {
-                  if (group.category === "Business Connect") {
-                    if (requestStatus === "Requested") {
-                      handleRequest(
-                        group.userId,
-                        group._id,
-                        profile._id,
-                        group.groupName,
-                        profile.firstName,
-                        profile.lastName
-                      );
-                    } else {
-                      setModalShow(true);
-                      setSelectedGroupId(group._id);
-                      setSelectedGroupName(group.groupName);
-                      setSelectedGroupUserId(group.userId);
-                    }
-                  } else {
-                    handleRequest(
-                      group.userId,
-                      group._id,
-                      profile._id,
-                      group.groupName,
-                      profile.firstName,
-                      profile.lastName
-                    );
-                  }
-                }}
-              >
-                {requestStatus}
-              </button>
-            )
+          {profile.profileLevel !== 0 && (
+            <>
+              {group.groupType === "Public" &&
+                !group.members.some((member) => member.userId === profile._id) ? (
+                <button
+                  onClick={() => handleAddMember(group._id)}
+                  className="py-1 md:py-2 px-4 md:px-6 bg-blue-600 text-white text-xs md:text-sm font-semibold rounded-md hover:bg-blue-500 transition"
+                >
+                  Join
+                </button>
+              ) : (
+                group.groupType === "Private" &&
+                !group.members.some((member) => member.userId === profile._id) && (
+                  <button
+                    className="py-1 md:py-2 px-4 md:px-6 bg-blue-600 text-white text-xs md:text-sm font-semibold rounded-md hover:bg-blue-500 transition"
+                    onClick={() => {
+                      if (group.category === "Business Connect") {
+                        if (requestStatus === "Requested") {
+                          handleRequest(
+                            group.userId,
+                            group._id,
+                            profile._id,
+                            group.groupName,
+                            profile.firstName,
+                            profile.lastName
+                          );
+                        } else {
+                          setModalShow(true);
+                          setSelectedGroupId(group._id);
+                          setSelectedGroupName(group.groupName);
+                          setSelectedGroupUserId(group.userId);
+                        }
+                      } else {
+                        handleRequest(
+                          group.userId,
+                          group._id,
+                          profile._id,
+                          group.groupName,
+                          profile.firstName,
+                          profile.lastName
+                        );
+                      }
+                    }}
+                  >
+                    {requestStatus}
+                  </button>
+                )
+              )}
+            </>
           )}
         </div>
+
 
         <MyVerticallyCenteredModal
           show={modalShow}

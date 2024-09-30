@@ -206,10 +206,9 @@ const IndividualGroup = () => {
       if (response.status === 200) {
         getGroup();
         toast.success(
-          `${
-            fileType === "groupPicture"
-              ? "Group Picture"
-              : fileType === "coverPicture"
+          `${fileType === "groupPicture"
+            ? "Group Picture"
+            : fileType === "coverPicture"
               ? "Cover Picture"
               : "Image"
           } updated successfully.`
@@ -240,13 +239,15 @@ const IndividualGroup = () => {
                   ></l-line-spinner>
                 </div>
               ) : (
+                
                 group.map((groupItem) => (
                   <div key={groupItem._id} className="ig-container">
                     <div className="w-full rounded-xl relative">
+                    {console.log('group logo',groupItem.groupLogo)}
                       <div
                         className="bg-cover bg-center w-full min-h-[35vh] rounded-t-xl"
                         style={{
-                          backgroundImage: `url(${profile.coverPicture})`,
+                          backgroundImage: `url(${groupItem.groupLogo})`,
                         }}
                       >
                         <div className="flex justify-end pt-5 pr-12">
@@ -301,7 +302,7 @@ const IndividualGroup = () => {
                         </div>
                       </div>
 
-                      <div className="bg-[#FEF7E7] w-full min-h-[15vh] rounded-b-xl py-5 px-4 lg:px-10">
+                      <div className="bg-[#eeeeee] w-full min-h-[15vh] rounded-b-xl py-5 px-4 lg:px-10">
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-0 text-center lg:text-left">
                           <div>
                             <p className="font-semibold text-[#3A3A3A] text-2xl font-Inter">
@@ -329,7 +330,7 @@ const IndividualGroup = () => {
                             <div className="text-center">
                               <p className="font-normal text-sm font-Inter">
                                 Members
-                               </p>
+                              </p>
                               <p className="font-medium text-lg font-Inter">
                                 {groupItem.members.length}
                               </p>
@@ -374,7 +375,7 @@ const IndividualGroup = () => {
                                   className="flex justify-end"
                                   onClick={() => setShowModal(true)}
                                 >
-                                  <div className="bg-[#F8A700]  hover:bg-[#eab751] w-full flex gap-2 font-bold text-md cursor-pointer text-gray-800 rounded-lg p-2">
+                                  <div className="bg-[#FEF7E7]  hover:bg-[#eab751] w-full flex gap-2 font-bold text-md cursor-pointer text-gray-800 rounded-lg p-2">
                                     <img src={Add} alt="" />
                                     Add or Remove Members From Group
                                   </div>
@@ -384,7 +385,7 @@ const IndividualGroup = () => {
                                   className="text-black no-underline"
                                 >
                                   <li className="flex mt-2 justify-end">
-                                    <div className="bg-[#F8A700] hover:bg-[#eab751] w-full flex gap-2 font-bold text-md cursor-pointer text-gray-800 rounded-lg p-2">
+                                    <div className="bg-[#FEF7E7] hover:bg-[#eab751] w-full flex gap-2 font-bold text-md cursor-pointer text-gray-800 rounded-lg p-2">
                                       <img src={LinkIcon} alt="" />
                                       Generate a Group Invite Link
                                     </div>
@@ -406,7 +407,7 @@ const IndividualGroup = () => {
                               .map((member) => (
                                 <div
                                   key={member._id}
-                                  className="flex gap-2 justify-between items-center p-3  border-gray-300 border-t-2 "
+                                  className="flex gap-2 align-center items-center p-3  border-gray-300 border-t-2 "
                                 >
                                   {member.profilePicture ? (
                                     <Avatar
@@ -424,7 +425,7 @@ const IndividualGroup = () => {
                                   <p className="mb-0 text-xs font-medium">
                                     {member.userName}
                                   </p>
-                                  <button
+                                  {/* <button
                                     className={`${
                                       isFollowing(member.userId)
                                         ? "bg-[#F8A700] text-white"
@@ -450,7 +451,7 @@ const IndividualGroup = () => {
                                     ) : (
                                       "Follow"
                                     )}
-                                  </button>
+                                  </button> */}
                                 </div>
                               ))}
                             <Link
@@ -511,10 +512,10 @@ const IndividualGroup = () => {
                                       {member.profileLevel === 0
                                         ? "Super Admin"
                                         : member.profileLevel === 1
-                                        ? "Admin"
-                                        : member.profileLevel === 2
-                                        ? "Alumni"
-                                        : "Student"}
+                                          ? "Admin"
+                                          : member.profileLevel === 2
+                                            ? "Alumni"
+                                            : "Student"}
                                     </span>
                                   </div>
                                 </div>
