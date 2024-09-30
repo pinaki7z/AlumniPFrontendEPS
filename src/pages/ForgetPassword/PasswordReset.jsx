@@ -1,14 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-
+import {jwtDecode} from 'jwt-decode'; // Import jwt-decode to decode the token
+import baseUrl from '../../config';
 const PasswordReset = () => {
-  const { userId, token } = useParams(); // Extract userId and token from the URL
+  const { token } = useParams(); // Extract token from the URL
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [userEmail, setUserEmail] = useState(''); // State to hold user email
   const navigate = useNavigate();
+
+  useEffect(() => {
+    try {
+      // Decode the JWT token to get the user email
+      const decoded = jwtDecode(decodeURIComponent(token));
+      setUserEmail(decoded.email); // Set the email in state
+    } catch (err) {
+      setError('Invalid or expired token');
+    }
+  }, [token]);
 
   const handlePasswordReset = async (e) => {
     e.preventDefault();
@@ -19,9 +31,10 @@ const PasswordReset = () => {
     }
 
     try {
-      // Send the new password to the backend API
-      const response = await axios.post(`/api/reset-password/${userId}/${encodeURIComponent(token)}`, {
+      // Send the new password to the backend API along with the token
+      const response = await axios.post(`${baseUrl}/forgotPass/reset-password/${encodeURIComponent(token)}`, {
         newPassword,
+        confirmNewPassword: confirmPassword,
       });
 
       if (response.data.success) {
@@ -45,6 +58,9 @@ const PasswordReset = () => {
           <p className="text-green-500 text-center">Password reset successful! Redirecting...</p>
         ) : (
           <form onSubmit={handlePasswordReset}>
+            {userEmail && (
+              <p className="text-center mb-8 text-gray-600">{userEmail}</p>
+            )}
             <div className="mb-4">
               <label className="block text-gray-700">New Password</label>
               <input
