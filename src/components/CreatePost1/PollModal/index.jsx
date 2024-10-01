@@ -5,7 +5,7 @@ const PollModal = ({ show, onHide, onCreatePoll, edit }) => {
   const [pollQuestion, setPollQuestion] = useState('');
   const [pollOptions, setPollOptions] = useState(['', '', '', '', '']);
   const [optionCount, setOptionCount] = useState(2);
-  const [multipleAnswers, setMultipleAnswers] = useState(false); // New state to track checkbox
+  const [multipleAnswers, setMultipleAnswers] = useState(false); 
 
   const handleOptionChange = (index, value) => {
     const newOptions = [...pollOptions];
@@ -68,6 +68,7 @@ const PollModal = ({ show, onHide, onCreatePoll, edit }) => {
             className="yep"
             id="check-apple"
             type="checkbox"
+            style={{display: 'none'}}
             checked={multipleAnswers}
             onChange={() => setMultipleAnswers(!multipleAnswers)} // Toggle the multipleAnswers state
           />

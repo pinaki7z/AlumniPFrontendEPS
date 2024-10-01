@@ -117,9 +117,10 @@ function Post({
   const profile = useSelector((state) => state.profile);
   const loggedInUserId = profile._id;
   const [isReactionsModalOpen, setIsReactionsModalOpen] = useState(false);
- 
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
   console.log('profile level 1', username)
- 
+
 
   console.log("groupIds in feed", _id, groupID);
 
@@ -139,7 +140,7 @@ function Post({
     }
   };
 
-  
+
   const fetchComments = async () => {
     try {
       const response = await axios.get(`${baseUrl}/posts/${postId}/comments`);
@@ -323,26 +324,26 @@ function Post({
         <>
           <div className=" flex mb-2 justify-between items-center  ">
             <div className="flex ">
-            {profilePicture ? (
-              <img
-                src={profilePicture}
-                style={{ width: "50px", height: "50px", borderRadius: "50%" }}
-              />
-            ) : (
-              <Avatar src={comment} style={{ width: "50px", height: "50px" }} />
-            )}
-            <div className="info">
-              <h4>{username}</h4>
-              <span
-                style={{
-                  fontSize: "14px",
-                  fontWeight: "500",
-                  color: "#004C8A",
-                }}
-              >
-                {formatCreatedAt(timestamp)}
-              </span>
-            </div>
+              {profilePicture ? (
+                <img
+                  src={profilePicture}
+                  style={{ width: "50px", height: "50px", borderRadius: "50%" }}
+                />
+              ) : (
+                <Avatar src={comment} style={{ width: "50px", height: "50px" }} />
+              )}
+              <div className="info">
+                <h4>{username}</h4>
+                <span
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: "500",
+                    color: "#004C8A",
+                  }}
+                >
+                  {formatCreatedAt(timestamp)}
+                </span>
+              </div>
             </div>
             {console.log('profile level', profile.profileLevel)}
             {(profileLevel === 0 || userId === profile._id) && (
@@ -363,7 +364,7 @@ function Post({
                   <MenuItem onClick={handleArchivePost}>
                     {archived ? "Unarchive" : "Archive"}
                   </MenuItem>
-                  <MenuItem onClick={() => handleDeletePost(userId)}>
+                  <MenuItem onClick={() => setIsDeleteModalOpen(true)}>
                     Delete
                   </MenuItem>
                 </Menu>
@@ -410,9 +411,8 @@ function Post({
 
               {/* Play/Pause Button */}
               <div
-                className={`absolute inset-0 flex justify-center items-center transition-opacity duration-300 ${
-                  isPlaying ? "opacity-0" : "opacity-100"
-                }`}
+                className={`absolute inset-0 flex justify-center items-center transition-opacity duration-300 ${isPlaying ? "opacity-0" : "opacity-100"
+                  }`}
                 onClick={handlePlayPause}
               >
                 {isPlaying ? (
@@ -422,7 +422,7 @@ function Post({
                       width="90"
                       height="90"
                       fill="currentColor"
-                      style={{color:"white"}}
+                      style={{ color: "white" }}
                       class="bi bi-pause-btn"
                       viewBox="0 0 16 16"
                     >
@@ -438,7 +438,7 @@ function Post({
                       height="90"
                       fill="currentColor"
                       class="bi bi-play-btn"
-                      style={{color:"white"}}
+                      style={{ color: "white" }}
                       viewBox="0 0 16 16"
                     >
                       <path d="M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z" />
@@ -541,7 +541,7 @@ function Post({
                   style={{
                     width: "20px",
                     height: "20px",
-                    color: "red",
+                    color: "#004C8A",
                     cursor: "pointer",
                   }}
                   onClick={handleThumbsUp}
@@ -557,7 +557,7 @@ function Post({
                   style={{
                     width: "20px",
                     height: "20px",
-                    color: "red",
+                    color: "#004C8A",
                     cursor: "pointer",
                   }}
                   onClick={handleSmile}
@@ -573,7 +573,7 @@ function Post({
                   style={{
                     width: "20px",
                     height: "20px",
-                    color: "red",
+                    color: "#004C8A",
                     cursor: "pointer",
                   }}
                   onClick={handleClap}
@@ -624,7 +624,7 @@ function Post({
           </div>
         </div>
       )}
-      <Modal
+      {/* <Modal
         open={isArchiveModalOpen}
         onClose={() => setIsArchiveModalOpen(false)}
         aria-labelledby="archive-modal-title"
@@ -653,7 +653,27 @@ function Post({
             </Button>
           </Box>
         </Box>
-      </Modal>
+      </Modal> */}
+      {isArchiveModalOpen && (
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg z-50">
+          <h2 className="text-lg font-bold mb-4">Archive Post</h2>
+          <p>Are you sure you want to archive this Post?</p>
+          <div className="flex justify-end mt-4">
+            <button onClick={confirmArchivePost} className="bg-red-600 text-white py-2 px-4 rounded-md" style={{color: 'white', backgroundColor: '#004C8A'}}>Yes</button>
+            <button onClick={() => setIsArchiveModalOpen(false)} className="ml-2 bg-gray-200 py-2 px-4 rounded-md">No</button>
+          </div>
+        </div>
+      )}
+      {isDeleteModalOpen && (
+                <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg z-50">
+                    <h2 className="text-lg font-bold mb-4">Delete Post</h2>
+                    <p>Are you sure you want to delete this post?</p>
+                    <div className="flex justify-end mt-4">
+                        <button onClick={()=>handleDeletePost(userId)} className="bg-red-600 text-white py-2 px-4 rounded-md" style={{color: 'white', backgroundColor: '#004C8A'}}>Yes</button>
+                        <button onClick={() => setIsDeleteModalOpen(false)} className="ml-2 bg-gray-200 py-2 px-4 rounded-md">No</button>
+                    </div>
+                </div>
+            )}
     </div>
   );
 }

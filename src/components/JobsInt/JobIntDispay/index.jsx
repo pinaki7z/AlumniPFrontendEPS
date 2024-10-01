@@ -29,7 +29,7 @@ const JobIntDisplay = ({ picture, userId, jobId, jobTitle, location, userName,pr
     const [appliedCandidatesDetails, setAppliedCandidatesDetails] = useState([]);
     const profile = useSelector((state) => state.profile);
     const [modalShow, setModalShow] = useState(false);
-    // const title = 'Jobs'
+   
     console.log('titleijb', locationType);
 
     const fetchAppliedUserIds = async () => {

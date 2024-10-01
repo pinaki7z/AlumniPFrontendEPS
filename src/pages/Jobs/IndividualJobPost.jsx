@@ -485,13 +485,13 @@ const IndividualJobPost = () => {
                                 borderRadius: '50%',
                                 marginRight: '10px'
                             }} /> */}
-                            <div style={{ display: 'flex', width: '100%', gap: '25px'}}  className="pt-10">
+                            <div style={{ display: 'flex', width: '100%', gap: '25px' }} className="pt-10">
                                 <div style={{ width: '70%' }}>
                                     <div
-                                        // className="ijp-title"
-                                       
+                                    // className="ijp-title"
+
                                     >
-                                        <p className="font-bold text-2xl md:text-3xl" style={{fontSize: '32px', fontFamily: 'Inter', fontWeight: '600'}}>{jobs.title}</p>
+                                        <p className="font-bold text-2xl md:text-3xl" style={{ fontSize: '32px', fontFamily: 'Inter', fontWeight: '600' }}>{jobs.title}</p>
                                     </div>
                                     {/* <div className="ijp-user-details">
 
@@ -503,7 +503,7 @@ const IndividualJobPost = () => {
                                         className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4 mb-4"
                                     >
                                         <div className="ijp-location">
-                                            <p style={{fontSize: '20px', fontFamily: 'Inter', fontWeight: '600',marginLeft: '0px'}}>{jobs.company}</p>
+                                            <p style={{ fontSize: '20px', fontFamily: 'Inter', fontWeight: '600', marginLeft: '0px' }}>{jobs.company}</p>
                                         </div>
                                     </div>
                                     <div className="ijp-candidates-button">
@@ -525,13 +525,29 @@ const IndividualJobPost = () => {
                                                 <>
                                                     <button onClick={() => setModalShow(true)} style={{ backgroundColor: '#174873', padding: '7px 20px' }}>Apply</button>
                                                     <button style={{ backgroundColor: '#ab021b', marginLeft: '10px', padding: '7px 20px' }} onClick={() => handleStarred(jobs._id)}>{starLoading ? 'Loading...' : starButtonText}</button>
-                                                    <MyVerticallyCenteredModal
+                                                    {/* <MyVerticallyCenteredModal
                                                         show={modalShow}
                                                         onHide={() => setModalShow(false)}
-                                                    />
+                                                    /> */}
+                                                    {modalShow && (
+                                                        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg z-50">
+                                                            <div className="flex flex-col">
+                                                                <h2 className="text-lg font-bold mb-4">Apply</h2>
+                                                                <label className="pb-2">Name</label>
+                                                                <input type="text" name="name" />
+                                                                <label className="pt-2 pb-2">Upload Resume</label>
+                                                                <input type="file" accept=".pdf" />
+                                                                <div className="flex justify-end mt-4">
+                                                                    <button className="bg-blue-600 text-white py-2 px-4 rounded-md" style={{backgroundColor: '#004C8A', color: 'white'}}>Submit</button>
+                                                                    <button onClick={() => setModalShow(false)} className="ml-2 bg-white-200 py-2 px-4 rounded-md" style={{backgroundColor: 'white', color: 'black'}}>Close</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    )}
                                                 </>
                                             )
                                         )}
+
                                     </div>
 
                                     <CandidatesModal />
@@ -557,7 +573,7 @@ const IndividualJobPost = () => {
                                             )}
                                         </div> */}
                                         <div className="ijp-description">
-                                            <p style={{fontSize: '20px', fontFamily: 'Inter', fontWeight: '600'}}>JOB DESCRIPTION:-</p>
+                                            <p style={{ fontSize: '20px', fontFamily: 'Inter', fontWeight: '600' }}>JOB DESCRIPTION:-</p>
                                             {jobs.attachments.map((attachment, index) => {
                                                 if (attachment.endsWith('.pdf')) {
                                                     return (
@@ -575,11 +591,11 @@ const IndividualJobPost = () => {
                                                 return null;
                                             })}
                                             {jobs.description && <p style={{ fontWeight: '500' }}>SKILLS REQUIRED:-</p>}
-                                            <p style={{fontSize: '16px', fontFamily: 'Inter', fontWeight: '400'}}>{jobs.description}</p>
+                                            <p style={{ fontSize: '16px', fontFamily: 'Inter', fontWeight: '400' }}>{jobs.description}</p>
                                         </div>
 
                                         <div className="ijp-images">
-                                            <p style={{fontSize: '20px', fontFamily: 'Inter', fontWeight: '600'}}>OTHER DETAILS:-</p>
+                                            <p style={{ fontSize: '20px', fontFamily: 'Inter', fontWeight: '600' }}>OTHER DETAILS:-</p>
                                             <div className="image-grid">
                                                 {renderImages()}
                                             </div>
@@ -596,53 +612,53 @@ const IndividualJobPost = () => {
                                     </div>
 
                                 </div>
-                                <div style={{ width: '30%'}}>
-                                    <div style={{border: '1px solid', borderRadius: '12px' }}>
-                                        <div style={{padding: '10px 0px 10px 25px',borderBottom: '1px solid', fontWeight: '700', fontSize: '24px',backgroundColor: '#004C8A', color: '#F8F8FF',borderRadius: '12px 12px 0px 0px'}}>Job overview</div>
-                                        <div style={{padding: '25px', backgroundColor: '#eeeeee'}}>
-                                            <div style={{display: 'flex',gap: '15px'}}>
+                                <div style={{ width: '30%' }}>
+                                    <div style={{ border: '1px solid', borderRadius: '12px' }}>
+                                        <div style={{ padding: '10px 0px 10px 25px', borderBottom: '1px solid', fontWeight: '700', fontSize: '24px', backgroundColor: '#004C8A', color: '#F8F8FF', borderRadius: '12px 12px 0px 0px' }}>Job overview</div>
+                                        <div style={{ padding: '25px', backgroundColor: '#eeeeee' }}>
+                                            <div style={{ display: 'flex', gap: '15px' }}>
                                                 <div>
-                                                    <img src={time} alt="" srcset="" style={{paddingTop: '5px'}}/>
+                                                    <img src={time} alt="" srcset="" style={{ paddingTop: '5px' }} />
                                                 </div>
                                                 <div>
-                                                    <p style={{fontWeight: '600', fontSize: '20px'}}>Date Posted</p>
+                                                    <p style={{ fontWeight: '600', fontSize: '20px' }}>Date Posted</p>
                                                     <p>22 April 2024</p>
                                                 </div>
                                             </div>
-                                            <div style={{display: 'flex',gap: '15px'}}> 
+                                            <div style={{ display: 'flex', gap: '15px' }}>
                                                 <div>
-                                                <img src={time} alt="" srcset="" style={{paddingTop: '5px'}}/>
+                                                    <img src={time} alt="" srcset="" style={{ paddingTop: '5px' }} />
                                                 </div>
                                                 <div>
-                                                <p style={{fontWeight: '600', fontSize: '20px'}}>Apply By</p>
-                                                <p>22 April 2024</p>
-                                                </div>
-                                            </div>
-                                            <div style={{display: 'flex',gap: '15px'}}>
-                                                <div>
-                                                <img src={locationIcon} alt="" srcset="" style={{paddingTop: '5px'}}/>
-                                                </div>
-                                                <div>
-                                                <p style={{fontWeight: '600', fontSize: '20px'}}>Location</p>
-                                                <p>{jobs.location}</p>
+                                                    <p style={{ fontWeight: '600', fontSize: '20px' }}>Apply By</p>
+                                                    <p>22 April 2024</p>
                                                 </div>
                                             </div>
-                                            <div style={{display: 'flex',gap: '15px'}}>
+                                            <div style={{ display: 'flex', gap: '15px' }}>
                                                 <div>
-                                                <img src={categoryIcon} alt="" srcset="" style={{paddingTop: '5px'}}/>
+                                                    <img src={locationIcon} alt="" srcset="" style={{ paddingTop: '5px' }} />
                                                 </div>
                                                 <div>
-                                                <p style={{fontWeight: '600', fontSize: '20px'}}>Category</p>
-                                                <p>{jobs.category}</p>
+                                                    <p style={{ fontWeight: '600', fontSize: '20px' }}>Location</p>
+                                                    <p>{jobs.location}</p>
                                                 </div>
                                             </div>
-                                            <div style={{display: 'flex',gap: '15px'}}>
+                                            <div style={{ display: 'flex', gap: '15px' }}>
                                                 <div>
-                                                <img src={salaryIcon} alt="" srcset="" style={{paddingTop: '5px'}}/>
+                                                    <img src={categoryIcon} alt="" srcset="" style={{ paddingTop: '5px' }} />
                                                 </div>
                                                 <div>
-                                                <p style={{fontWeight: '600', fontSize: '20px'}}>Salary</p>
-                                                <p>{jobs.salaryMin} - {jobs.salaryMax} {jobs.duration}</p>
+                                                    <p style={{ fontWeight: '600', fontSize: '20px' }}>Category</p>
+                                                    <p>{jobs.category}</p>
+                                                </div>
+                                            </div>
+                                            <div style={{ display: 'flex', gap: '15px' }}>
+                                                <div>
+                                                    <img src={salaryIcon} alt="" srcset="" style={{ paddingTop: '5px' }} />
+                                                </div>
+                                                <div>
+                                                    <p style={{ fontWeight: '600', fontSize: '20px' }}>Salary</p>
+                                                    <p>{jobs.salaryMin} - {jobs.salaryMax} {jobs.duration}</p>
                                                 </div>
                                             </div>
                                         </div>

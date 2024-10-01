@@ -543,13 +543,13 @@ function EventDetailsModal({
                 />
               </div>
             </div>
-            <div className="mt-6 flex flex-wrap lg:justify-between gap-4">
-              <button
+            <div className="mt-6 flex flex-wrap lg gap-4">
+              {/* <button
                 onClick={onAddReminder}
                 className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
               >
                 Add Reminder
-              </button>
+              </button> */}
               {(event.userId === profile._id || profile.profileLevel === 0) && (
                 <>
                   <button

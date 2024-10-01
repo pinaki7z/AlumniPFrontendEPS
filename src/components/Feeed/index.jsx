@@ -47,13 +47,14 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
   const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
   const [displayCreatePost, setDisplayCreatePost] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const activePageRef = useRef(1);
   const isFetchingRef = useRef(false);
   let lastFetchedPageRef = useRef(0);
   console.log("Entity type1", entityType)
   const [jobs, setJobs] = useState([]);
   const { _id } = useParams();
-  console.log('user id for profile',userId)
+  console.log('user id for profile', userId)
 
 
   const LIMIT = 4;
@@ -237,7 +238,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
       }
     } catch (error) {
       console.error("Error fetching posts:", error);
-    } finally{
+    } finally {
       setLoadingPost(false);
     }
 
@@ -251,9 +252,48 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
     setDisplayCreatePost(true);
   };
 
-  const handleArchivePost = () => {
+  const handleArchiveInternship = async (postId) => {
     setMenuAnchor(null);
-    setIsArchiveModalOpen(true);
+    try {
+      const response = await fetch(`${baseUrl}/internships/${postId}`, {
+          method: 'PUT',
+          headers: {
+              'Content-Type': 'application/json',
+          }
+      });
+
+      if (response.ok) {
+          toast.success(`Archived successfully`);
+          setIsArchiveModalOpen(false);
+          window.location.reload();
+      } else {
+          console.error('Failed to archive job');
+      }
+  } catch (error) {
+      console.error('Error:', error);
+  }
+  };
+
+  const handleDeleteInternship = async (postId) => {
+    setMenuAnchor(null);
+    try {
+      const response = await fetch(`${baseUrl}/internships/${postId}`, {
+          method: 'DELETE',
+          headers: {
+              'Content-Type': 'application/json',
+          }
+      });
+
+      if (response.ok) {
+          toast.success(`Deleted successfully`);
+          setIsDeleteModalOpen(false);
+          window.location.reload();
+      } else {
+          console.error('Failed to delete internship');
+      }
+  } catch (error) {
+      console.error('Error:', error);
+  }
   };
 
 
@@ -312,24 +352,24 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
               <div key={post._id} className="post-box  p-2 lg:p-4 " style={{ width: '100%' }}>
                 <div className=" flex mb-2 justify-between items-center  ">
                   <div className='flex '>
-                  {post.profilePicture ? (
-                    <img
-                      src={post.profilePicture}
-                      style={{ width: "50px", height: "50px", borderRadius: "50%" }}
-                    />
-                  ) : null}
-                  <div className="info">
-                    <h4>{post.userName}</h4>
-                    <span
-                      style={{
-                        fontSize: "14px",
-                        fontWeight: "500",
-                        color: "#004C8A",
-                      }}
-                    >
-                      {formatCreatedAt(post.createdAt)}
-                    </span>
-                  </div>
+                    {post.profilePicture ? (
+                      <img
+                        src={post.profilePicture}
+                        style={{ width: "50px", height: "50px", borderRadius: "50%" }}
+                      />
+                    ) : null}
+                    <div className="info">
+                      <h4>{post.userName}</h4>
+                      <span
+                        style={{
+                          fontSize: "14px",
+                          fontWeight: "500",
+                          color: "#004C8A",
+                        }}
+                      >
+                        {formatCreatedAt(post.createdAt)}
+                      </span>
+                    </div>
                   </div>
                   {(profile.profileLevel === 0 || userId === profile._id) && (
                     <>
@@ -345,15 +385,42 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
                         open={Boolean(menuAnchor)}
                         onClose={() => setMenuAnchor(null)}
                       >
-                        <MenuItem onClick={handleEditPost}>Edit</MenuItem>
-                        <MenuItem onClick={handleArchivePost}>
-                          {/* {archived ? "Unarchive" : "Archive"} */}
+                        <MenuItem onClick={() => {
+                          setIsArchiveModalOpen(true);
+                          setMenuAnchor(null);
+                        }
+                        }>
+                          Archive
                         </MenuItem>
-                        <MenuItem onClick={() => handleDeletePost(userId)}>
+                        <MenuItem onClick={() => {
+                          setIsDeleteModalOpen(true);
+                          setMenuAnchor(null)
+                        }
+                        }>
                           Delete
                         </MenuItem>
                       </Menu>
                     </>
+                  )}
+                  {isArchiveModalOpen && (
+                    <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg z-50">
+                      <h2 className="text-lg font-bold mb-4">Archive Internship</h2>
+                      <p>Are you sure you want to archive this internship?</p>
+                      <div className="flex justify-end mt-4">
+                        <button onClick={()=>handleArchiveInternship(post._id)} className="bg-red-600 text-white py-2 px-4 rounded-md" style={{color: 'white', backgroundColor: '#004C8A'}}>Yes</button>
+                        <button onClick={() => setIsArchiveModalOpen(false)} className="ml-2 bg-gray-200 py-2 px-4 rounded-md">No</button>
+                      </div>
+                    </div>
+                  )}
+                  {isDeleteModalOpen && (
+                    <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg z-50">
+                      <h2 className="text-lg font-bold mb-4">Delete Internship</h2>
+                      <p>Are you sure you want to delete this internship?</p>
+                      <div className="flex justify-end mt-4">
+                        <button onClick={()=>handleDeleteInternship(post._id)} className="bg-red-600 text-white py-2 px-4 rounded-md" style={{color: 'white', backgroundColor: '#004C8A'}}>Yes</button>
+                        <button onClick={() => setIsDeleteModalOpen(false)} className="ml-2 bg-gray-200 py-2 px-4 rounded-md">No</button>
+                      </div>
+                    </div>
                   )}
                 </div>
                 <JobIntDisplay

@@ -14,7 +14,7 @@ import { Link, useLocation } from "react-router-dom";
 import { AddMembers } from "../../components/Groups/AddMembers";
 import GroupMembers from "../../components/Groups/GroupMembers";
 import { FaPlus } from "react-icons/fa";
-
+import { useState } from "react";
 const Groups = () => {
   const profile = useSelector((state) => state.profile);
   const title = "Groups";
@@ -25,6 +25,13 @@ const Groups = () => {
   const buttontext1Link = "/groups";
   const buttontext2Link = "/groups/suggested-groups";
   const buttontext3Link = `/groups/${profile._id}/joined-groups`;
+  const [groupType, setGroupType] = useState(""); // State to store selected option
+  const [searchQuery, setSearchQuery] = useState("")
+
+  // Handler to update the groupType when an option is selected
+  const handleGroupTypeChange = (e) => {
+    setGroupType(e.target.value); // Store selected option in state
+  };
 
   let admin;
   if (profile.profileLevel === 0 || profile.profileLevel === 1) {
@@ -72,8 +79,8 @@ const Groups = () => {
                         name="search"
                         id="search"
                         placeholder="Search for groups"
-                        //value={searchQuery}
-                        //onChange={(e) => setSearchQuery(e.target.value)}
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
                         style={{
                           width: "100%",
                           padding: "10px 40px 10px 10px",
@@ -107,10 +114,11 @@ const Groups = () => {
                   </form>
                 </div>
                 <div className=" w-full lg:w-[340px]   ">
-                  <select className="w-full h-12 select-dropdown rounded shadow">
+                  <select className="w-full h-12 select-dropdown rounded shadow" value={groupType} // Binding state to the dropdown
+                    onChange={handleGroupTypeChange} >
                     <option value="">All Groups</option>
                     <option value="Public">Public</option>
-                    <option value="Pr">Private</option>
+                    <option value="Private">Private</option>
                   </select>
                 </div>
               </div>
@@ -174,7 +182,8 @@ const Groups = () => {
                     </div>
                   </form>
                 </div>
-                <select className="select-dropdown">
+                <select className="select-dropdown" value={groupType} // Binding state to the dropdown
+                  onChange={handleGroupTypeChange} >
                   <option value="">All Groups</option>
                   <option value="Public">Public</option>
                   <option value="Private">Private</option>
@@ -240,7 +249,8 @@ const Groups = () => {
                     </div>
                   </form>
                 </div>
-                <select className="select-dropdown">
+                <select className="select-dropdown" value={groupType} // Binding state to the dropdown
+                  onChange={handleGroupTypeChange} >
                   <option value="">All Groups</option>
                   <option value="Public">Public</option>
                   <option value="Private">Private</option>
@@ -272,7 +282,7 @@ const Groups = () => {
                   className=""
                 >
                   <button
-                  className="flex items-center text-center justify-center gap-3 w-full lg:w-[150px] "
+                    className="flex items-center text-center justify-center gap-3 w-full lg:w-[150px] "
                     style={{
                       padding: "8px 32px",
                       borderRadius: "5px",
@@ -305,7 +315,7 @@ const Groups = () => {
         {admin ? (
           <Route
             path="/"
-            
+
             element={
               <PageSubTitle
                 buttontext1="All Groups"
@@ -404,7 +414,7 @@ const Groups = () => {
         {/* <Route path="/suggested-groups" element={<SuggestedGroups />} /> */}
         <Route path="/:id/joined-groups" element={<JoinedGroups />} />
         {admin ? (
-          <Route path="/" element={<AllGroups />} />
+          <Route path="/" element={<AllGroups searchQuery={searchQuery} groupType={groupType} />} />
         ) : (
           <Route path="/" element={<MyGroups />} />
         )}

@@ -15,17 +15,18 @@ import baseUrl from '../../config';
 import { fetchMembers } from '../../store';
 
 const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
-    // const membersred = useSelector((state) => state.member.filter(member => member.profileLevel !== 0));
   const [membersred, setMembersred] = useState([]);
   const [allMembers, setAllMembers] = useState([]);
-  const [cookie, setCookie] = useCookies('token');
+  const [cookie] = useCookies('token');
   const [displayedMembers, setDisplayedMembers] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [memberRole, setMemberRole] = useState(""); // Dropdown state for role filter
   const [noUsersFound, setNoUsersFound] = useState(false);
-  const [loading, setLoading] = useState(true); // Initially true to indicate data is being fetched
+  const [loading, setLoading] = useState(true);
   const activePageRef = useRef(1);
   const LIMIT = 6;
   const profile = useSelector((state) => state.profile);
+  
   let admin;
   if (profile.profileLevel === 0 || profile.profileLevel === 1) {
     admin = true;
@@ -42,7 +43,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
     } catch (error) {
       console.error("Error fetching members:", error);
     } finally {
-      setLoading(false); // Set loading to false once the data is fetched
+      setLoading(false);
     }
   };
 
@@ -56,24 +57,40 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
 
   useEffect(() => {
     if (!loading) {
-      initialMembers(); // Call initialMembers once loading is done
+      initialMembers();
     }
   }, [loading, membersred]);
 
+  // New useEffect that filters based on both search query and member role
   useEffect(() => {
+    let filteredMembers = membersred;
+
+    // Filter by search query if provided
     if (searchQuery) {
-      const filteredMembers = membersred.filter(
+      filteredMembers = filteredMembers.filter(
         (member) =>
           member.firstName.toLowerCase().includes(searchQuery.toLowerCase())
       );
-      setDisplayedMembers(filteredMembers.slice(0, LIMIT));
-      setNoUsersFound(filteredMembers.length === 0);
-    } else {
-      const initialBatch = membersred.slice(0, LIMIT);
-      setDisplayedMembers(initialBatch);
-      setNoUsersFound(false);
     }
-  }, [searchQuery, membersred]);
+
+    // Filter by member role if selected
+    if (memberRole) {
+      const roleMapping = {
+        "1": 1, // Admin
+        "2": 2, // Alumni
+        "3": 3  // Current Student
+      };
+      filteredMembers = filteredMembers.filter(
+        (member) => member.profileLevel === roleMapping[memberRole]
+      );
+    }
+
+    // Handle no users found scenario
+    setNoUsersFound(filteredMembers.length === 0);
+
+    // Display only the first LIMIT number of members
+    setDisplayedMembers(filteredMembers.slice(0, LIMIT));
+  }, [searchQuery, memberRole, membersred]);
 
   const loadMoreMembers = () => {
     setLoading(true);
@@ -105,7 +122,6 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
       if (response.status === 200) {
         toast.dismiss();
         toast.success("Success");
-        // window.location.reload();
         getMembers();
       } else {
         console.error('Failed to delete user');
@@ -113,6 +129,11 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
     } catch (error) {
       console.error('Error deleting user:', error);
     }
+  };
+
+  // Handler to update the memberRole when an option is selected
+  const handleMemberRoleChange = (e) => {
+    setMemberRole(e.target.value); // Store selected option in state
   };
 
   return (
@@ -150,12 +171,12 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
             </div>
           </form>
         </div>
-        <div className=' w-full lg:w-[340px]'>
-          <select className='w-full h-12 select-dropdown rounded shadow'>
+        <div className='w-full lg:w-[340px]'>
+          <select className='w-full h-12 select-dropdown rounded shadow' value={memberRole} onChange={handleMemberRoleChange}>
             <option value="">All Roles</option>
-            <option value="Admin">Admin</option>
-            <option value="Alumni">Alumni</option>
-            <option value="Current Student">Current Student</option>
+            <option value="1">Admin</option>
+            <option value="2">Alumni</option>
+            <option value="3">Current Student</option>
           </select>
         </div>
       </div>
@@ -164,15 +185,16 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
         <Route path="/" element={
           <>
             <div className="flex flex-wrap gap-10 py-4">
-             
-              {loading ?null: <Link to={`/members/create`} style={{ textDecoration: 'none', color: 'black' }}>
-                <button
-                  className='relative lg:w-64 w-[330px]'
-                  style={{ border: '2px dotted #F8A700', borderRadius: '8px', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-                >
-                  <img src={createMember} alt="" className='lg:w-20 py-5 text-center w-10' />
-                </button>
-              </Link>}
+              {loading ? null : (
+                <Link to={`/members/create`} style={{ textDecoration: 'none', color: 'black' }}>
+                  <button
+                    className='relative lg:w-64 w-[330px]'
+                    style={{ border: '2px dotted #F8A700', borderRadius: '8px', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                  >
+                    <img src={createMember} alt="" className='lg:w-20 py-5 text-center w-10' />
+                  </button>
+                </Link>
+              )}
               {displayedMembers.map((member) => (
                 <Profilecard
                   key={member._id}
@@ -185,9 +207,11 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
                 />
               ))}
             </div>
-            {loading && <div className="loading-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '300px' }}>
-        <l-tail-chase size="40" speed="1.75" color="#174873"></l-tail-chase>
-      </div>}
+            {loading && (
+              <div className="loading-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '300px' }}>
+                <l-tail-chase size="40" speed="1.75" color="#174873"></l-tail-chase>
+              </div>
+            )}
             {activePageRef.current * LIMIT < totalMembers && (
               <div style={{ textAlign: 'center' }}>
                 <button className="load-more-button" onClick={loadMoreMembers}>

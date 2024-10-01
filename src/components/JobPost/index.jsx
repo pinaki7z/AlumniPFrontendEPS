@@ -1,32 +1,26 @@
-import React from 'react';
-import './JobPost.css';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import { GiMoneyStack } from 'react-icons/gi';
 import { AiFillGold, AiOutlineDelete } from 'react-icons/ai';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 import { toast } from 'react-toastify';
 import { BiSolidArchiveIn } from "react-icons/bi";
-import { useState } from 'react';
 import { FaBriefcase } from "react-icons/fa";
 import { IoIosInformationCircle } from "react-icons/io";
-import { CiLocationArrow1 } from "react-icons/ci";
-import { RiHomeSmileLine } from "react-icons/ri";
 import baseUrl from "../../config";
 import location from "../../images/location-vector.svg";
 import categoryV from "../../images/category.svg";
-import amount from "../../images/amount.svg"
+import amount from "../../images/amount.svg";
 
 const JobPost = ({ userId, id, jobTitle, title, titleS, description, salaryMin, createdAt, picture, salaryMax, duration, jobType, questions, category, currency, attachments, appliedCandidates, searchQuery, type, locationType, company }) => {
     const profile = useSelector((state) => state.profile);
     const navigateTo = useNavigate();
     const [menuVisible, setMenuVisible] = useState(false);
     const [showModal, setShowModal] = useState(false);
-
+    const [modalShow, setModalShow] = useState(false);
+    const [deleteModalShow, setDeleteModalShow] = useState(false);
 
     const handleClick = () => {
-        console.log('titee', title)
         if (type === 'Job') {
             navigateTo(`/jobs/${id}/Jobs`);
         }
@@ -35,82 +29,31 @@ const JobPost = ({ userId, id, jobTitle, title, titleS, description, salaryMin, 
             navigateTo(`/internships/${id}/Internships`);
         }
     }
-    const [modalShow, setModalShow] = React.useState(false);
-    const [deleteModalShow, setDeleteModalShow] = React.useState(false);
 
-    function MyVerticallyCenteredModal(props) {
-        const handleArchive = async () => {
-            try {
-                const response = await fetch(`${baseUrl}/${type + 's'}/${id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                });
-
-                if (response.ok) {
-                    console.log('archived successfully');
-                    toast.success(`success`)
-                    setModalShow(false);
-                    window.location.reload();
-                } else {
-                    console.error('Failed to delete job');
+    const handleArchive = async () => {
+        try {
+            const response = await fetch(`${baseUrl}/${type + 's'}/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
                 }
-            } catch (error) {
-                console.error('Error:', error);
+            });
+
+            if (response.ok) {
+                toast.success(`Archived successfully`);
+                setModalShow(false);
+                window.location.reload();
+            } else {
+                console.error('Failed to archive job');
             }
-        };
-
-        return (
-            <Modal
-                {...props}
-                size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        Archive {titleS}
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <p>
-                        Are you sure you want to archive this {titleS}?
-                    </p>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={handleArchive}>Yes</Button>
-                    <Button onClick={props.onHide}>No</Button>
-                </Modal.Footer>
-            </Modal>
-        );
-    }
-
-    function DeleteModal(props) {
-        return (
-            <Modal
-                {...props}
-                size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        Are you sure you want to delete this job ?You will lose access to all data including CVs received under this job.If you want to retain the data , Archive instead.
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Footer>
-                    <Button onClick={handleDelete}>Delete</Button>
-                    <Button onClick={props.onHide}>Close</Button>
-                </Modal.Footer>
-            </Modal>
-        );
-    }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
 
     const handleDelete = async () => {
-        setDeleteModalShow(false)
+        setDeleteModalShow(false);
         try {
-            console.log('id', id)
             const response = await fetch(`${baseUrl}/${type + 's'}/${id}`, {
                 method: 'DELETE',
                 headers: {
@@ -119,9 +62,7 @@ const JobPost = ({ userId, id, jobTitle, title, titleS, description, salaryMin, 
             });
 
             if (response.ok) {
-                console.log('deleted successfully');
-                toast.success(`success`)
-                setModalShow(false);
+                toast.success(`Deleted successfully`);
                 window.location.reload();
             } else {
                 console.error('Failed to delete job');
@@ -132,112 +73,116 @@ const JobPost = ({ userId, id, jobTitle, title, titleS, description, salaryMin, 
     }
 
     return (
-        <div className="donation-card" style={{ height: '100%', width: '100%' }}>
-            <div className="donation-card-image" style={{ height: 'auto', width: '30%' }}>
+        <div className="border rounded-lg shadow-md p-4 flex flex-col md:flex-row w-full">
+            <div className="md:w-1/3 w-full">
                 {attachments && attachments.map((attachment, index) => {
                     if (!attachment.endsWith('.pdf')) {
                         return (
                             <img
                                 key={index}
-                                src={attachment}  // Use the full URL directly
-                                alt={`attachment-${index}`}  // Provide a descriptive alt text
-                                className="src"
+                                src={attachment}
+                                alt={`attachment-${index}`}
+                                className="rounded-md"
                             />
                         );
                     }
                     return null;
                 })}
-
             </div>
-            <div style={{ padding: '16px', width: '70%' }}>
-                <div style={{ border: '1px', backgroundColor: "white", width: '100%' }}>
-                    <div className="donation-card-title" style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                        <p onClick={handleClick} style={{ cursor: 'pointer', fontFamily: 'Inter', fontSize: '24px', fontWeight: '600' }}>{jobTitle}</p>
-                        {appliedCandidates && appliedCandidates.map(candidate => {
-                            if (candidate.userId === profile._id) {
-                                return (
-                                    <>
-                                        {candidate.userId === profile._id && (
-                                            <div style={{ fontSize: '15px', cursor: 'pointer', color: 'blueviolet', display: 'flex', gap: '10px' }}>
-                                                {candidate.comment && <span
-                                                    key={candidate.userId}
-                                                    style={{ fontSize: '20px', cursor: 'pointer', color: 'black', display: 'flex', alignItems: 'center' }}
-                                                    onClick={() => setShowModal(true)}
-                                                >
-                                                    <IoIosInformationCircle />
-                                                </span>}
-                                                {candidate.status}
-                                            </div>
-                                        )}
-                                        {showModal && (
-                                            <div className="block" style={{
-                                                position: 'fixed', top: '50%',
-                                                left: '50%', transform: 'translate(-50%, -50%)',
-                                                zIndex: '999', color: 'black', fontWeight: '700', backgroundColor: '#f9f9f9', minWidth: '24vw', padding: '10px', border: 'solid 2px'
-                                            }}>
-                                                <div>
-                                                    <span className="close" style={{ cursor: 'pointer' }} onClick={() => setShowModal(false)}>&times;</span>
-                                                    <p style={{ textAlign: 'center', fontWeight: '400' }}>{candidate.comment}</p>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </>
-                                );
-                            }
-                            return null;
-                        })}
-                        {((profile.profileLevel === 0 || profile.profileLevel === 1) || userId === profile._id) && (
-                            <div style={{ cursor: 'pointer', position: 'relative' }} onClick={() => setMenuVisible(!menuVisible)}>
-                                &#8942;
-                                {menuVisible && (
-                                    <ul className="menu">
-                                        <li style={{ listStyleType: 'none' }} onClick={() => setDeleteModalShow(true)}>Delete</li>
-                                    </ul>
-                                )}
-                                <DeleteModal
-                                    show={deleteModalShow}
-                                    onHide={() => setDeleteModalShow(false)}
-                                />
+
+            <div className="md:w-2/3 w-full p-4">
+                <div className="flex justify-between items-center">
+                    <p onClick={handleClick} className="text-xl font-bold cursor-pointer">
+                        {jobTitle}
+                    </p>
+                    {appliedCandidates && appliedCandidates.map(candidate => {
+                        if (candidate.userId === profile._id) {
+                            return (
+                                <>
+                                    {candidate.comment && (
+                                        <span
+                                            key={candidate.userId}
+                                            className="text-lg cursor-pointer text-blue-600"
+                                            onClick={() => setShowModal(true)}
+                                        >
+                                            <IoIosInformationCircle />
+                                        </span>
+                                    )}
+                                    {showModal && (
+                                        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white shadow-lg p-6 rounded-lg z-50">
+                                            <span className="absolute top-2 right-2 cursor-pointer" onClick={() => setShowModal(false)}>&times;</span>
+                                            <p className="text-center">{candidate.comment}</p>
+                                        </div>
+                                    )}
+                                </>
+                            );
+                        }
+                        return null;
+                    })}
+
+                    {(profile.profileLevel === 0 || profile.profileLevel === 1 || userId === profile._id) && (
+                        <div className="relative">
+                            <span className="text-2xl cursor-pointer" onClick={() => setMenuVisible(!menuVisible)}>&#8942;</span>
+                            {menuVisible && (
+                                <ul className="absolute right-0 bg-white shadow-lg rounded-md p-2">
+                                    <li className="cursor-pointer" onClick={() => setDeleteModalShow(true)}>Delete</li>
+                                </ul>
+                            )}
+                        </div>
+                    )}
+                </div>
+
+                <div className="mt-2 text-lg font-semibold">{company}</div>
+
+                <div className="flex justify-between items-center mt-4">
+                    {locationType && (
+                        <div className="flex items-center">
+                            <img src={location} alt="location" className="w-6 h-6" />
+                            <p className="ml-2">{Object.keys(locationType).find(key => locationType[key])}</p>
+                        </div>
+                    )}
+                    <div className="flex items-center">
+                        <img src={categoryV} alt="category" className="w-6 h-6" />
+                        <p className="ml-2">{category}</p>
+                    </div>
+                    <div className="flex items-center">
+                        <img src={amount} alt="salary" className="w-6 h-6" />
+                        <p className="ml-2">{salaryMin === null && salaryMax === null ? 'Unpaid' : `${salaryMin} - ${salaryMax}`}</p>
+                    </div>
+                </div>
+
+                {userId === profile._id && (
+                    <div className="mt-4 flex gap-4">
+                        <button
+                            onClick={() => setModalShow(true)}
+                            className="bg-blue-600 text-white py-2 px-4 rounded-md flex items-center"
+                        >
+                            <BiSolidArchiveIn className="mr-2" /> Archive
+                        </button>
+                        {modalShow && (
+                            <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg z-50">
+                                <h2 className="text-lg font-bold mb-4">Archive {titleS}</h2>
+                                <p>Are you sure you want to archive this {titleS}?</p>
+                                <div className="flex justify-end mt-4">
+                                    <button onClick={handleArchive} className="bg-red-600 text-white py-2 px-4 rounded-md">Yes</button>
+                                    <button onClick={() => setModalShow(false)} className="ml-2 bg-gray-200 py-2 px-4 rounded-md">No</button>
+                                </div>
                             </div>
                         )}
                     </div>
-                </div>
-                <div className="user-details">
-                    <p style={{ cursor: 'pointer', fontFamily: 'Inter', fontSize: '20px', fontWeight: '600', marginLeft: '0px' }}>{company}</p>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '15px' }}>
-                    {locationType && <div className="user-details">
-                        <img src={location} />
-                        <p style={{ cursor: 'pointer', fontFamily: 'Inter', fontSize: '16px', fontWeight: '500' }}>{Object.keys(locationType).find(key => locationType[key])}</p>
-                    </div>}
-
-                    <div className="user-details">
-                        <img src={categoryV} />
-                        <p style={{ cursor: 'pointer', fontFamily: 'Inter', fontSize: '16px', fontWeight: '500' }}>{category}</p>
-                    </div>
-                    <div className="user-details">
-                        <img src={amount} />
-                        {(salaryMin === null && salaryMax === null) ? <p style={{ cursor: 'pointer', fontFamily: 'Inter', fontSize: '16px', fontWeight: '500' }}>Unpaid</p> : (
-                            <>
-                                <p style={{ cursor: 'pointer', fontFamily: 'Inter', fontSize: '16px', fontWeight: '500' }}>{salaryMin} <span style={{ marginLeft: '5px' }}>-</span> <span style={{ marginLeft: '5px', cursor: 'pointer', fontFamily: 'Inter', fontSize: '16px', fontWeight: '500' }}>{salaryMax}</span></p>
-                            </>
-                        )}
-                    </div>
-                    {/* <div className="user-details">
-                        <FaBriefcase />
-                        <p>{type}</p>
-                    </div> */}
-                </div>
-                {(userId === profile._id) && (
-                    <div className="job-post-delete" >
-                        <Button style={{ display: 'flex', gap: '1vw' }} onClick={() => setModalShow(true)}><BiSolidArchiveIn />Archive</Button>
-                        <MyVerticallyCenteredModal
-                            show={modalShow}
-                            onHide={() => setModalShow(false)}
-                        />
-                    </div>
                 )}
             </div>
+
+            {deleteModalShow && (
+                <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg z-50">
+                    <h2 className="text-lg font-bold mb-4">Delete Job</h2>
+                    <p>Are you sure you want to delete this job? You will lose access to all data including CVs received under this job.</p>
+                    <div className="flex justify-end mt-4">
+                        <button onClick={handleDelete} className="bg-red-600 text-white py-2 px-4 rounded-md">Delete</button>
+                        <button onClick={() => setDeleteModalShow(false)} className="ml-2 bg-gray-200 py-2 px-4 rounded-md">Close</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

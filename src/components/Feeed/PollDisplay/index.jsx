@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './pollDisplay.css';
-import { Avatar, IconButton, Modal as MModal, Box, Menu, MenuItem } from '@mui/material';
+import { Avatar, IconButton, Modal as MModal, Modal as MMModal, Box, Menu, MenuItem } from '@mui/material';
 import { MoreVert } from '@mui/icons-material';
 import pic from "../../../images/profilepic.jpg";
 import { useSelector } from 'react-redux';
@@ -24,7 +24,7 @@ const PollDisplay = ({ poll, archived }) => {
     const [updatedPoll, setUpdatedPoll] = useState(null);
     const [modalOpen, setModalOpen] = useState(false);
     const [menuAnchor, setMenuAnchor] = useState(null);
-    const [archiveModalOpen, setArchiveModalOpen] = useState(false);
+    const [modalShow, setModalShow] = useState(false);
     const profile = useSelector((state) => state.profile);
     const [showPollModal, setShowPollModal] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -144,12 +144,12 @@ const PollDisplay = ({ poll, archived }) => {
     };
 
     const handleArchivePoll = () => {
-        setArchiveModalOpen(true);
+        setModalShow(true);
         setMenuAnchor(null);
     };
 
     const confirmArchivePoll = async () => {
-        setArchiveModalOpen(false); // Close the confirmation modal
+        setModalShow(false); // Close the confirmation modal
 
         try {
             const url = `${baseUrl}/poll/${poll._id}/archive`;
@@ -176,21 +176,7 @@ const PollDisplay = ({ poll, archived }) => {
         setIsDeleteModalOpen(true);
 
         setMenuAnchor(null);
-        // try {
-        //     const url = `${baseUrl}/poll/${poll._id}`;
-        //     const response = await axios.delete(url);
 
-        //     if (response.status === 200) {
-        //         console.log("Poll deleted successfully");
-        //         toast.success("Poll deleted successfully");
-        //         window.location.reload();
-        //     } else {
-        //         console.error("Failed to delete poll");
-        //         toast.error("Failed to delete poll");
-        //     }
-        // } catch (error) {
-        //     console.error("Error occurred while deleting poll:", error);
-        // }
     };
 
     const confirmDeletePoll = async () => {
@@ -273,9 +259,9 @@ const PollDisplay = ({ poll, archived }) => {
                 )}
             </div>
             <h3 style={{ fontWeight: '600', fontSize: '20px', paddingTop: '30px', color: '#3A3A3A', fontFamily: 'Inter' }}>{poll.question}       {poll.multipleAnswers ? (
-                <p style={{color: 'grey', fontSize: '15px',paddingTop: '10px'}}>(Multiple choices can be made)</p>
+                <p style={{ color: 'grey', fontSize: '15px', paddingTop: '10px' }}>(Multiple choices can be made)</p>
             ) : (
-                <p style={{color: 'grey', fontSize: '15px',paddingTop: '10px'}}>(Choose only one option)</p>
+                <p style={{ color: 'grey', fontSize: '15px', paddingTop: '10px' }}>(Choose only one option)</p>
             )}</h3>
 
             <div className="options-container">
@@ -330,7 +316,7 @@ const PollDisplay = ({ poll, archived }) => {
                 </Box>
             </MModal>
 
-            <Modal show={archiveModalOpen} onHide={() => setArchiveModalOpen(false)}>
+            {/* <Modal show={archiveModalOpen} onHide={() => setArchiveModalOpen(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Confirm {archived ? 'Unarchive' : 'Archive'}</Modal.Title>
                 </Modal.Header>
@@ -343,8 +329,20 @@ const PollDisplay = ({ poll, archived }) => {
                         Yes
                     </Button>
                 </Modal.Footer>
-            </Modal>
-            <Modal show={isDeleteModalOpen} onHide={() => setIsDeleteModalOpen(false)}>
+            </Modal> */}
+
+            {modalShow && (
+                <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg z-50">
+                    <h2 className="text-lg font-bold mb-4">Archive Poll</h2>
+                    <p>Are you sure you want to archive this poll?</p>
+                    <div className="flex justify-end mt-4">
+                        <button onClick={confirmArchivePoll} className="bg-red-600 text-white py-2 px-4 rounded-md" style={{color: 'white', backgroundColor: '#004C8A'}}>Yes</button>
+                        <button onClick={() => setModalShow(false)} className="ml-2 bg-gray-200 py-2 px-4 rounded-md">No</button>
+                    </div>
+                </div>
+            )}
+
+            {/* <Modal show={isDeleteModalOpen} onHide={() => setIsDeleteModalOpen(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Confirm Delete</Modal.Title>
                 </Modal.Header>
@@ -353,7 +351,18 @@ const PollDisplay = ({ poll, archived }) => {
                     <Button variant="secondary" onClick={() => setIsDeleteModalOpen(false)}>No</Button>
                     <Button variant="primary" onClick={confirmDeletePoll}>Yes</Button>
                 </Modal.Footer>
-            </Modal>
+            </Modal> */}
+
+            {isDeleteModalOpen && (
+                <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg z-50">
+                    <h2 className="text-lg font-bold mb-4">Delete Poll</h2>
+                    <p>Are you sure you want to delete this poll?</p>
+                    <div className="flex justify-end mt-4">
+                        <button onClick={confirmDeletePoll} className="bg-red-600 text-white py-2 px-4 rounded-md" style={{color: 'white', backgroundColor: '#004C8A'}}>Yes</button>
+                        <button onClick={() => setIsDeleteModalOpen(false)} className="ml-2 bg-gray-200 py-2 px-4 rounded-md">No</button>
+                    </div>
+                </div>
+            )}
 
             <PollModal
                 show={showPollModal}
