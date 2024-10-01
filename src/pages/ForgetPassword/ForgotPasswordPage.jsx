@@ -5,20 +5,24 @@ import { toast } from 'react-toastify';
 import baseUrl from '../../config';
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
   const [isEmailSent, setIsEmailSent] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
     // Handle the password reset logic here
     // console.log('Password reset request sent to:', email);
     axios.post(`${baseUrl}/forgotPass`, { email })
     .then((response) => {
+      setLoading(false);
       setIsEmailSent(true);
       toast.dismiss()
       // toast.success("Check Your Inbox")
       toast.success(response.data.message)
 
     }).catch((error) => {
+      setLoading(false);
       toast.dismiss()
       toast.error(error.response.data.message)
     })
@@ -72,10 +76,12 @@ const ForgotPasswordPage = () => {
               <div>
                 <button
                   type="submit"
+                  disabled={loading}
                   onClick={handleSubmit}
-                  className="w-full bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-600 transition duration-300"
+
+                  className={`w-full bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-600 transition duration-300 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
-                  Send Reset Link
+                 {loading ?"loading...": "Send Reset Link"}
                 </button>
               </div>
             </form>
