@@ -20,6 +20,7 @@ import baseUrl from "../../config";
 import { updateProfile } from "../../store/profileSlice";
 import { toast } from "react-toastify";
 import { Avatar } from "@mui/material";
+//import { handleChatbox } from "../Chat";
 
 orbit.register();
 
@@ -273,30 +274,11 @@ const Profilecard = ({
 
         </Link>
         <br />
-        {/* {loading ? (
-          <div className="text-center mt-4">
-            <l-orbit size="35" speed="1.5" color="black"></l-orbit>
-          </div>
-        ) : (
-          name !== "follow" && (
-            <button
-              onClick={handleFollowToggle}
-              className={`absolute left-0 bottom-0 w-full h-12 font-semibold text-lg ${
-                isFollowing
-                  ? "bg-[#004C8A] text-white"
-                  : "bg-[#F8A700] text-black"
-              } hover:bg-[#F8A700]`}
-              style={{ borderRadius: "0 0 8px 8px" }}
-            >
-              {isFollowing ? "Following" : "Follow"}
-            </button>
-          )
-        )} */}
         {(profile.profileLevel === 0 || profile.profileLevel === 1) && (
           <button
-            // onClick={handleFollowToggle}
             className={`absolute left-0 bottom-0 w-full h-12 font-semibold text-lg bg-[#004C8A] text-white hover:bg-[#F8A700]`}
             style={{ borderRadius: "0 0 8px 8px" }}
+            //onClick={()=> handleChatbox(true)}
           >
             Message
           </button>

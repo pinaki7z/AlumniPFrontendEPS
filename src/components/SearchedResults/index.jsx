@@ -44,7 +44,7 @@ export const SearchedResults = () => {
   console.log('search results component', searchResults)
 
   return (
-    <div className='' style={{ paddingTop: '30px', width: '60%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div className='' style={{ paddingTop: '30px', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center',paddingLeft: '71px',paddingRight: '10px' }}>
 
       {loading && <l-line-spinner
         size="40"

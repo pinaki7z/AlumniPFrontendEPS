@@ -40,6 +40,9 @@ export default function EventCalendar() {
   const [selectedEventDetailsPopup, setSelectedEventDetailsPopup] =
     useState(null);
   const [loading, setLoading] = useState(false);
+  const [addEventLoading, setAddEventLoading] = useState(false);
+  const [deleteEventLoading, setDeleteEventLoading] = useState(false);
+  const [editEventLoading, setEditEventLoading] = useState(false);
   const [reminderModalShow, setReminderModalShow] = useState(false);
   const calendarRef = useRef(null);
   const profile = useSelector((state) => state.profile);
@@ -83,6 +86,22 @@ export default function EventCalendar() {
     }
   };
 
+  // const fetchEvents = async () => {
+  //   try {
+  //     const response = await axios.get(`${baseUrl}/events`);
+  //     const eventsWithDates = response.data.map((event) => ({
+  //       ...event,
+  //       start: new Date(event.start),
+  //       end: new Date(event.end),
+  //       id: event._id,
+  //     }));
+  //     setAllEvents(eventsWithDates);
+  //   } catch (error) {
+  //     console.error("Error fetching events:", error);
+  //     toast.error("Failed to fetch events");
+  //   }
+  // };
+
   const fetchEventDetails = async (eventId) => {
     setLoading(true);
     try {
@@ -115,33 +134,83 @@ export default function EventCalendar() {
     }
   };
 
+  // const handleAddEvent = async () => {
+  //   try {
+  //     const response = await axios.post(`${baseUrl}/events/createEvent`, {
+  //       ...newEvent,
+  //       userId: profile._id,
+  //       userName: `${profile.firstName} ${profile.lastName}`,
+  //       profilePicture: profile.profilePicture,
+  //       department: profile.department,
+  //     });
+  //     setAllEvents([...allEvents, response.data]);
+  //     setModalShow(false);
+  //     toast.success("Event added successfully");
+  //     resetNewEvent();
+  //   } catch (error) {
+  //     console.error("Error adding event:", error);
+  //     toast.error("Failed to add event");
+  //   }
+  // };
+
   const handleAddEvent = async () => {
     try {
-      const response = await axios.post(`${baseUrl}/events/createEvent`, {
+      setAddEventLoading(true);
+      const eventToAdd = {
         ...newEvent,
+        start: new Date(newEvent.start),
+        end: new Date(newEvent.end),
         userId: profile._id,
         userName: `${profile.firstName} ${profile.lastName}`,
         profilePicture: profile.profilePicture,
         department: profile.department,
-      });
-      setAllEvents([...allEvents, response.data]);
+      };
+      const response = await axios.post(`${baseUrl}/events/createEvent`, eventToAdd);
+      setAllEvents([...allEvents, { ...response.data, start: new Date(response.data.start), end: new Date(response.data.end) }]);
       setModalShow(false);
       toast.success("Event added successfully");
+      setAddEventLoading(false);
       resetNewEvent();
     } catch (error) {
       console.error("Error adding event:", error);
       toast.error("Failed to add event");
+      setAddEventLoading(false);
     }
   };
 
+  // const handleEditEvent = async () => {
+  //   try {
+  //     const response = await axios.put(
+  //       `${baseUrl}/events/${selectedEvent._id}`,
+  //       newEvent
+  //     );
+  //     const updatedEvents = allEvents.map((event) =>
+  //       event._id === selectedEvent._id ? response.data : event
+  //     );
+  //     setAllEvents(updatedEvents);
+  //     setModalShow(false);
+  //     setIsEditing(false);
+  //     toast.success("Event updated successfully");
+  //     resetNewEvent();
+  //   } catch (error) {
+  //     console.error("Error updating event:", error);
+  //     toast.error("Failed to update event");
+  //   }
+  // };
+
   const handleEditEvent = async () => {
     try {
+      const eventToUpdate = {
+        ...newEvent,
+        start: new Date(newEvent.start),
+        end: new Date(newEvent.end),
+      };
       const response = await axios.put(
         `${baseUrl}/events/${selectedEvent._id}`,
-        newEvent
+        eventToUpdate
       );
       const updatedEvents = allEvents.map((event) =>
-        event._id === selectedEvent._id ? response.data : event
+        event._id === selectedEvent._id ? { ...response.data, start: new Date(response.data.start), end: new Date(response.data.end) } : event
       );
       setAllEvents(updatedEvents);
       setModalShow(false);
@@ -154,9 +223,12 @@ export default function EventCalendar() {
     }
   };
 
+
   const handleDeleteEvent = async () => {
+    
     if (!selectedEvent) return;
     try {
+      setDeleteEventLoading(true);
       await axios.delete(`${baseUrl}/events/${selectedEvent._id}`);
       setAllEvents(
         allEvents.filter((event) => event._id !== selectedEvent._id)
@@ -164,10 +236,12 @@ export default function EventCalendar() {
       setSelectedEvent(null);
       setIsEditing(false);
       setSelectedEventDetails(null);
+      setDeleteEventLoading(false);
       toast.success("Event deleted successfully");
     } catch (error) {
       console.error("Error deleting event:", error);
       toast.error("Failed to delete event");
+      setDeleteEventLoading(false);
     }
   };
 
@@ -231,6 +305,10 @@ export default function EventCalendar() {
           isEditing={isEditing}
           newEvent={newEvent}
           setNewEvent={setNewEvent}
+          addEventLoading={addEventLoading}
+          setAddEventLoading={setAddEventLoading}
+          editEventLoading={editEventLoading}
+          setEditEventLoading={setEditEventLoading}
           onClose={() => {
             setModalShow(false);
             resetNewEvent();
@@ -248,6 +326,8 @@ export default function EventCalendar() {
             setModalShow(true);
           }}
           onDelete={handleDeleteEvent}
+          deleteEventLoading={deleteEventLoading}
+          setDeleteEventLoading={setDeleteEventLoading}
           onAddReminder={() => setReminderModalShow(true)}
           attendees={attendees}
           profile={profile}
@@ -266,7 +346,7 @@ export default function EventCalendar() {
   );
 }
 
-function EventModal({ isEditing, newEvent, setNewEvent, onClose, onSubmit }) {
+function EventModal({ isEditing, newEvent, setNewEvent, onClose, onSubmit, addEventLoading, setAddEventLoading, editEventLoading, setEditEventLoading }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setNewEvent({ ...newEvent, [name]: value });
@@ -316,6 +396,7 @@ function EventModal({ isEditing, newEvent, setNewEvent, onClose, onSubmit }) {
             <h2 className="text-2xl font-bold ">
               {isEditing ? "Edit Event" : "Add Event"}
             </h2>
+
             <div
               onClick={onClose}
               className="flex justify-center cursor-pointer items-center p-2  bg-gray-300 text-gray-800 rounded-full hover:bg-gray-400"
@@ -441,8 +522,15 @@ function EventModal({ isEditing, newEvent, setNewEvent, onClose, onSubmit }) {
                   onSubmit={onSubmit}
                   className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                 >
-                  {isEditing ? "Update Event" : "Add Event"}
+                  {addEventLoading
+                    ? "Adding Event..."
+                    : editEventLoading
+                      ? "Updating Event..."
+                      : isEditing
+                        ? "Update Event"
+                        : "Add Event"}
                 </button>
+
               </div>
             </form>
           </div>
@@ -460,6 +548,8 @@ function EventDetailsModal({
   onAddReminder,
   attendees,
   profile,
+  deleteEventLoading,
+  setDeleteEventLoading
 }) {
   return (
     <>
@@ -565,7 +655,7 @@ function EventDetailsModal({
                     onClick={onDelete}
                     className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
                   >
-                    Delete Event
+                    {deleteEventLoading ? 'Deleting...' : 'Delete Event'}
                   </button>
                 </>
               )}

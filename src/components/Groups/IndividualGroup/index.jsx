@@ -27,6 +27,7 @@ import { useCookies } from "react-cookie";
 import { lineSpinner } from "ldrs";
 import searchIcon from "../../../images/search.svg";
 import { Avatar } from "@mui/material";
+import { fetchMembers } from '../../../store';
 lineSpinner.register();
 
 const IndividualGroup = () => {
@@ -53,6 +54,19 @@ const IndividualGroup = () => {
     admin = true;
   }
 
+  const getMembers = async () => {
+    try {
+      const membersData = await fetchMembers();
+      if (membersData) {
+        setAllMembers(membersData);
+      }
+    } catch (error) {
+      console.error("Error fetching members:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const getGroup = async () => {
     try {
       setPageLoading(true);
@@ -75,6 +89,7 @@ const IndividualGroup = () => {
 
   useEffect(() => {
     getGroup();
+    getMembers();
   }, []);
 
   const handleFollowToggle = async (memberId, userName) => {

@@ -13,7 +13,7 @@ import baseUrl from "../../config.js";
 
 const RegisterPage = () => {
   const navigateTo = useNavigate();
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -22,41 +22,48 @@ const RegisterPage = () => {
     confirmPassword: '',
     gender: '',
     accept: false,
+    graduatedFromClass: '',
+    graduatingYear: ''
   });
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    const val = type === 'checkbox' ? checked : value;
+    let val = type === 'checkbox' ? checked : value;
+  
+    // Convert specific fields to numbers
+    if (name === 'graduatedFromClass' || name === 'graduatingYear') {
+      val = parseInt(val, 10); // Convert value to number
+    }
+  
     setFormData({ ...formData, [name]: val });
   };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
       console.log('formData', formData);
       const response = await axios.post(`${baseUrl}/alumni/register`, formData);
-
       console.log('Registration successful!', response.data);
       toast.success("User Registered successfully!");
       navigateTo('/');
       setLoading(false);
-
     } catch (error) {
       console.error('Registration failed!', error.response.data);
-      toast.error(error.response.data);
+      toast.error(error.response.data.error);
       setLoading(false);
-
     }
   };
+
   const generateYears = () => {
     const currentYear = new Date().getFullYear();
     const years = [];
     for (let i = currentYear - 1; i >= currentYear - 100; i--) {
-      years.push(`${i}-${i + 1}`);
+      years.push(`${i}`);
     }
     return years;
   };
+
   return (
     <div className="register">
       <main className="rectangle-parent">
@@ -156,7 +163,7 @@ const RegisterPage = () => {
               <div className="last-name-field3">
                 <div className="gender">Gender</div>
                 <div className="gender1">
-                  <select name='department' id='department' style={{ fontSize: 'var(--input-text-title-size)', width: '100%', height: '100%', borderRadius: 'var(--br-9xs)', border: '1px solid var(--outline-box)', boxSizing: 'border-box', backgroundColor: 'var(--background-light)' }} onChange={handleChange} required>
+                  <select name='gender' id='gender' style={{ fontSize: 'var(--input-text-title-size)', width: '100%', height: '100%', borderRadius: 'var(--br-9xs)', border: '1px solid var(--outline-box)', boxSizing: 'border-box', backgroundColor: 'var(--background-light)' }} onChange={handleChange} required>
                     <option value='' disabled selected >Select Gender</option>
                     <option value='Male'>Male</option>
                     <option value='Female'>Female</option>
@@ -166,23 +173,30 @@ const RegisterPage = () => {
                 </div>
               </div>
               <div className="last-name-field4">
-                <div className="department">Department</div>
+                <div className="department">Graduated From Class</div>
                 <div className="dept">
-                  <select name='department' id='department' style={{ fontSize: 'var(--input-text-title-size)', width: '100%', height: '100%', borderRadius: 'var(--br-9xs)', border: '1px solid var(--outline-box)', boxSizing: 'border-box', backgroundColor: 'var(--background-light)' }} onChange={handleChange} required>
-                    <option value='' disabled selected >Select Department</option>
-                    <option value='Agricultural Engineering'>Agricultural Engineering</option>
-                    <option value='Gastroenterology'>Gastroenterology</option>
-                    <option value='Indian languages'>Indian languages</option>
-                    <option value='Neurosurgery'>Neurosurgery</option>
-                    <option value='Vocal Music'>Vocal Music</option>
+                  <select name='graduatedFromClass' id='graduatedFromClass' style={{ fontSize: 'var(--input-text-title-size)', width: '100%', height: '100%', borderRadius: 'var(--br-9xs)', border: '1px solid var(--outline-box)', boxSizing: 'border-box', backgroundColor: 'var(--background-light)' }} onChange={handleChange} required>
+                    <option value='' disabled selected >Select Graduated From Class</option>
+                    <option value='1'>1st</option>
+                    <option value='2'>2nd</option>
+                    <option value='3'>3rd</option>
+                    <option value='4'>4th</option>
+                    <option value='5'>5th</option>
+                    <option value='6'>6th</option>
+                    <option value='7'>7th</option>
+                    <option value='8'>8th</option>
+                    <option value='9'>9th</option>
+                    <option value='10'>10th</option>
+                    <option value='11'>11th</option>
+                    <option value='12'>12th</option>
                   </select>
                 </div>
               </div>
               <div className="last-name-field5">
-                <div className="batch">Batch</div>
+                <div className="batch">Graduating Year</div>
                 <div className="batch1">
-                  <select name='batch' id='batch' style={{ fontSize: 'var(--input-text-title-size)', width: '100%', height: '100%', borderRadius: 'var(--br-9xs)', border: '1px solid var(--outline-box)', boxSizing: 'border-box', backgroundColor: 'var(--background-light)' }} onChange={handleChange} required>
-                    <option value='' disabled selected>Select Batch</option>
+                  <select name='graduatingYear' id='graduatingYear' style={{ fontSize: 'var(--input-text-title-size)', width: '100%', height: '100%', borderRadius: 'var(--br-9xs)', border: '1px solid var(--outline-box)', boxSizing: 'border-box', backgroundColor: 'var(--background-light)' }} onChange={handleChange} required>
+                    <option value='' disabled selected>Select Graduating Year</option>
                     {generateYears().map((year) => (
                       <option key={year} value={year}>
                         {year}
@@ -192,24 +206,29 @@ const RegisterPage = () => {
                 </div>
               </div>
               <div className="privacy-policy-link">
-                <div className="controls">
-                  <div className="union-wrapper">
-                    <img
-                      className="union-icon"
-                      loading="lazy"
-                      alt=""
-                      src="/union.svg"
-                    />
-                  </div>
-                </div>
                 <div className="by-creating-your">
-                  By creating your account, you agree to our
+                <label>
+                  <input 
+                    type="checkbox" 
+                    name="accept" 
+                    id="accept" 
+                    onChange={handleChange}
+                    required
+                  /> I agree to the terms & conditions
+                </label>
                 </div>
                 <div className="privacy-policy">Privacy Policy</div>
               </div>
+             
             </div>
-            <button className="register-button" type='submit' id='btn' name='btn'>
-              <div className="register-button1">{loading? 'Registering...' : "Let's go"}</div>
+            <button 
+              className="register-button" 
+              type='submit' 
+              id='btn' 
+              name='btn'
+              disabled={!formData.accept || loading}
+            >
+              <div className="register-button1">{loading ? 'Registering...' : "Let's go"}</div>
             </button>
           </form>
         </div>
