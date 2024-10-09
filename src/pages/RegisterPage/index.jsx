@@ -78,7 +78,6 @@ const RegisterPage = () => {
   return (
     <div className="register" style={{ backgroundImage: `url(${currentBg})`, transition: "background-image 0.5s ease-in-out" }}>
       <main className="rectangle-parent">
-        <div className="frame-child" />
         <div className="rectangle-group">          
           <div className="bhu-alumni-association-container1">
           <div className="p-8">
