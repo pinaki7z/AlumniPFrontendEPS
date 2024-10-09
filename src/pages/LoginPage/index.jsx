@@ -126,7 +126,7 @@ const LoginPage = ({ handleLogin }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentBg((prevBg) => (prevBg === bg1 ? bg2 : bg1));
-    }, 2000); 
+    }, 2000);
 
     return () => clearInterval(interval);
   }, []);
@@ -180,11 +180,11 @@ const LoginPage = ({ handleLogin }) => {
         <div className="login-fields">
           <form className="credentials-input" onSubmit={handleSubmit}>
             {/* <h1 className=" text-3xl md:text-4xl mt-[23px]" style={{ color: '#36454F' }}>Welcome Back!</h1> */}
-            <div style={{width: '100%', display: 'flex', justifyContent: 'center', paddingTop: '25px'}}>
+            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', paddingTop: '70px' }}>
               <img src={eps} alt="" width='110px' height='170px' />
             </div>
 
-            <div className="university-affiliation">
+            {/* <div className="university-affiliation">
               <div className="bhu-alumni-association-container">
                 <b className="bhu">
                   <span className="bhu1" style={{ color: '#36454F', fontSize: '60px' }}>Excel Public School</span>
@@ -195,62 +195,64 @@ const LoginPage = ({ handleLogin }) => {
                   <span className="alumni-association1" style={{ color: '#36454F' }}>Alumni Association</span>
                 </span>
               </div>
-            </div>
-            <div className="account-details-parent">
-              <div className="account-details" style={{ width: '100%' }}>
-                <div className="email" style={{ color: '#36454F' }}>Email</div>
-                <div className="email1" style={{ width: '100%' }}>
-                  <div className="field">
-                    <input
-                      className="email-address"
-                      placeholder="Email address"
-                      type="text"
-                      style={{ width: '100%' }}
-                      value={email} onChange={(e) => setEmail(e.target.value)}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="password" style={{ color: '#36454F' }}>Password</div>
-              <div className="input-area">
-                <div className="input">
-                  <div className="input1" style={{ position: 'relative' }}>
-                    <div className="field1" style={{ width: '100%' }}>
+            </div> */}
+            <div style={{paddingTop: '1em', width: '100%'}}>
+              <div className="account-details-parent">
+                <div className="account-details" style={{ width: '100%' }}>
+                  <div className="email" style={{ color: '#36454F' }}>Email</div>
+                  <div className="email1" style={{ width: '100%' }}>
+                    <div className="field">
                       <input
-                        className="email-address1"
-                        placeholder="Password"
-                        type={passwordVisible ? 'text' : 'password'}
-                        style={{ width: '80%' }}
-                        value={password} onChange={(e) => setPassword(e.target.value)}
+                        className="email-address"
+                        placeholder="Email address"
+                        type="text"
+                        style={{ width: '100%' }}
+                        value={email} onChange={(e) => setEmail(e.target.value)}
                       />
                     </div>
-                    {passwordVisible ? (
-                      <GoEyeClosed
-                        style={{ position: 'absolute', top: '15px', right: '15px', width: '1.5em', height: '1.5em', cursor: 'pointer' }}
-                        onClick={() => setPasswordVisible(false)}
-                      />
-                    ) : (
-                      <GoEye
-                        style={{ position: 'absolute', top: '15px', right: '15px', width: '1.5em', height: '1.5em', cursor: 'pointer' }}
-                        onClick={() => setPasswordVisible(true)}
-                      />
-                    )}
                   </div>
                 </div>
-                <div className="remember-this-device-forgot">
-                  <div className="remember-this-device">
-                    <div className="controls">
-                      <div className="checkmark">
+                <div className="password" style={{ color: '#36454F' }}>Password</div>
+                <div className="input-area">
+                  <div className="input">
+                    <div className="input1" style={{ position: 'relative' }}>
+                      <div className="field1" style={{ width: '100%' }}>
                         <input
-                          type="checkbox"
-                          checked={rememberDevice}
-                          onChange={() => setRememberDevice(!rememberDevice)}
+                          className="email-address1"
+                          placeholder="Password"
+                          type={passwordVisible ? 'text' : 'password'}
+                          style={{ width: '80%' }}
+                          value={password} onChange={(e) => setPassword(e.target.value)}
                         />
                       </div>
+                      {passwordVisible ? (
+                        <GoEyeClosed
+                          style={{ position: 'absolute', top: '15px', right: '15px', width: '1.5em', height: '1.5em', cursor: 'pointer' }}
+                          onClick={() => setPasswordVisible(false)}
+                        />
+                      ) : (
+                        <GoEye
+                          style={{ position: 'absolute', top: '15px', right: '15px', width: '1.5em', height: '1.5em', cursor: 'pointer' }}
+                          onClick={() => setPasswordVisible(true)}
+                        />
+                      )}
                     </div>
-                    <div className="remember-this-device1" style={{ color: '#008080' }}>Remember this device</div>
                   </div>
-                  <div onClick={() => navigate('/forgot-password')} className="cursor-pointer underline whitespace-nowrap text-sm text-blue-400 hover:text-blue-600 active:text-blue-900 select-none">Forgot Password?</div>
+                  <div className="remember-this-device-forgot">
+                    <div className="remember-this-device">
+                      <div className="controls">
+                        <div className="checkmark">
+                          <input
+                            type="checkbox"
+                            checked={rememberDevice}
+                            onChange={() => setRememberDevice(!rememberDevice)}
+                          />
+                        </div>
+                      </div>
+                      <div className="remember-this-device1" style={{ color: '#008080' }}>Remember this device</div>
+                    </div>
+                    <div onClick={() => navigate('/forgot-password')} className="cursor-pointer underline whitespace-nowrap text-sm text-blue-400 hover:text-blue-600 active:text-blue-900 select-none">Forgot Password?</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -272,7 +274,7 @@ const LoginPage = ({ handleLogin }) => {
         </div>
       </main>
     </div>
-    
+
   );
 };
 
