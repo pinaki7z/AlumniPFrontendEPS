@@ -40,7 +40,7 @@
 }
 .rectangle-group {
   height: 960px;
-  border-radius: var(--br-xs) var(--br-5xl) var(--br-5xl) var(--br-xs);
+  border-radius: 24px 0px 0px 24px;
   background-color: #004C8A;
   color: #FFFFFF;
   flex-direction: row;

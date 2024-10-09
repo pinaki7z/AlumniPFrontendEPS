@@ -1,9 +1,7 @@
 import "./loginPage.css";
 import "../../components/FrameComponent/FrameComponent.css";
 import eps from "../../images/excelPublicSchool.png";
-import bg from "./background.jpg";
 import { useState, useEffect } from "react";
-import "./loginPage.css";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -14,9 +12,8 @@ import baseUrl from "../../config";
 import { GoEye } from "react-icons/go";
 import { GoEyeClosed } from "react-icons/go";
 import CryptoJS from "crypto-js";
-import { Avatar } from "@mui/material";
-import bg1 from "../../images/login-bg-1.jpg";
-import bg2 from "../../images/login-bg-2.jpg";
+import bg1 from "../../images/login-bg-1.jpg"; // Image 1
+import bg2 from "../../images/login-bg-2.jpg"; // Image 2
 
 const LoginPage = ({ handleLogin }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -24,16 +21,15 @@ const LoginPage = ({ handleLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [cookie, setCookie] = useCookies(["token"]);
-  // const navigateTo = useNavigate();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const profile = useSelector((state) => state.profile);
-  const backgroundImageUrl = `${process.env.REACT_APP_URL}/images/background.jpg`;
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [rememberDevice, setRememberDevice] = useState(false);
   const [currentBg, setCurrentBg] = useState(bg1);
-  const SECRET_KEY =
-    "f3c8a3c9b8a9f0b2440a646f3a5b8f9e6d6e46555a4b2b5c6d7c8d9e0a1b2c3d4f5e6a7b8c9d0e1f2a3b4c5d6e7f8g9h0";
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const SECRET_KEY = "f3c8a3c9b8a9f0b2440a646f3a5b8f9e6d6e46555a4b2b5c6d7c8d9e0a1b2c3d4f5e6a7b8c9d0e1f2a3b4c5d6e7f8g9h0";
 
   const encrypt = (text) => {
     return CryptoJS.AES.encrypt(text, SECRET_KEY).toString();
@@ -53,6 +49,7 @@ const LoginPage = ({ handleLogin }) => {
       setRememberDevice(true);
     }
   }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -87,13 +84,8 @@ const LoginPage = ({ handleLogin }) => {
       const currentDate = new Date();
 
       // Handle account expiration
-      if (
-        alumni.expirationDate &&
-        new Date(alumni.expirationDate) < currentDate
-      ) {
-        toast.error(
-          "Your account has expired. Contact admin to recover account"
-        );
+      if (alumni.expirationDate && new Date(alumni.expirationDate) < currentDate) {
+        toast.error("Your account has expired. Contact admin to recover account");
         return;
       }
 
@@ -123,39 +115,26 @@ const LoginPage = ({ handleLogin }) => {
     }
   };
 
+  // Change background images every 2 seconds with sliding animation
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentBg((prevBg) => (prevBg === bg1 ? bg2 : bg1));
-    }, 2000);
+      setIsAnimating(true); // Start the animation
+      setTimeout(() => {
+        setCurrentBg((prevBg) => (prevBg === bg1 ? bg2 : bg1)); // Switch images
+        setIsAnimating(false); // End the animation
+      }, 1000); // Time to complete the animation (1s)
+    }, 2000); // Change every 2 seconds
 
     return () => clearInterval(interval);
   }, []);
 
-  // bg #004C8A
-  // 552 width
-
-  // 147 width
-  // 200
-
-  // blue width 578px
   return (
-    <div className="landing-page-1  md:h-[100vh] p-[20px]" style={{ backgroundImage: `url(${currentBg})`, transition: "background-image 0.5s ease-in-out" }}>
-      {/* <div className="main-container" style={{marginBottom: '20px'}}>
-        <div className="content-area">
-          <img src={eps} alt="" width='90px' height='120px' />
-        </div>
-      </div> */}
+    <div className={`landing-page-1 min-h-[100vh] p-[20px] ${isAnimating ? "slide-animation" : ""}`} style={{ backgroundImage: `url(${currentBg})`, transition: "background-image 0.5s linear" }}>
       <main className="login-panel">
-        {/* <div className="login-panel-child" /> */}
-        <div className="bg-[#004C8A] flex flex-col  items-center rounded-[24px] md:w-[578px]">
-          {/* <img src="logo123.png" alt="" width='147px' height='200px' className="md:mb-[50px] md:mt-[130px]" /> */}
+        <div className="bg-[#004C8A] flex flex-col items-center md:w-[578px]" style={{ borderRadius: '24px 0px 0px 24px' }}>
           <div className="p-8">
-            <h1 className="rediscover-reconnect-reignite">
-              Alumni Connect
-            </h1>
-            <h1 className="your-alumni-journey">
-              Reconnect with your Alma Mater
-            </h1>
+            <h1 className="rediscover-reconnect-reignite">Alumni Connect</h1>
+            <h1 className="your-alumni-journey">Reconnect with your Alma Mater</h1>
             <div style={{ fontSize: '0.26em', color: 'white' }}>
               <p>Dear Excellites,</p><br />
               <p>Welcome back to your EPS!</p><br />
@@ -179,24 +158,10 @@ const LoginPage = ({ handleLogin }) => {
         </div>
         <div className="login-fields">
           <form className="credentials-input" onSubmit={handleSubmit}>
-            {/* <h1 className=" text-3xl md:text-4xl mt-[23px]" style={{ color: '#36454F' }}>Welcome Back!</h1> */}
             <div style={{ width: '100%', display: 'flex', justifyContent: 'center', paddingTop: '70px' }}>
               <img src={eps} alt="" width='110px' height='170px' />
             </div>
-
-            {/* <div className="university-affiliation">
-              <div className="bhu-alumni-association-container">
-                <b className="bhu">
-                  <span className="bhu1" style={{ color: '#36454F', fontSize: '60px' }}>Excel Public School</span>
-                </b>
-                <br />
-                <span className="alumni-association">
-                  <b className="b">{` `}</b>
-                  <span className="alumni-association1" style={{ color: '#36454F' }}>Alumni Association</span>
-                </span>
-              </div>
-            </div> */}
-            <div style={{paddingTop: '1em', width: '100%'}}>
+            <div style={{ paddingTop: '1em', width: '100%' }}>
               <div className="account-details-parent">
                 <div className="account-details" style={{ width: '100%' }}>
                   <div className="email" style={{ color: '#36454F' }}>Email</div>
@@ -274,7 +239,6 @@ const LoginPage = ({ handleLogin }) => {
         </div>
       </main>
     </div>
-
   );
 };
 
