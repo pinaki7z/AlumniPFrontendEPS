@@ -24,15 +24,16 @@
   font-size: 36px;
 }
 .bhu-alumni-association-container1 {
-  width: 264px;
+  width: 100%;
   position: relative;
   display: inline-block;
   flex-shrink: 0;
   z-index: 2;
+  height: 100%;
 }
 .first-name-field-wrapper,
 .rectangle-group {
-  width: 456px;
+  /* width: 456px; */
   display: flex;
   box-sizing: border-box;
   max-width: 100%;
@@ -45,14 +46,16 @@
   flex-direction: row;
   align-items: flex-end;
   justify-content: center;
-  padding: 313px var(--padding-xl);
+  /* padding: 313px var(--padding-xl); */
   z-index: 1;
+  width: 50%;
 }
 .first-name-field-wrapper {
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-end;
-  padding: 0 0 25px;
+  padding: 30px;
+  width: 50%;
 }
 .rectangle-parent,
 .register {
@@ -65,7 +68,7 @@
   background-color: var(--background-light);
   align-items: flex-end;
   justify-content: flex-start;
-  gap: 120px;
+  /* gap: 120px; */
   max-width: 100%;
   text-align: left;
   font-size: 68px;
@@ -83,7 +86,7 @@
   box-sizing: border-box;
   line-height: normal;
   letter-spacing: normal;
-  background-image: url(../../images/arial-view2.jpg);
+  /* background-image: url(../../images/arial-view2.jpg); */
   background-size: cover;
   background-repeat: no-repeat;
   background-position: top;

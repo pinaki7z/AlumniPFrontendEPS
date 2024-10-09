@@ -253,7 +253,9 @@ const Profilecard = ({
                   ? "ALUMNI"
                   : member.profileLevel === 3
                     ? "STUDENT"
-                    : "SUPER ADMIN"}
+                    : member.profileLevel === 0
+                    ? "SUPER ADMIN"
+                    : "Member(Unverified)"}
             </h3>
           </div>
           <p className="text-muted-foreground">{member.department}</p>

@@ -127,7 +127,7 @@
     width: 100%;
     position: relative;
     overflow: hidden;
-    background-image: url(../../images/arial-view2.jpg);
+    /* background-image: url(../../images/login-bg-1.jpg); */
     flex-direction: column;
     justify-content: center;
     align-items: center;

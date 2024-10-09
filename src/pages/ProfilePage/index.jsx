@@ -117,17 +117,42 @@ const ProfilePage = () => {
       if (daysDiff > 0) {
         return (
           <>
-            <p>
+            <p
+              style={{
+                color: "#fff", // white text for better contrast on dark background
+                backgroundColor: "rgba(0, 0, 0, 0.5)", // semi-transparent black background for readability
+                padding: "10px", // adds some space around the text
+                borderRadius: "5px", // rounded corners for better aesthetics
+              }}
+            >
               Your account is not validated and will expire in {daysDiff} days.
-              <Link to="/profile/profile-settings">
-                <span> Upload your ID</span>
+              <Link
+                to="/profile/profile-settings"
+                style={{
+                  color: "#FFD700", // gold color to make the link stand out
+                  fontWeight: "bold", // bold for emphasis
+                  textDecoration: "underline", // underline to differentiate the link
+                }}
+              >
+                Upload your ID
               </Link>
               &nbsp;&nbsp;to validate your account
             </p>
           </>
         );
       } else if (daysDiff < 0) {
-        return "Your account has expired";
+        return (
+          <p
+            style={{
+              color: "#fff",
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              padding: "10px",
+              borderRadius: "5px",
+            }}
+          >
+            Your account has expired
+          </p>
+        );
       }
     }
     return null;
@@ -176,21 +201,21 @@ const ProfilePage = () => {
     const file = event.target.files[0];
     if (file) {
       const formData = new FormData();
-    formData.append('image', file);
+      formData.append('image', file);
 
-    axios.post(`${baseUrl}/uploadImage/singleImage`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
-      .then(res => {
-        setFormData({ ...formData, coverPicture: res.data });
-        handleSubmit();
+      axios.post(`${baseUrl}/uploadImage/singleImage`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       })
-      .catch(err => {
-        console.log(err);
-      });
-   
+        .then(res => {
+          setFormData({ ...formData, coverPicture: res.data });
+          handleSubmit();
+        })
+        .catch(err => {
+          console.log(err);
+        });
+
     }
 
     // const file = event.target.files[0];
@@ -310,7 +335,7 @@ const ProfilePage = () => {
               <Avatar
                 src={profile.profilePicture || profilePic}
                 alt="profile-picture"
-                sx={{width:"150px" , height:"150px"}}
+                sx={{ width: "150px", height: "150px" }}
                 className=" rounded-full border-4 border-white object-cover"
               />
               <input
@@ -346,10 +371,10 @@ const ProfilePage = () => {
                     {member.profileLevel === 1
                       ? "ADMIN"
                       : member.profileLevel === 2
-                      ? "ALUMNI"
-                      : member.profileLevel === 3
-                      ? "STUDENT"
-                      : "SUPERADMIN"}
+                        ? "ALUMNI"
+                        : member.profileLevel === 3
+                          ? "STUDENT"
+                          : "SUPERADMIN"}
                   </p>
                   <p className="font-medium text-gray-800 text-base mt-2">
                     Passionate soul, chasing dreams, inspiring others, embracing
@@ -368,7 +393,7 @@ const ProfilePage = () => {
                     </Link>
 
                     {/* Followers */}
-                    <Link
+                    {/* <Link
                       to={`/profile/${profile._id}/followers`}
                       className="no-underline text-center"
                     >
@@ -379,7 +404,7 @@ const ProfilePage = () => {
                     </Link>
 
                     {/* Following */}
-                    <Link
+                    {/* <Link
                       to={`/profile/${profile._id}/following`}
                       className="no-underline text-center"
                     >
@@ -387,7 +412,7 @@ const ProfilePage = () => {
                       <p className="font-medium text-gray-800 text-lg">
                         {profile.following.length}
                       </p>
-                    </Link>
+                    </Link>  */}
                   </div>
                 </div>
               </div>

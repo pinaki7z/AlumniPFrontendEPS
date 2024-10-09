@@ -1,6 +1,6 @@
 import FrameComponent1 from "../../components/FrameComponent/FrameComponent1.jsx";
 import "./registerpage.css";
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import axios from 'axios';
 import "./registerpage.css";
 import "../LoginPage/loginPage.css"
@@ -10,9 +10,12 @@ import logo from "../../images/bhu.png";
 import { useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify";
 import baseUrl from "../../config.js";
+import bg1 from "../../images/login-bg-1.jpg";
+import bg2 from "../../images/login-bg-2.jpg";
 
 const RegisterPage = () => {
   const navigateTo = useNavigate();
+  const [currentBg, setCurrentBg] = useState(bg1);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
@@ -55,6 +58,14 @@ const RegisterPage = () => {
     }
   };
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentBg((prevBg) => (prevBg === bg1 ? bg2 : bg1));
+    }, 2000); 
+
+    return () => clearInterval(interval);
+  }, []);
+
   const generateYears = () => {
     const currentYear = new Date().getFullYear();
     const years = [];
@@ -65,24 +76,43 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="register">
+    <div className="register" style={{ backgroundImage: `url(${currentBg})`, transition: "background-image 0.5s ease-in-out" }}>
       <main className="rectangle-parent">
         <div className="frame-child" />
-        <div className="rectangle-group">
-          <div className="frame-item" />
+        <div className="rectangle-group">          
           <div className="bhu-alumni-association-container1">
-            <b>
-              <span>Excel Public School</span>
-            </b>
-            <span className="alumni-association">
-              <b>{` `}</b>
-              <span className="alumni-association1">Alumni Association</span>
-            </span>
+          <div className="p-8">
+            <h1 className="rediscover-reconnect-reignite" style={{fontSize: '0.9em', fontWeight: '700'}}>
+              Alumni Connect
+            </h1>
+            <h1 className="your-alumni-journey">
+              Reconnect with your Alma Mater
+            </h1>
+            <div style={{ fontSize: '0.22em', color: 'white' }}>
+              <p>Dear Excellites,</p><br />
+              <p>Welcome back to your EPS!</p><br />
+              <p>As a member of our vibrant and accomplished alumni community, you are an integral part of the legacy we continue to build. Whether you walked through our portals years ago or just recently graduated, your time at Excel Public School shaped your future and contributed to the school's growth and success.</p><br />
+
+              <p>I am excited to welcome you to EXCEL CONNECT—a platform designed to reconnect, reminisce, and collaborate. This platform is more than just a space to keep in touch; it is a gateway to share achievements, engage in meaningful dialogues, and contribute to the ongoing development of your alma mater. Through this, we hope to strengthen the bond between past and present, creating a community of lifelong learners and leaders.</p><br />
+
+              <p>At Excel Public School, we take immense pride in the journeys our alumni have embarked upon, and we are always eager to hear your stories, celebrate your successes, and collaborate on future endeavours. EXCEL CONNECT offers opportunities to stay connected with fellow alumni, mentor current students, and participate in events that bring us closer.</p><br />
+
+              <p>As you reconnect with your school, batch mates, and schoolmates, we invite you to contribute your experiences, skills, and knowledge. Together, let us continue to inspire and lead, as we always have, guided by the values and education that Excel Public School instilled in all of you.</p><br />
+
+              <p>I look forward to your active participation and to celebrating your future milestones. Remember, Excel Public School will always be your home away from home no matter where life takes you.</p><br />
+
+              <p>Welcome back to where it all began!</p><br />
+
+              <p>Warm Regards,</p>
+              <p>Mathew K G</p>
+              <p>(Principal)</p>
+            </div>
+          </div>
           </div>
         </div>
         <div className="first-name-field-wrapper">
           <form className="first-name-field" onSubmit={handleSubmit} >
-            <h1 className="create-an-account">Create an account</h1>
+            <h1 className="create-an-account">Register Now</h1>
             <div className="last-name-field-parent">
               <div className="last-name-field">First Name</div>
               <div className="input">
