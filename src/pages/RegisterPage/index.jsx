@@ -1,6 +1,6 @@
 import FrameComponent1 from "../../components/FrameComponent/FrameComponent1.jsx";
 import "./registerpage.css";
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import "./registerpage.css";
 import "../LoginPage/loginPage.css"
@@ -16,6 +16,8 @@ import bg2 from "../../images/login-bg-2.jpg";
 const RegisterPage = () => {
   const navigateTo = useNavigate();
   const [currentBg, setCurrentBg] = useState(bg1);
+  const [nextBg, setNextBg] = useState(bg2);
+  const [slideDirection, setSlideDirection] = useState("left");
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
@@ -32,18 +34,19 @@ const RegisterPage = () => {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     let val = type === 'checkbox' ? checked : value;
-  
+
     // Convert specific fields to numbers
     if (name === 'graduatedFromClass' || name === 'graduatingYear') {
       val = parseInt(val, 10); // Convert value to number
     }
-  
+
     setFormData({ ...formData, [name]: val });
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 1000));
     try {
       console.log('formData', formData);
       const response = await axios.post(`${baseUrl}/alumni/register`, formData);
@@ -60,8 +63,12 @@ const RegisterPage = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentBg((prevBg) => (prevBg === bg1 ? bg2 : bg1));
-    }, 2000); 
+      setSlideDirection(prev => prev === "left" ? "right" : "left");
+      setTimeout(() => {
+        setCurrentBg(prev => prev === bg1 ? bg2 : bg1);
+        setNextBg(prev => prev === bg1 ? bg2 : bg1);
+      }, 1000);
+    }, 2000);
 
     return () => clearInterval(interval);
   }, []);
@@ -78,35 +85,51 @@ const RegisterPage = () => {
   return (
     <div className="register" style={{ backgroundImage: `url(${currentBg})`, transition: "background-image 0.5s ease-in-out" }}>
       <main className="rectangle-parent">
-        <div className="rectangle-group">          
+        <div
+          className="absolute inset-0 bg-cover bg-center transition-transform duration-1000"
+          style={{
+            backgroundImage: `url(${currentBg})`,
+            zIndex: '-4',
+            transform: `translateX(${slideDirection === "left" ? "-100%" : "0"})`
+          }}
+        />
+        <div
+          className="absolute inset-0 bg-cover bg-center transition-transform duration-1000"
+          style={{
+            backgroundImage: `url(${nextBg})`,
+            zIndex: '-4',
+            transform: `translateX(${slideDirection === "left" ? "0" : "100%"})`
+          }}
+        />
+        <div className="rectangle-group">
           <div className="bhu-alumni-association-container1">
-          <div className="p-8">
-            <h1 className="rediscover-reconnect-reignite" style={{fontSize: '0.9em', fontWeight: '700'}}>
-              Alumni Connect
-            </h1>
-            <h1 className="your-alumni-journey">
-              Reconnect with your Alma Mater
-            </h1>
-            <div style={{ fontSize: '0.22em', color: 'white' }}>
-              <p>Dear Excellites,</p><br />
-              <p>Welcome back to your EPS!</p><br />
-              <p>As a member of our vibrant and accomplished alumni community, you are an integral part of the legacy we continue to build. Whether you walked through our portals years ago or just recently graduated, your time at Excel Public School shaped your future and contributed to the school's growth and success.</p><br />
+            <div className="p-8">
+              <h1 className="rediscover-reconnect-reignite" style={{ fontSize: '0.9em', fontWeight: '700' }}>
+                Excel Connect
+              </h1>
+              <h1 className="your-alumni-journey">
+                Reconnect with your Alma Mater
+              </h1>
+              <div style={{ fontSize: '0.22em', color: 'white' }}>
+                <p>Dear Excellites,</p><br />
+                <p>Welcome back to your EPS!</p><br />
+                <p>As a member of our vibrant and accomplished alumni community, you are an integral part of the legacy we continue to build. Whether you walked through our portals years ago or just recently graduated, your time at Excel Public School shaped your future and contributed to the school's growth and success.</p><br />
 
-              <p>I am excited to welcome you to EXCEL CONNECT—a platform designed to reconnect, reminisce, and collaborate. This platform is more than just a space to keep in touch; it is a gateway to share achievements, engage in meaningful dialogues, and contribute to the ongoing development of your alma mater. Through this, we hope to strengthen the bond between past and present, creating a community of lifelong learners and leaders.</p><br />
+                <p>I am excited to welcome you to EXCEL CONNECT—a platform designed to reconnect, reminisce, and collaborate. This platform is more than just a space to keep in touch; it is a gateway to share achievements, engage in meaningful dialogues, and contribute to the ongoing development of your alma mater. Through this, we hope to strengthen the bond between past and present, creating a community of lifelong learners and leaders.</p><br />
 
-              <p>At Excel Public School, we take immense pride in the journeys our alumni have embarked upon, and we are always eager to hear your stories, celebrate your successes, and collaborate on future endeavours. EXCEL CONNECT offers opportunities to stay connected with fellow alumni, mentor current students, and participate in events that bring us closer.</p><br />
+                <p>At Excel Public School, we take immense pride in the journeys our alumni have embarked upon, and we are always eager to hear your stories, celebrate your successes, and collaborate on future endeavours. EXCEL CONNECT offers opportunities to stay connected with fellow alumni, mentor current students, and participate in events that bring us closer.</p><br />
 
-              <p>As you reconnect with your school, batch mates, and schoolmates, we invite you to contribute your experiences, skills, and knowledge. Together, let us continue to inspire and lead, as we always have, guided by the values and education that Excel Public School instilled in all of you.</p><br />
+                <p>As you reconnect with your school, batch mates, and schoolmates, we invite you to contribute your experiences, skills, and knowledge. Together, let us continue to inspire and lead, as we always have, guided by the values and education that Excel Public School instilled in all of you.</p><br />
 
-              <p>I look forward to your active participation and to celebrating your future milestones. Remember, Excel Public School will always be your home away from home no matter where life takes you.</p><br />
+                <p>I look forward to your active participation and to celebrating your future milestones. Remember, Excel Public School will always be your home away from home no matter where life takes you.</p><br />
 
-              <p>Welcome back to where it all began!</p><br />
+                <p>Welcome back to where it all began!</p><br />
 
-              <p>Warm Regards,</p>
-              <p>Mathew K G</p>
-              <p>(Principal)</p>
+                <p>Warm Regards,</p>
+                <p>Mathew K G</p>
+                <p>(Principal)</p>
+              </div>
             </div>
-          </div>
           </div>
         </div>
         <div className="first-name-field-wrapper">
@@ -150,7 +173,7 @@ const RegisterPage = () => {
                       placeholder="Enter Email Address"
                       type="text"
                       style={{ width: '100%' }}
-                      name='email' id='email' onChange={handleChange} required 
+                      name='email' id='email' onChange={handleChange} required
                     />
                   </div>
                 </div>
@@ -166,7 +189,7 @@ const RegisterPage = () => {
                         placeholder="Enter Password"
                         type="password"
                         style={{ width: '100%' }}
-                        name='password' id='password' onChange={handleChange} required 
+                        name='password' id='password' onChange={handleChange} required
                       />
                     </div>
                   </div>
@@ -183,7 +206,7 @@ const RegisterPage = () => {
                         placeholder="Confirm Password"
                         type="password"
                         style={{ width: '100%' }}
-                        name='confirmPassword' id='confirmPassword' onChange={handleChange} required 
+                        name='confirmPassword' id='confirmPassword' onChange={handleChange} required
                       />
                     </div>
                   </div>
@@ -236,24 +259,24 @@ const RegisterPage = () => {
               </div>
               <div className="privacy-policy-link">
                 <div className="by-creating-your">
-                <label>
-                  <input 
-                    type="checkbox" 
-                    name="accept" 
-                    id="accept" 
-                    onChange={handleChange}
-                    required
-                  /> I agree to the terms & conditions
-                </label>
+                  <label>
+                    <input
+                      type="checkbox"
+                      name="accept"
+                      id="accept"
+                      onChange={handleChange}
+                      required
+                    /> I agree to the terms & conditions
+                  </label>
                 </div>
                 <div className="privacy-policy">Privacy Policy</div>
               </div>
-             
+
             </div>
-            <button 
-              className="register-button" 
-              type='submit' 
-              id='btn' 
+            <button
+              className="register-button"
+              type='submit'
+              id='btn'
               name='btn'
               disabled={!formData.accept || loading}
             >
