@@ -28,6 +28,8 @@ const LoginPage = ({ handleLogin }) => {
   const [rememberDevice, setRememberDevice] = useState(false);
   const [currentBg, setCurrentBg] = useState(bg1);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [slideDirection, setSlideDirection] = useState("left");
+  const [nextBg, setNextBg] = useState(bg2);
 
   const SECRET_KEY = "f3c8a3c9b8a9f0b2440a646f3a5b8f9e6d6e46555a4b2b5c6d7c8d9e0a1b2c3d4f5e6a7b8c9d0e1f2a3b4c5d6e7f8g9h0";
 
@@ -63,6 +65,8 @@ const LoginPage = ({ handleLogin }) => {
         localStorage.removeItem("savedEmail");
         localStorage.removeItem("savedPassword");
       }
+
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       const response = await fetch(`${baseUrl}/alumni/login`, {
         method: "POST",
@@ -118,22 +122,36 @@ const LoginPage = ({ handleLogin }) => {
   // Change background images every 2 seconds with sliding animation
   useEffect(() => {
     const interval = setInterval(() => {
-      setIsAnimating(true); // Start the animation
+      setSlideDirection(prev => prev === "left" ? "right" : "left");
       setTimeout(() => {
-        setCurrentBg((prevBg) => (prevBg === bg1 ? bg2 : bg1)); // Switch images
-        setIsAnimating(false); // End the animation
-      }, 1000); // Time to complete the animation (1s)
-    }, 2000); // Change every 2 seconds
+        setCurrentBg(prev => prev === bg1 ? bg2 : bg1);
+        setNextBg(prev => prev === bg1 ? bg2 : bg1);
+      }, 12000);
+    }, 2000);
 
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className={`landing-page-1 min-h-[100vh] p-[20px] ${isAnimating ? "slide-animation" : ""}`} style={{ backgroundImage: `url(${currentBg})`, transition: "background-image 0.5s linear" }}>
+    <div className="landing-page-1 min-h-screen p-5 relative overflow-hidden">
+      <div
+        className="absolute inset-0 bg-cover bg-center transition-transform duration-1000"
+        style={{
+          backgroundImage: `url(${currentBg})`,
+          transform: `translateX(${slideDirection === "left" ? "-100%" : "0"})`
+        }}
+      />
+      <div
+        className="absolute inset-0 bg-cover bg-center transition-transform duration-1000"
+        style={{
+          backgroundImage: `url(${nextBg})`,
+          transform: `translateX(${slideDirection === "left" ? "0" : "100%"})`
+        }}
+      />
       <main className="login-panel">
         <div className="bg-[#004C8A] flex flex-col items-center md:w-[578px]" style={{ borderRadius: '24px 0px 0px 24px' }}>
           <div className="p-8">
-            <h1 className="rediscover-reconnect-reignite">Alumni Connect</h1>
+            <h1 className="rediscover-reconnect-reignite">Excel Connect</h1>
             <h1 className="your-alumni-journey">Reconnect with your Alma Mater</h1>
             <div style={{ fontSize: '0.26em', color: 'white' }}>
               <p>Dear Excellites,</p><br />

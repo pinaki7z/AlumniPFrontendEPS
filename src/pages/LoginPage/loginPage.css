@@ -120,6 +120,7 @@
     flex-direction: row;
     /* align-items: flex-end; */
     gap: 24px;
+    z-index: 2;
     max-width: 100%;
     font-size: 56px;
   }
