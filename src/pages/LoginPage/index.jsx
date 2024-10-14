@@ -200,7 +200,9 @@ const LoginPage = ({ handleLogin }) => {
                     background: '#F8A700',
                     borderRadius: '3px',
                     padding: '6px 10px',
-                    float: 'right'
+                    float: 'right',
+                    fontSize: '20px',
+                    fontWeight: '500'
                   }}>Read Less</button>
                 </>
               ) : (
@@ -209,7 +211,9 @@ const LoginPage = ({ handleLogin }) => {
                   background: '#F8A700',
                   borderRadius: '3px',
                   padding: '6px 10px',
-                  float: 'right'
+                  float: 'right',
+                  fontSize: '20px',
+                  fontWeight: '500'
                 }}>Read More</button>
               )}
             </div>
@@ -234,7 +238,8 @@ const LoginPage = ({ handleLogin }) => {
                     background: '#F8A700',
                     borderRadius: '3px',
                     padding: '8px 20px',
-                    fontSize: '0.26em'
+                    fontSize: '20px',
+                    fontWeight: '500'
                   }}
                 >
                   View Gallery
