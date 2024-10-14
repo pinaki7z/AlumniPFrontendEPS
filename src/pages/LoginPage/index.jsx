@@ -12,8 +12,13 @@ import baseUrl from "../../config";
 import { GoEye } from "react-icons/go";
 import { GoEyeClosed } from "react-icons/go";
 import CryptoJS from "crypto-js";
-import bg1 from "../../images/login-bg-1.jpg"; // Image 1
-import bg2 from "../../images/login-bg-2.jpg"; // Image 2
+import bg1 from "../../images/login-bg-1.jpg";
+import bg2 from "../../images/login-bg-2.jpg";
+import carouselImage1 from "../../images/eps-image1.jpeg";
+import carouselImage2 from "../../images/eps-image2.jpeg";
+import carouselImage3 from "../../images/eps-image3.jpeg";
+import carouselImage4 from "../../images/eps-image4.jpeg";
+import carouselImage5 from "../../images/eps-image5.jpeg";
 
 const LoginPage = ({ handleLogin }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -30,6 +35,9 @@ const LoginPage = ({ handleLogin }) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [slideDirection, setSlideDirection] = useState("left");
   const [nextBg, setNextBg] = useState(bg2);
+  const [showMore, setShowMore] = useState(false);
+  const [carouselIndex, setCarouselIndex] = useState(0);
+  const carouselImages = [carouselImage1, carouselImage2, carouselImage3, carouselImage4, carouselImage5];
 
   const SECRET_KEY = "f3c8a3c9b8a9f0b2440a646f3a5b8f9e6d6e46555a4b2b5c6d7c8d9e0a1b2c3d4f5e6a7b8c9d0e1f2a3b4c5d6e7f8g9h0";
 
@@ -132,6 +140,15 @@ const LoginPage = ({ handleLogin }) => {
     return () => clearInterval(interval);
   }, []);
 
+
+  const handleNextImage = () => {
+    setCarouselIndex((prevIndex) => (prevIndex + 1) % carouselImages.length);
+  };
+
+  const handlePrevImage = () => {
+    setCarouselIndex((prevIndex) => (prevIndex - 1 + carouselImages.length) % carouselImages.length);
+  };
+
   return (
     <div className="landing-page-1 min-h-screen p-5 relative overflow-hidden">
       <div
@@ -157,20 +174,45 @@ const LoginPage = ({ handleLogin }) => {
               <p>Dear Excellites,</p><br />
               <p>Welcome back to your EPS!</p><br />
               <p>As a member of our vibrant and accomplished alumni community, you are an integral part of the legacy we continue to build. Whether you walked through our portals years ago or just recently graduated, your time at Excel Public School shaped your future and contributed to the school's growth and success.</p><br />
+              <p>I am excited to welcome you to EXCEL CONNECT—a platform designed to reconnect, reminisce, and collaborate. This platform is more than just a space to keep in touch; it is a gateway to share achievements, engage in meaningful dialogues, and contribute to the ongoing development of your alma mater.</p>
 
-              <p>I am excited to welcome you to EXCEL CONNECT—a platform designed to reconnect, reminisce, and collaborate. This platform is more than just a space to keep in touch; it is a gateway to share achievements, engage in meaningful dialogues, and contribute to the ongoing development of your alma mater. Through this, we hope to strengthen the bond between past and present, creating a community of lifelong learners and leaders.</p><br />
 
-              <p>At Excel Public School, we take immense pride in the journeys our alumni have embarked upon, and we are always eager to hear your stories, celebrate your successes, and collaborate on future endeavours. EXCEL CONNECT offers opportunities to stay connected with fellow alumni, mentor current students, and participate in events that bring us closer.</p><br />
-
-              <p>As you reconnect with your school, batch mates, and schoolmates, we invite you to contribute your experiences, skills, and knowledge. Together, let us continue to inspire and lead, as we always have, guided by the values and education that Excel Public School instilled in all of you.</p><br />
-
-              <p>I look forward to your active participation and to celebrating your future milestones. Remember, Excel Public School will always be your home away from home no matter where life takes you.</p><br />
-
-              <p>Welcome back to where it all began!</p><br />
-
-              <p>Warm Regards,</p>
-              <p>Mathew K G</p>
-              <p>(Principal)</p>
+              {showMore ? (
+                <>
+                  <p>Through this, we hope to strengthen the bond between past and present, creating a community of lifelong learners and leaders.</p>
+                  <p>At Excel Public School, we take immense pride in the journeys our alumni have embarked upon, and we are always eager to hear your stories, celebrate your successes, and collaborate on future endeavours. EXCEL CONNECT offers opportunities to stay connected with fellow alumni, mentor current students, and participate in events that bring us closer.</p><br />
+                  <p>As you reconnect with your school, batch mates, and schoolmates, we invite you to contribute your experiences, skills, and knowledge. Together, let us continue to inspire and lead, as we always have, guided by the values and education that Excel Public School instilled in all of you.</p><br />
+                  <p>I look forward to your active participation and to celebrating your future milestones. Remember, Excel Public School will always be your home away from home no matter where life takes you.</p><br />
+                  <p>Welcome back to where it all began!</p><br />
+                  <p>Warm Regards,</p>
+                  <p>Mathew K G</p>
+                  <p>(Principal)</p>
+                  <button onClick={() => setShowMore(false)} className="text-blue-500 hover:text-blue-700">Read less</button>
+                </>
+              ) : (
+                <button onClick={() => setShowMore(true)} className="text-blue-500 hover:text-blue-700">Read more</button>
+              )}
+            </div>
+            <div className="carousel-container" style={{ paddingTop: '15px' }}>
+              <img
+                src={carouselImages[carouselIndex]}
+                alt={`Carousel Image ${carouselIndex + 1}`}
+                className="carousel-image"
+              />
+              <div className="carousel-controls" style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '10px' }}>
+                <button onClick={handlePrevImage} style={{ color: 'white', fontSize: '20px' }}>Previous</button>
+                <button onClick={handleNextImage} style={{ color: 'white', fontSize: '20px' }}>Next</button>
+              </div>
+              <div>
+                <a
+                  href="https://eps.insideoutprojects.in/alumni-gallery/"
+                  target="_blank" // Opens in a new tab
+                  rel="noopener noreferrer" // Security best practice
+                  className="gallery-button"
+                >
+                  View Gallery
+                </a>
+              </div>
             </div>
           </div>
         </div>
