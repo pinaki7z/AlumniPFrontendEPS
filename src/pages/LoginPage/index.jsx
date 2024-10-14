@@ -159,7 +159,7 @@ const LoginPage = ({ handleLogin }) => {
 
   return (
     <div className="landing-page-1 min-h-screen p-5 relative overflow-hidden">
-      <div
+      {/* <div
         className="absolute inset-0 bg-cover bg-center transition-transform duration-1000"
         style={{
           backgroundImage: `url(${currentBg})`,
@@ -172,7 +172,7 @@ const LoginPage = ({ handleLogin }) => {
           backgroundImage: `url(${nextBg})`,
           transform: `translateX(${slideDirection === "left" ? "0" : "100%"})`
         }}
-      />
+      /> */}
       <main className="login-panel">
         <div className="bg-[#004C8A] flex flex-col items-center md:w-[578px]" style={{ borderRadius: '24px 0px 0px 24px' }}>
           <div className="p-8">
