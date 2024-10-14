@@ -220,10 +220,10 @@ const LoginPage = ({ handleLogin }) => {
                 className="carousel-image"
               />
               <div className="carousel-controls" style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '10px' }}>
-                <button onClick={handlePrevImage} style={{ color: 'white', fontSize: '20px' }}>Previous</button>
+                {/* <button onClick={handlePrevImage} style={{ color: 'white', fontSize: '20px' }}>Previous</button> */}
                 {/* <button onClick={handleNextImage} style={{ color: 'white', fontSize: '20px' }}>Next</button> */}
               </div>
-              <div style={{width: '100%',textAlign: 'center'}}>
+              <div style={{width: '100%',display: 'flex',justifyContent: 'center'}}>
                 <a
                   href="https://eps.insideoutprojects.in/alumni-gallery/"
                   target="_blank"
@@ -233,7 +233,7 @@ const LoginPage = ({ handleLogin }) => {
                     color: '#F8F8FF',
                     background: '#F8A700',
                     borderRadius: '3px',
-                    padding: '6px',
+                    padding: '8px 20px',
                     fontSize: '0.26em'
                   }}
                 >
