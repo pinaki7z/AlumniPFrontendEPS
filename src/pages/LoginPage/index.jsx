@@ -223,7 +223,7 @@ const LoginPage = ({ handleLogin }) => {
                 {/* <button onClick={handlePrevImage} style={{ color: 'white', fontSize: '20px' }}>Previous</button> */}
                 {/* <button onClick={handleNextImage} style={{ color: 'white', fontSize: '20px' }}>Next</button> */}
               </div>
-              <div style={{width: '100%',display: 'flex',justifyContent: 'center'}}>
+              <div style={{width: '100%',display: 'flex',justifyContent: 'center', paddingTop: '8px'}}>
                 <a
                   href="https://eps.insideoutprojects.in/alumni-gallery/"
                   target="_blank"
