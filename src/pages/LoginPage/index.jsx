@@ -199,18 +199,18 @@ const LoginPage = ({ handleLogin }) => {
                     color: '#F8F8FF',
                     background: '#F8A700',
                     borderRadius: '3px',
-                    padding: '6px',
+                    padding: '6px 10px',
                     float: 'right'
-                  }}>Read less</button>
+                  }}>Read Less</button>
                 </>
               ) : (
                 <button onClick={() => setShowMore(true)} className="text-blue-500 hover:text-blue-700" style={{
                   color: '#F8F8FF',
                   background: '#F8A700',
                   borderRadius: '3px',
-                  padding: '6px',
+                  padding: '6px 10px',
                   float: 'right'
-                }}>Read more</button>
+                }}>Read More</button>
               )}
             </div>
             <div className="carousel-container" style={{ paddingTop: '50px' }}>
