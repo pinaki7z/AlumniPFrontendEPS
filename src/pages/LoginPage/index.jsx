@@ -60,6 +60,14 @@ const LoginPage = ({ handleLogin }) => {
     }
   }, []);
 
+  useEffect(() => {
+    const carouselInterval = setInterval(() => {
+      setCarouselIndex(prevIndex => (prevIndex + 1) % carouselImages.length);
+    }, 3000);
+
+    return () => clearInterval(carouselInterval);
+  }, [carouselImages.length]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -187,13 +195,25 @@ const LoginPage = ({ handleLogin }) => {
                   <p>Warm Regards,</p>
                   <p>Mathew K G</p>
                   <p>(Principal)</p>
-                  <button onClick={() => setShowMore(false)} className="text-blue-500 hover:text-blue-700">Read less</button>
+                  <button onClick={() => setShowMore(false)} className="text-blue-500 hover:text-blue-700" style={{
+                    color: '#F8F8FF',
+                    background: '#F8A700',
+                    borderRadius: '3px',
+                    padding: '6px',
+                    float: 'right'
+                  }}>Read less</button>
                 </>
               ) : (
-                <button onClick={() => setShowMore(true)} className="text-blue-500 hover:text-blue-700">Read more</button>
+                <button onClick={() => setShowMore(true)} className="text-blue-500 hover:text-blue-700" style={{
+                  color: '#F8F8FF',
+                  background: '#F8A700',
+                  borderRadius: '3px',
+                  padding: '6px',
+                  float: 'right'
+                }}>Read more</button>
               )}
             </div>
-            <div className="carousel-container" style={{ paddingTop: '15px' }}>
+            <div className="carousel-container" style={{ paddingTop: '50px' }}>
               <img
                 src={carouselImages[carouselIndex]}
                 alt={`Carousel Image ${carouselIndex + 1}`}
@@ -201,14 +221,21 @@ const LoginPage = ({ handleLogin }) => {
               />
               <div className="carousel-controls" style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '10px' }}>
                 <button onClick={handlePrevImage} style={{ color: 'white', fontSize: '20px' }}>Previous</button>
-                <button onClick={handleNextImage} style={{ color: 'white', fontSize: '20px' }}>Next</button>
+                {/* <button onClick={handleNextImage} style={{ color: 'white', fontSize: '20px' }}>Next</button> */}
               </div>
-              <div>
+              <div style={{width: '100%',textAlign: 'center'}}>
                 <a
                   href="https://eps.insideoutprojects.in/alumni-gallery/"
-                  target="_blank" // Opens in a new tab
-                  rel="noopener noreferrer" // Security best practice
+                  target="_blank"
+                  rel="noopener noreferrer" 
                   className="gallery-button"
+                  style={{
+                    color: '#F8F8FF',
+                    background: '#F8A700',
+                    borderRadius: '3px',
+                    padding: '6px',
+                    fontSize: '0.26em'
+                  }}
                 >
                   View Gallery
                 </a>
