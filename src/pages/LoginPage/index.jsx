@@ -176,7 +176,7 @@ const LoginPage = ({ handleLogin }) => {
       <main className="login-panel">
         <div className="bg-[#004C8A] flex flex-col items-center md:w-[578px]" style={{ borderRadius: '24px 0px 0px 24px' }}>
           <div className="p-8">
-            <p>Excel Connect<br/><span >Reconnect with your Alma Mater</span></p>
+            <p style={{fontSize: '35px',fontWeight: '700',color: '#f8f8ff'}}>Excel Connect<br/><span style={{fontSize: '30px',fontWeight: '0',color: '#f8f8ff'}}>Reconnect with your Alma Mater</span></p>
             {/* <p className="your-alumni-journey">Reconnect with your Alma Mater</p> */}
             <div style={{ fontSize: '0.26em', color: 'white',paddingTop: '25px' }}>
               <p>Dear Excellites,</p><br />
