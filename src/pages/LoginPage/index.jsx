@@ -176,9 +176,9 @@ const LoginPage = ({ handleLogin }) => {
       <main className="login-panel">
         <div className="bg-[#004C8A] flex flex-col items-center md:w-[578px]" style={{ borderRadius: '24px 0px 0px 24px' }}>
           <div className="p-8">
-            <h1 className="rediscover-reconnect-reignite">Excel Connect</h1>
-            <h1 className="your-alumni-journey">Reconnect with your Alma Mater</h1>
-            <div style={{ fontSize: '0.26em', color: 'white' }}>
+            <p>Excel Connect<br/><span >Reconnect with your Alma Mater</span></p>
+            {/* <p className="your-alumni-journey">Reconnect with your Alma Mater</p> */}
+            <div style={{ fontSize: '0.26em', color: 'white',paddingTop: '25px' }}>
               <p>Dear Excellites,</p><br />
               <p>Welcome back to your EPS!</p><br />
               <p>As a member of our vibrant and accomplished alumni community, you are an integral part of the legacy we continue to build. Whether you walked through our portals years ago or just recently graduated, your time at Excel Public School shaped your future and contributed to the school's growth and success.</p><br />
