@@ -83,9 +83,9 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="register" style={{ backgroundImage: `url(${currentBg})`, transition: "background-image 0.5s ease-in-out" }}>
+    <div className="register">
       <main className="rectangle-parent">
-        <div
+        {/* <div
           className="absolute inset-0 bg-cover bg-center transition-transform duration-1000"
           style={{
             backgroundImage: `url(${currentBg})`,
@@ -100,17 +100,12 @@ const RegisterPage = () => {
             zIndex: '-4',
             transform: `translateX(${slideDirection === "left" ? "0" : "100%"})`
           }}
-        />
+        /> */}
         <div className="rectangle-group">
           <div className="bhu-alumni-association-container1">
             <div className="p-8">
-              <h1 className="rediscover-reconnect-reignite" style={{ fontSize: '0.9em', fontWeight: '700' }}>
-                Excel Connect
-              </h1>
-              <h1 className="your-alumni-journey">
-                Reconnect with your Alma Mater
-              </h1>
-              <div style={{ fontSize: '0.22em', color: 'white' }}>
+            <p style={{fontSize: '35px',fontWeight: '700',color: '#f8f8ff'}}>Excel Connect<br/><span style={{fontSize: '30px',fontWeight: '0',color: '#f8f8ff'}}>Reconnect with your Alma Mater</span></p>
+              <div style={{ fontSize: '0.22em', color: 'white',paddingTop: '25px'  }}>
                 <p>Dear Excellites,</p><br />
                 <p>Welcome back to your EPS!</p><br />
                 <p>As a member of our vibrant and accomplished alumni community, you are an integral part of the legacy we continue to build. Whether you walked through our portals years ago or just recently graduated, your time at Excel Public School shaped your future and contributed to the school's growth and success.</p><br />
