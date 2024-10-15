@@ -747,6 +747,9 @@
     font-size: 36px;
     padding: 0;
   }
+  .subheading{
+    padding-top: 10px;
+  }
   .content-area {
     flex-direction: column;
     gap: 20px;
