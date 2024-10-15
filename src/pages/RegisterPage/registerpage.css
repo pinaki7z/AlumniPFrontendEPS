@@ -91,7 +91,7 @@
   background-repeat: no-repeat;
   background-position: top;
 }
-@media screen and (max-width: 1025px) {
+/* @media screen and (max-width: 1025px) {
   .rectangle-parent {
     flex-wrap: wrap;
     gap: 60px;
@@ -111,14 +111,32 @@
   .rectangle-parent {
     gap: 30px;
   }
-}
+} */
 @media screen and (max-width: 450px) {
   .bhu-alumni-association-container {
     font-size: 22px;
   }
   .rectangle-group {
-    padding-top: var(--padding-113xl);
-    padding-bottom: var(--padding-113xl);
+    /* padding-top: var(--padding-113xl);
+    padding-bottom: var(--padding-113xl); */
+    width: 100% ;
+    height: auto;
+    border-radius: 0px;
     box-sizing: border-box;
   }
+  .rectangle-parent{
+    display: flex;
+    flex-direction: column;
+    border-radius: 0px; 
+  }
+  .first-name-field-wrapper{
+    width: 100%;
+  }
+  .last-name-field2{
+    margin-bottom: 50px;
+  }
+  .last-name-field1{
+    margin-bottom: 50px;
+  }
 }
+  
