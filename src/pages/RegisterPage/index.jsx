@@ -12,6 +12,11 @@ import { toast } from "react-toastify";
 import baseUrl from "../../config.js";
 import bg1 from "../../images/login-bg-1.jpg";
 import bg2 from "../../images/login-bg-2.jpg";
+import carouselImage1 from "../../images/eps-image1.jpeg";
+import carouselImage2 from "../../images/eps-image2.jpeg";
+import carouselImage3 from "../../images/eps-image3.jpeg";
+import carouselImage4 from "../../images/eps-image4.jpeg";
+import carouselImage5 from "../../images/eps-image5.jpeg";
 
 const RegisterPage = () => {
   const navigateTo = useNavigate();
@@ -19,6 +24,9 @@ const RegisterPage = () => {
   const [nextBg, setNextBg] = useState(bg2);
   const [slideDirection, setSlideDirection] = useState("left");
   const [loading, setLoading] = useState(false);
+  const [showMore, setShowMore] = useState(false);
+  const [carouselIndex, setCarouselIndex] = useState(0);
+  const carouselImages = [carouselImage1, carouselImage2, carouselImage3, carouselImage4, carouselImage5];
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -42,6 +50,26 @@ const RegisterPage = () => {
 
     setFormData({ ...formData, [name]: val });
   };
+
+  useEffect(() => {
+    const carouselInterval = setInterval(() => {
+      setCarouselIndex(prevIndex => (prevIndex + 1) % carouselImages.length);
+    }, 3000);
+
+    return () => clearInterval(carouselInterval);
+  }, [carouselImages.length]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSlideDirection(prev => prev === "left" ? "right" : "left");
+      setTimeout(() => {
+        setCurrentBg(prev => prev === bg1 ? bg2 : bg1);
+        setNextBg(prev => prev === bg1 ? bg2 : bg1);
+      }, 12000);
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -90,25 +118,74 @@ const RegisterPage = () => {
             <div className="p-8">
               <p style={{ fontSize: '35px', fontWeight: '700', color: '#f8f8ff' }}>Excel Connect<br /></p>
               <p className="subheading" style={{ fontSize: '30px', fontWeight: '0', color: '#f8f8ff', lineHeight: '85%' }}>Reconnect with your Alma Mater</p>
-              <div style={{ fontSize: '0.22em', color: 'white', paddingTop: '25px' }}>
+              <div className='message-div' style={{ fontSize: '0.22em', color: 'white', paddingTop: '25px' }}>
                 <p>Dear Excellites,</p><br />
                 <p>Welcome back to your EPS!</p><br />
                 <p>As a member of our vibrant and accomplished alumni community, you are an integral part of the legacy we continue to build. Whether you walked through our portals years ago or just recently graduated, your time at Excel Public School shaped your future and contributed to the school's growth and success.</p><br />
 
-                <p>I am excited to welcome you to EXCEL CONNECT—a platform designed to reconnect, reminisce, and collaborate. This platform is more than just a space to keep in touch; it is a gateway to share achievements, engage in meaningful dialogues, and contribute to the ongoing development of your alma mater. Through this, we hope to strengthen the bond between past and present, creating a community of lifelong learners and leaders.</p><br />
+                <p>I am excited to welcome you to EXCEL CONNECT—a platform designed to reconnect, reminisce, and collaborate. This platform is more than just a space to keep in touch; it is a gateway to share achievements, engage in meaningful dialogues, and contribute to the ongoing development of your alma mater. </p> <br />
 
-                <p>At Excel Public School, we take immense pride in the journeys our alumni have embarked upon, and we are always eager to hear your stories, celebrate your successes, and collaborate on future endeavours. EXCEL CONNECT offers opportunities to stay connected with fellow alumni, mentor current students, and participate in events that bring us closer.</p><br />
-
-                <p>As you reconnect with your school, batch mates, and schoolmates, we invite you to contribute your experiences, skills, and knowledge. Together, let us continue to inspire and lead, as we always have, guided by the values and education that Excel Public School instilled in all of you.</p><br />
-
-                <p>I look forward to your active participation and to celebrating your future milestones. Remember, Excel Public School will always be your home away from home no matter where life takes you.</p><br />
-
-                <p>Welcome back to where it all began!</p><br />
-
-                <p>Warm Regards,</p>
-                <p>Mathew K G</p>
-                <p>(Principal)</p>
+                {showMore ? (
+                <>
+                  <p>Through this, we hope to strengthen the bond between past and present, creating a community of lifelong learners and leaders.</p>
+                  <p>At Excel Public School, we take immense pride in the journeys our alumni have embarked upon, and we are always eager to hear your stories, celebrate your successes, and collaborate on future endeavours. EXCEL CONNECT offers opportunities to stay connected with fellow alumni, mentor current students, and participate in events that bring us closer.</p><br />
+                  <p>As you reconnect with your school, batch mates, and schoolmates, we invite you to contribute your experiences, skills, and knowledge. Together, let us continue to inspire and lead, as we always have, guided by the values and education that Excel Public School instilled in all of you.</p><br />
+                  <p>I look forward to your active participation and to celebrating your future milestones. Remember, Excel Public School will always be your home away from home no matter where life takes you.</p><br />
+                  <p>Welcome back to where it all began!</p><br />
+                  <p>Warm Regards,</p>
+                  <p>Mathew K G</p>
+                  <p>(Principal)</p>
+                  <button onClick={() => setShowMore(false)} className="text-blue-500 hover:text-blue-700" style={{
+                    color: '#F8F8FF',
+                    background: '#F8A700',
+                    borderRadius: '3px',
+                    padding: '6px 10px',
+                    float: 'right',
+                    fontSize: '20px',
+                    fontWeight: '500'
+                  }}>Read Less</button>
+                </>
+              ) : (
+                <button onClick={() => setShowMore(true)} className="text-blue-500 hover:text-blue-700" style={{
+                  color: '#F8F8FF',
+                  background: '#F8A700',
+                  borderRadius: '3px',
+                  padding: '6px 10px',
+                  float: 'right',
+                  fontSize: '20px',
+                  fontWeight: '500'
+                }}>Read More</button>
+              )}
               </div>
+              <div className="carousel-container" style={{ paddingTop: '50px' }}>
+              <img
+                src={carouselImages[carouselIndex]}
+                alt={`Carousel Image ${carouselIndex + 1}`}
+                className="carousel-image"
+              />
+              <div className="carousel-controls" style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '10px' }}>
+                {/* <button onClick={handlePrevImage} style={{ color: 'white', fontSize: '20px' }}>Previous</button> */}
+                {/* <button onClick={handleNextImage} style={{ color: 'white', fontSize: '20px' }}>Next</button> */}
+              </div>
+              <div style={{width: '100%',display: 'flex',justifyContent: 'center', paddingTop: '8px'}}>
+                <a
+                  href="https://eps.insideoutprojects.in/alumni-gallery/"
+                  target="_blank"
+                  rel="noopener noreferrer" 
+                  className="gallery-button"
+                  style={{
+                    color: '#F8F8FF',
+                    background: '#F8A700',
+                    borderRadius: '3px',
+                    padding: '8px 20px',
+                    fontSize: '20px',
+                    fontWeight: '500'
+                  }}
+                >
+                  View Gallery
+                </a>
+              </div>
+            </div>
             </div>
           </div>
         </div>
