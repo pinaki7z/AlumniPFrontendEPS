@@ -816,7 +816,7 @@
     flex-wrap: wrap;
   }
   .button1 {
-    font-size: var(--input-text-size);
+    font-size: 20px;
     line-height: 16px;
   }
 }

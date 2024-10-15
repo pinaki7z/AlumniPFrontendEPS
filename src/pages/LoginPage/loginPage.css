@@ -5,6 +5,9 @@
   border-radius: 50%;
   background-color: var(--background-medium);
 }
+.main-container-div{
+  border-radius: 24px 0px 0px 24px;
+}
 .logo {
   margin: 0;
   position: relative;
@@ -701,7 +704,7 @@
     position: relative;
     
   } */
-/* @media screen and (max-width: 975px) {
+@media screen and (max-width: 975px) {
     .welcome-back {
       font-size: var(--font-size-7xl);
     }
@@ -709,7 +712,7 @@
       font-size: var(--font-size-10xl);
     }
   }
-  @media screen and (max-width: 450px) {
+  /* @media screen and (max-width: 450px) {
     .welcome-back {
       font-size: var(--font-size-lgi);
     }
@@ -759,6 +762,16 @@
   }
   .credentials-input {
     gap: var(--gap-5xs);
+    padding: 10px 10px;
+  }
+  .main-container-div{
+    border-radius: 0px;
+  }
+  .login-panel{
+    border-radius: 0px;
+  }
+  .message-div p {
+    font-size: 10px;
   }
   /* .account-details-parent{
       margin-top: 20px;
