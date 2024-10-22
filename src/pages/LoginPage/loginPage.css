@@ -26,7 +26,7 @@
 
 .gallery-button:hover {
   color: #f0f0f0; /* Change to a lighter color on hover */
-  text-decoration: underline; /* Add underline on hover */
+  text-decoration: none; /* Add underline on hover */
 }
 .logo-wrapper {
   display: flex;
