@@ -11,6 +11,8 @@
     "@mui/material": "^5.16.7",
     "@mui/styled-engine-sc": "^6.0.0-alpha.1",
     "@mui/system": "^5.14.13",
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
     "@popperjs/core": "^2.11.8",
     "@reduxjs/toolkit": "^1.9.7",
     "@testing-library/jest-dom": "^5.17.0",
@@ -51,7 +53,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts start --host 0.0.0.0",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: alumni-frontend
+    ports:
+      - '8436:8436'
+    restart: unless-stopped
+    environment:
+      - NODE_EN=prod
+      - PORT=8436
+      - HOST=0.0.0.0

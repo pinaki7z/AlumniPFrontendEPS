@@ -12,11 +12,11 @@ import { toast } from "react-toastify";
 import baseUrl from "../../config.js";
 import bg1 from "../../images/login-bg-1.jpg";
 import bg2 from "../../images/login-bg-2.jpg";
-import carouselImage1 from "../../images/eps-image1.jpeg";
-import carouselImage2 from "../../images/eps-image2.jpeg";
-import carouselImage3 from "../../images/eps-image3.jpeg";
-import carouselImage4 from "../../images/eps-image4.jpeg";
-import carouselImage5 from "../../images/eps-image5.jpeg";
+import carouselImage1 from "../../images/22-23 -Class 10.jpg";
+import carouselImage2 from "../../images/22-23 Class 12.jpg";
+import carouselImage3 from "../../images/23-24 -Class 10.jpg";
+import carouselImage4 from "../../images/23 24 Class 12.jpg";
+//import carouselImage5 from "../../images/eps-image5.jpeg";
 
 const RegisterPage = () => {
   const navigateTo = useNavigate();
@@ -26,7 +26,7 @@ const RegisterPage = () => {
   const [loading, setLoading] = useState(false);
   const [showMore, setShowMore] = useState(false);
   const [carouselIndex, setCarouselIndex] = useState(0);
-  const carouselImages = [carouselImage1, carouselImage2, carouselImage3, carouselImage4, carouselImage5];
+  const carouselImages = [carouselImage1, carouselImage2, carouselImage3, carouselImage4];
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -162,6 +162,7 @@ const RegisterPage = () => {
                 src={carouselImages[carouselIndex]}
                 alt={`Carousel Image ${carouselIndex + 1}`}
                 className="carousel-image"
+                style={{width: '100%', height: '360px'}}
               />
               <div className="carousel-controls" style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '10px' }}>
                 {/* <button onClick={handlePrevImage} style={{ color: 'white', fontSize: '20px' }}>Previous</button> */}
