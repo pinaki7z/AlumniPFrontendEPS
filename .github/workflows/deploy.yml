@@ -22,8 +22,9 @@ jobs:
         env:
           EPS_SSH_USER: ${{ secrets.EPS_SSH_USER }}
           EPS_SSH_PASSWORD: ${{ secrets.EPS_SSH_PASSWORD }}
+          EPS_SSH_IPADDR: ${{ secrets.EPS_SSH_IPADDR }}
         run: |
-          sshpass -p "$EPS_SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $EPS_SSH_USER@your-server-ip << 'EOF'
+          sshpass -p "$EPS_SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $EPS_SSH_USER@$EPS_SSH_IPADDR << 'EOF'
             cd /alumniportal/AlumniPFrontendEPS
             docker-compose down
             docker-compose up -d --build
