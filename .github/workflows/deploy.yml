@@ -20,8 +20,8 @@ jobs:
 
       - name: Deploy to Remote Server
         env:
-          SSH_USER: ${{ secrets.EPS_SSH_USER }}
-          SSH_PASSWORD: ${{ secrets.EPS_SSH_PASSWORD }}
+          EPS_SSH_USER: ${{ secrets.EPS_SSH_USER }}
+          EPS_SSH_PASSWORD: ${{ secrets.EPS_SSH_PASSWORD }}
         run: |
           sshpass -p "$EPS_SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $EPS_SSH_USER@your-server-ip << 'EOF'
             cd /alumniportal/AlumniPFrontendEPS
