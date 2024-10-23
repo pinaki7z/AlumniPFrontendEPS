@@ -1,4 +1,4 @@
-name: Auto Deploy Alumni Portal Frontend App
+name: Auto Deploy React App
 
 on:
   push:
@@ -29,3 +29,8 @@ jobs:
             docker-compose down
             docker-compose up -d --build
           EOF
+      
+      - name: Debug environment variables
+        run: |
+          echo "SSH User: $EPS_SSH_USER"
+          echo "SSH IP: $EPS_SSH_IPADDR"
