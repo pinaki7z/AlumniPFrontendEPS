@@ -170,7 +170,7 @@ const RegisterPage = () => {
               </div>
               <div style={{width: '100%',display: 'flex',justifyContent: 'center', paddingTop: '8px'}}>
                 <a
-                  href="https://eps.insideoutprojects.in/alumni-gallery/"
+                  href="https://stg.excelpublicschool.com/alumni-gallery/"
                   target="_blank"
                   rel="noopener noreferrer" 
                   className="gallery-button"
