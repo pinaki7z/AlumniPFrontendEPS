@@ -162,7 +162,6 @@ const RegisterPage = () => {
                 src={carouselImages[carouselIndex]}
                 alt={`Carousel Image ${carouselIndex + 1}`}
                 className="carousel-image"
-                style={{width: '100%', height: '360px'}}
               />
               <div className="carousel-controls" style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '10px' }}>
                 {/* <button onClick={handlePrevImage} style={{ color: 'white', fontSize: '20px' }}>Previous</button> */}
